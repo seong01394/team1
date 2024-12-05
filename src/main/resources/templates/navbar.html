@@ -1,0 +1,59 @@
+<div th:fragment="navbarFragment">
+  <div class="top_menu_img">
+    <div class="top_menu_label">자연인 리조트 ver 5.0</div>
+  </div>
+  
+  <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">HOME</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+          
+        <!-- 메뉴 시작 -->
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <li>
+                  <a> 메뉴 </a>
+                </li>
+
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false" >                                                            
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li class="nav-item">
+                            <a class="nav-link" >회원 가입</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" >비밀 번호 변경</a>
+                        </li>  
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" >                                                            
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li class="nav-item"><a class="nav-link" >카테고리 목록</a></li>
+                        <li class="nav-item"><a class="nav-link" >회원 목록</a></li>
+                        <li class="nav-item"><a class="nav-link" >전체 글 목록</a></li>
+                    </ul>
+                </li>
+              
+                <li class="nav-item">
+                    <a class="nav-link"  >로그인</a>
+                    <a class="nav-link" >로그아웃</a>
+                </li>
+                  
+            </ul>
+        </div>
+        <!-- 메뉴 종료 -->
+          
+    </div>  
+  </nav>
+</div>
+
+
