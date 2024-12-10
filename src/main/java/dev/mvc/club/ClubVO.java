@@ -1,1 +1,65 @@
+package dev.mvc.club;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+//CREATE TABLE club (
+//    CLUBNO        NUMBER(10)        NOT NULL  PRIMARY KEY,
+//    ADMINNO       NUMBER(10)        NOT NULL,  
+//    CLUBNAME      VARCHAR(30)       NOT NULL,
+//    PLAYER        VARCHAR(30)       NOT NULL,
+//    HEADCOACH     VARCHAR(30)       NOT NULL,
+//    LEGEND        VARCHAR(30)       NOT NULL,
+//    HISTORY       CLOB              NOT NULL,
+//    INFO          CLOB              NOT NULL,
+//    RANK          NUMBER(5)         DEFAULT 1   NOT NULL,
+//    FOREIGN KEY (ADMINNO) REFERENCES admin (ADMINNO)
+//  );
+
+@Setter @Getter @ToString
+public class ClubVO {
+  /** 구단 번호 */  
+  private Integer clubno;
+  
+  /** 관리자 번호 */  
+  private Integer adminno;
+
+  /** 구단명 */
+  @NotEmpty(message="구단명 필수 항목입니다.")
+  @Size(min=2, max=10, message="구단명은 최소 2자에서 최대 10자입니다.")
+  private String clubname;
+
+  /** 구단 주요 선수 */
+  @NotEmpty(message="선수 이름 입력은 필수 항목입니다.")
+  @Size(min=2, max=12, message="선수 이름은 최소 2자에서 최대 12자입니다.")
+  private String player;
+  
+  /** 구단 감독 */
+  @NotEmpty(message="감독 이름 입력은 필수 항목입니다.")
+  @Size(min=2, max=12, message="감독 이름은 최소 2자에서 최대 12자입니다.")
+  private String headcoach;
+  
+  /** 구단 역대 선수 */
+  @NotEmpty(message="레전드 이름 입력은 필수 항목입니다.")
+  @Size(min=2, max=12, message="레전드 이름은 최소 2자에서 최대 12자입니다.")
+  private String legend;
+  
+  /** 구단 역사  */
+  private String history = "";
+  
+  /** 구단 정보  */
+  private String info = "";
+  
+  /** 출력 순서 */
+  @NotNull(message="출력 순서는 필수 입력 항목입니다.")
+  @Min(value=1)
+  @Max(value=1000000)  
+  private Integer rank;
+}
