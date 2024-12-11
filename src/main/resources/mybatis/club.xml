@@ -3,19 +3,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.club.ClubDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
   <insert id="create" parameterType="dev.mvc.club.ClubVO">
-    INSERT INTO club(clubno, adminno, clubname, player, headcoach, legend, history, info, rank) 
-    VALUES(club_seq.nextval, #{adminno}, #{clubname}, #{player}, #{headcoach}, #{legend}, #{history}, #{info}, #{rank})
+    INSERT INTO club(clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible) 
+    VALUES(club_seq.nextval, #{adminno}, #{clubname}, #{player}, #{headcoach}, #{legend}, #{history}, #{info}, #{rank}, #{visible})
   </insert>
   
   <select id="read" resultType="dev.mvc.club.ClubVO" parameterType="Integer">
-    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank
+    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible
     FROM club
     WHERE clubno=#{clubno}
   </select>  
   
   <update id="update" parameterType="dev.mvc.club.ClubVO">
     UPDATE club 
-    SET clubname=#{clubname}, player=#{player}, headcoach=#{headcoach}, legend=#{legend}, history=#{history}, info=#{info}, rank=#{rank} 
+    SET clubname=#{clubname}, player=#{player}, headcoach=#{headcoach}, legend=#{legend}, history=#{history}, info=#{info}, rank=#{rank}, visible=#{visible} 
     WHERE clubno=#{clubno}
   </update> 
   
@@ -23,4 +23,43 @@
     DELETE FROM club WHERE clubno=#{clubno}
   </delete>  
   
+   <select id="list_all" resultType="dev.mvc.club.ClubVO">
+    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible
+    FROM club
+    ORDER BY rank ASC
+  </select> 
+  
+  <!-- 우선 순위 높임, 10 등 -> 1 등 -->
+  <update id="update_rank_up" parameterType="Integer">
+    UPDATE club SET rank=rank-1  
+    WHERE clubno=#{clubno}
+  </update>
+  
+  <!-- 우선 순위 낮춤, 1 등 -> 10 등 -->
+  <update id="update_rank_down" parameterType="Integer">
+    UPDATE club SET rank=rank+1  
+    WHERE clubno=#{clubno}
+  </update>  
+  
+    <!-- 구단 목록 -->
+  <select id="clubnameset" resultType="String">
+    SELECT clubname FROM club WHERE history = '--' ORDER BY rank ASC 
+  </select>
+  
+    <!-- 숨긴 '구단 명'을 제외하고 접속자에게 공개할 '구단명 출력 -->
+  <select id="list_all_clubgrp_y" resultType="dev.mvc.club.ClubVO">
+    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible 
+    FROM club 
+    WHERE history='--' AND visible='Y' 
+    ORDER BY rank ASC 
+  </select>
+
+  <!-- 특정 장르에 속하면서,
+        숨긴 '구단명을 제외하고 접속자에게 공개할 '구단명' 출력 -->
+  <select id="list_all_club_y" resultType="dev.mvc.club.ClubVO" parameterType="String">
+    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible 
+    FROM club 
+    WHERE history != '--' AND visible='Y' AND clubname=#{clubname}
+    ORDER BY rank ASC 
+  </select>
 </mapper>   
