@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.club.ClubDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <insert id="create" parameterType="dev.mvc.club.ClubVO">
+    INSERT INTO club(clubno, adminno, clubname, player, headcoach, legend, history, info, rank) 
+    VALUES(club_seq.nextval, #{adminno}, #{clubname}, #{player}, #{headcoach}, #{legend}, #{history}, #{info}, #{rank})
+  </insert>
+  
+  <select id="read" resultType="dev.mvc.club.ClubVO" parameterType="Integer">
+    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank
+    FROM club
+    WHERE clubno=#{clubno}
+  </select>  
+  
+  <update id="update" parameterType="dev.mvc.club.ClubVO">
+    UPDATE club 
+    SET clubname=#{clubname}, player=#{player}, headcoach=#{headcoach}, legend=#{legend}, history=#{history}, info=#{info}, rank=#{rank} 
+    WHERE clubno=#{clubno}
+  </update> 
+  
+  <delete id="delete" parameterType="int">
+    DELETE FROM club WHERE clubno=#{clubno}
+  </delete>  
+  
+</mapper>   
