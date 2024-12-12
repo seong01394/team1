@@ -105,7 +105,9 @@ public class ClubCont {
     return "/club/read";
    }
                       
-  
+  /**
+   * 수정폼
+   */
   @GetMapping(value="/update/{clubno}")
   public String update(HttpSession session, Model model,
                              @PathVariable("clubno") Integer clubno,
