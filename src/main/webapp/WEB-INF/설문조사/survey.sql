@@ -11,7 +11,9 @@ CREATE TABLE survey (
     write_date      Date            NOT NULL, -- 작성일자
     selectno        NUMBER(10)      NOT NULL, -- 선택 인원 수
     adminno         NUMBER(10)      NOT NULL,  -- 관리자 번호
-    FOREIGN KEY (adminno) REFERENCES admin(adminno)
+    memberno        NUMBER(10)      NOT NULL,  -- 멤버 번호
+    FOREIGN KEY (adminno) REFERENCES admin(adminno),
+    FOREIGN KEY (memberno) REFERENCES member(memberno)
 )
     
 COMMENT ON TABLE survey is '설문조사';
