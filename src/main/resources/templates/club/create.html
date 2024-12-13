@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">구단 등록</div>
+  
+  <aside class="aside_right">
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  
+  <!--/* '/club/list_search_com.html' 파일의 list_search_fragment를 가져다 사용 */--> 
+  <div th:replace="~{club/list_search_com::list_search_fragment}"></div> 
+
+  <div class="menu_line"></div>
+    
+  <div style="width: 50%; margin: 0px auto;">  
+    <form name="frm" method="post" action="/club/create" th:object="${clubVO}">
+      <div>
+        <label>구단명</label>
+        <input type="text" name="clubname" value="" autofocus="autofocus"
+               class="form-control" style="width: 50%;" th:field="*{clubname}">
+        <div th:if="${#fields.hasErrors('clubname')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err: ${#lists.sort(#fields.errors('clubname'))}" th:text="${err}"></div>
+        </div>  
+      </div>
+      <div>
+        <label>구단 정보</label>
+        <input type="text" name="info" value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{info}">
+        <div th:if="${#fields.hasErrors('info')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err: ${#lists.sort(#fields.errors('info'))}" th:text="${err}"></div>
+        </div>  
+      </div>
+      <div>
+        <label>구단 주요 선수</label>
+        <input type="text" name="player" value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{palyer}">
+        <div th:if="${#fields.hasErrors('palyer')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err: ${#lists.sort(#fields.errors('palyer'))}" th:text="${err}"></div>
+        </div>  
+      </div>
+      <div>
+        <label>구단 감독</label>
+        <input type="text" name="headcoach" value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{headcoach}">
+        <div th:if="${#fields.hasErrors('headcoach')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err: ${#lists.sort(#fields.errors('headcoach'))}" th:text="${err}"></div>
+        </div>  
+      </div>      
+      <div>
+        <label>구단 역대 선수</label>
+        <input type="text" name="legend" value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{legend}">
+        <div th:if="${#fields.hasErrors('legend')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err: ${#lists.sort(#fields.errors('legend'))}" th:text="${err}"></div>
+        </div>  
+      </div> 
+      <div>
+        <label>구단 역사</label>
+        <input type="text" name="history" value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{history}">
+        <div th:if="${#fields.hasErrors('history')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err: ${#lists.sort(#fields.errors('history'))}" th:text="${err}"></div>
+        </div>  
+      </div>
+      <div>                
+        <label>출력 순서</label>
+        <input type="number" name="rank" value="1" min="1" max="1000000" step="1"
+               class="form-control" style="width: 50%;" th:field="*{rank}"> 
+        <div th:if="${#fields.hasErrors('rank')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err: ${#lists.sort(#fields.errors('rank'))}" th:text="${err}"></div>
+        </div>  
+      </div>
+      <div>
+        <label>출력 모드(Y/N)</label>
+        <select id="visible" name="visible" class="form-control">
+          <option value="출력 모드" selected="selected">출력 모드</option>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+        </select>
+        <div th:if="${#fields.hasErrors('visible')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err: ${#lists.sort(#fields.errors('visible'))}" th:text="${err}"></div>
+        </div>  
+      </div>
+      <div class="content_body_bottom">
+        <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+        <button type="button" onclick="location.href='/cate/list_search'" class="btn btn-secondary btn-sm">목록</button>
+      </div>
+      
+    </form>
+  <div>  
+</div>
+</html>
+

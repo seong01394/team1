@@ -1,0 +1,71 @@
+<!--/* 
+<div th:replace="~{cate/list_all_com::list_all_fragment}"></div> 
+'/cate/list_all_com.html' 파일의 list_all_fragment를 가져다 사용
+*/-->
+<div th:fragment="list_all_fragment"> 
+  <table class="table table-hover" style="width: 100%;">
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 10%;'/>    
+      <col style='width: 20%;'/>
+      <col style='width: 20%;'/>
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="th_bs">구단 번호</th>
+        <th class="th_bs">구단명</th>
+        <th class="th_bs">구단 정보</th>
+        <th class="th_bs">구단 주요 선수</th>
+        <th class="th_bs">구단 감독</th>
+        <th class="th_bs">구단 역대 선수</th>
+        <th class="th_bs">구단 역사</th>
+        <th class="th_bs">기타</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="clubVO, status:${list}">
+        <td class="td_bs" th:text="${no-status.index}"></td>
+        <td class="td_bs">
+          <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.clubname}"></a>
+        </td>
+        <td class="td_bs">
+          <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.info}"></a>
+        </td>
+        <td class="td_bs">
+        <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${cateVO.player}"></a>
+        </td>
+        <td class="td_bs">
+          <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${cateVO.headcoach}"></a>
+          </td>
+          <td class="td_bs">
+            <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${cateVO.legend}"></a>
+            </td>          
+            <td class="td_bs">
+              <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${cateVO.history}"></a>
+              </td>          
+        <td class="td_bs">
+          <span th:text="${clubVO.rank}"></span>
+          <span th:if="${clubVO.visible == 'Y'}">
+            <a th:href="@{|/club/update_visible_n/${clubVO.clubno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/show.png" class="icon" title="출력"></a>
+          </span>
+          <span th:if="${clubVO.visible == 'N'}">
+            <a th:href="@{|/club/update_visible_y/${clubVO.clubno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/hide.png" class="icon" title="숨김"></a>  
+          </span>
+          <a th:href="@{|/club/update_rank_up/${clubVO.cateno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/decrease.png" class="icon" title="구단순위 높임"></a>
+          <a th:href="@{|/club/update_rank_down/${clubVO.clubno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/increase.png" class="icon" title="구단순위 낮춤"></a>
+          <a th:href="@{|/club/update/${clubVO.clubno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/update.png" class="icon" title="수정"></a> <!-- /static 기준 -->
+          <a th:href="@{|/club/delete/${clubVO.clubno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/delete.png" class="icon" title="삭제"></a> <!--/* /static 기준 */-->
+          <a th:if="${clubVO.name != '--'}" th:href="@{|/contents/create?clubno=${clubVO.clubno}|}"><img src="/club/images/create.png" class="icon" title="삭제"></a> <!--/* /static 기준 */-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="Bottom_menu" th:utext="${paging}"></div> 
+  <!-- 페이지 버튼 목록 출력 종료 -->
+
+</div>
+
