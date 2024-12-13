@@ -15,7 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import dev.mvc.cate.CateVO;
+
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -69,6 +69,14 @@ public class ClubCont {
 
     return "/club/create"; // /templates/club/create.html
     } 
+
+    int cnt = this.clubProc.create(clubVO);
+    
+    if (cnt == 1) {
+
+    } else {
+      model.addAttribute("code", "create_fail");
+    }
     
    
     return "/club/msg"; // /templates/club/msg.html
