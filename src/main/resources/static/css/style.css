@@ -14,7 +14,7 @@
      font-size: 16px; 
      margin: 0px;  /* top right bottom left */
      padding: 0px;
-     color: #FAFAFA;
+     color: #000000;
   }  
   
   .container_main {
@@ -330,12 +330,12 @@
   
   a:hover{  /* A 태그에 마우스가 올라간 상태 */
     text-decoration: underline; /* 밑줄 출력 */
-    color: #FF6600;
+    color: #FAFAFA;
   }
   
   a:active{  /* A 태그를 클릭한 상태 */
     text-decoration: underline; /* 밑줄 출력 */
-    color: #FF6600;
+    color: #FAFAFA;
   }
 
   .menu_link:link{  /* 방문전 상태 */
@@ -574,11 +574,11 @@
     }
   }
 
-  .navbar-toggler-icon {
+  .bar-toggler-icon {
     background-color: white; /* 아이콘 색상을 흰색으로 설정 */
   }
 
-  .navbar-toggler {
+  .bar-toggler {
     border: none; /* 테두리를 삭제 */
   }
 

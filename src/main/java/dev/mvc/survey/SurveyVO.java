@@ -23,4 +23,8 @@ public class SurveyVO {
   private String fin_date;
   /** 작성일자 */
   private String write_date = "";
+  /** 관리자 번호 */
+  private Integer adminno;
+  /** 회원 번호 */
+  private Integer memberno;
 }

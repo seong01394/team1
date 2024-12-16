@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.survey.SurveyDAOInter"> 
+  <insert id="create" parameterType="dev.mvc.survey.SurveyVO">
+    INSERT INTO survey
+    (surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date, adminno, memberno) 
+    VALUES(survey_seq.nextval, #{survey_title}, #{seqno}, #{qa_num}, #{qa_contents}, #{start_date}, #{fin_date}, sysdate, #{adminno}, #{memberno})
+  </insert>
+  
+  <select id="read" resultType="dev.mvc.survey.SurveyVO" parameterType="Integer">
+    SELECT surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date, adminno, memberno
+    FROM survey
+    WHERE surveyno=#{surveyno}
+  </select>  
+  
+  <update id="update" parameterType="dev.mvc.survey.SurveyVO">
+    UPDATE survey 
+    SET qa_contents=#{qa_contents}, start_date=#{start_date}, fin_date=#{fin_date} 
+    WHERE surveyno=#{surveyno}
+  </update> 
+  
+  <delete id="delete" parameterType="int">
+    DELETE FROM survey WHERE surveyno=#{surveyno}
+  </delete>
+  
+  <select id="list_all" resultType="dev.mvc.survey.SurveyVO">
+    SELECT surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date, adminno, memberno
+    FROM survey 
+    ORDER BY surveyno ASC
+  </select>
+  
+</mapper>

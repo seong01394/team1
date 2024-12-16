@@ -3,9 +3,10 @@ package dev.mvc.club;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service("dec.mvc.club.ClubProc")
+@Component("dev.mvc.club.ClubProc")
 public class ClubProc implements ClubProcInter {
   @Autowired
   private ClubDAOInter clubDAO;

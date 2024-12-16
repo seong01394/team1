@@ -45,7 +45,7 @@ dependencies {
   implementation 'org.json:json:20240303'
   // https://mvnrepository.com/artifact/commons-codec/commons-codec
   implementation 'commons-codec:commons-codec:1.16.0'
-  
+  implementation 'com.zaxxer:HikariCP:5.0.1' 
   // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
   // https://mvnrepository.com/artifact/commons-io/commons-io
