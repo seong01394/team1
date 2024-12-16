@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
-  <div layout:fragment="content" style="width: 100%; text-align: center;">
-    <h1>시작 화면</h1><br>
+  <div layout:fragment="content">
   <div class="image-container">
-    <img src="/images/main.jpg" alt="Left Image">
-    <img src="/images/main.jpg" alt="Center Image">
-    <img src="/images/main.jpg" alt="Right Image">
+    <a th:href="@{|/club/list_all|}">
+      <img src="/images/구단정보.png" alt="Left Image">
+    <span class="image-text">구단 정보</span>
+    </a>
+    <a th:href="@{|/survey/list_all|}">
+      <img src="/images/설문조사.png" alt="Center Image">
+    </a>
+    <a th:href="@{|/comm/list_all|}">
+      <img src="/images/커뮤니티.png" alt="Right Image">
+    </a>
   </div>
 </html>
 
