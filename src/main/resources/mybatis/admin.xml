@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.member.MemberDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <select id="checkID" resultType="int" parameterType="String">
+    SELECT COUNT(id) as cnt
+    FROM admin
+    WHERE id=#{id}
+  </select>
+
+  <select id="list" resultType="dev.mvc.admin.AdminVO">
+    SELECT adminno, id, passwd, adname
+    FROM admin
+    ORDER BY id ASC
+  </select>
+  
+  <select id="read" resultType="dev.mvc.admin.AdminVO" parameterType="int">
+    SELECT adminno, id, passwd, adname
+    FROM admin
+    WHERE adminno = #{adminno}
+  </select>  
+
+  <!-- id(이메일)로 관리자 정보 조회 -->
+  <select id="readById" resultType="dev.mvc.admin.AdminVO" parameterType="String">
+    SELECT adminno, id, passwd, adname
+    FROM admin
+    WHERE id = #{id}
+  </select>
+  
+  <!-- 로그인, 1: 로그인 처리, 0: 메시지 출력 -->
+  <select id="login" resultType="int" parameterType="HashMap">
+    SELECT COUNT(adminno) as cnt
+    FROM admin
+    WHERE id=#{id} AND passwd=#{passwd}
+  </select>
+  
+  <!--  현재 패스워드 검사 -->
+  <select id="passwd_check" parameterType="HashMap" resultType="int">
+    SELECT COUNT(adminno) as cnt
+    FROM admin
+    WHERE adminno=#{adminno} AND passwd=#{passwd}
+  </select>
+   
+</mapper>
