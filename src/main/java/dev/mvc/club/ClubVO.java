@@ -18,7 +18,7 @@ import lombok.ToString;
 //    HEADCOACH     VARCHAR(30)       NOT NULL,
 //    LEGEND        VARCHAR(30)       NOT NULL,
 //    HISTORY       CLOB              NOT NULL,
-//    INFO          CLOB              NOT NULL,
+//    INFO          VARCHAR(255)             NOT NULL,
 //    RANK          NUMBER(5)         DEFAULT 1   NOT NULL,
 //    FOREIGN KEY (ADMINNO) REFERENCES admin (ADMINNO)
 //  );
@@ -29,27 +29,27 @@ public class ClubVO {
   private Integer clubno;
   
   /** 관리자 번호 */  
-  private Integer adminno;
+  private Integer adminno = 1;
 
   /** 구단명 */
   @NotEmpty(message="구단명 필수 항목입니다.")
   @Size(min=2, max=10, message="구단명은 최소 2자에서 최대 10자입니다.")
-  private String clubname;
+  private String clubname = "";
 
   /** 구단 주요 선수 */
   @NotEmpty(message="선수 이름 입력은 필수 항목입니다.")
   @Size(min=2, max=12, message="선수 이름은 최소 2자에서 최대 12자입니다.")
-  private String player;
+  private String player = "";
   
   /** 구단 감독 */
   @NotEmpty(message="감독 이름 입력은 필수 항목입니다.")
   @Size(min=2, max=12, message="감독 이름은 최소 2자에서 최대 12자입니다.")
-  private String headcoach;
+  private String headcoach = "";
   
   /** 구단 역대 선수 */
   @NotEmpty(message="레전드 이름 입력은 필수 항목입니다.")
   @Size(min=2, max=12, message="레전드 이름은 최소 2자에서 최대 12자입니다.")
-  private String legend;
+  private String legend = "";
   
   /** 구단 역사  */
   private String history = "";
@@ -62,4 +62,9 @@ public class ClubVO {
   @Min(value=1)
   @Max(value=1000000)  
   private Integer rank;
+  
+  /** 출력 모드 */
+  @NotEmpty(message="출력 모드는 필수 항목입니다.")
+  @Pattern(regexp="^[YN]$", message="Y 또는 N만 입력 가능합니다.")
+  private String visible;
 }

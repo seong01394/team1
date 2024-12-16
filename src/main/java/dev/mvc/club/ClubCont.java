@@ -55,6 +55,9 @@ public class ClubCont {
   public String create(Model model) {
     ClubVO clubVO = new ClubVO();
     model.addAttribute("clubVO", clubVO);
+    
+    clubVO.setClubname("구단명");
+    clubVO.setInfo("구단 정보 입력하기");
 
     return "/club/create"; // /templates/club/create.html
     }    
@@ -76,6 +79,8 @@ public class ClubCont {
     return "/club/create"; // /templates/club/create.html
     } 
 
+    clubVO.setClubname(clubVO.getClubname().trim());
+    clubVO.setInfo(clubVO.getInfo().trim());
     int cnt = this.clubProc.create(clubVO);
     
     if (cnt == 1) {

@@ -5,12 +5,14 @@
 <div th:fragment="list_all_fragment"> 
   <table class="table table-hover" style="width: 100%;">
     <colgroup>
+      <col style='width: 8%;'/>
       <col style='width: 10%;'/>
       <col style='width: 20%;'/>
+      <col style='width: 11%;'/>    
+      <col style='width: 10%;'/>
+      <col style='width: 11%;'/>
       <col style='width: 20%;'/>
-      <col style='width: 10%;'/>    
-      <col style='width: 20%;'/>
-      <col style='width: 20%;'/>
+      <col style='width: 8%;'/>
     </colgroup>
     <thead>
       <tr>
@@ -34,16 +36,16 @@
           <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.info}"></a>
         </td>
         <td class="td_bs">
-        <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${cateVO.player}"></a>
+        <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.player}"></a>
         </td>
         <td class="td_bs">
-          <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${cateVO.headcoach}"></a>
+          <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.headcoach}"></a>
           </td>
           <td class="td_bs">
-            <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${cateVO.legend}"></a>
+            <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.legend}"></a>
             </td>          
             <td class="td_bs">
-              <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${cateVO.history}"></a>
+              <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.history}"></a>
               </td>          
         <td class="td_bs">
           <span th:text="${clubVO.rank}"></span>

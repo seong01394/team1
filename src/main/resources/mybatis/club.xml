@@ -15,8 +15,15 @@
   
   <update id="update" parameterType="dev.mvc.club.ClubVO">
     UPDATE club 
-    SET clubname=#{clubname}, player=#{player}, headcoach=#{headcoach}, legend=#{legend}, history=#{history}, info=#{info}, rank=#{rank}, visible=#{visible} 
-    WHERE clubno=#{clubno}
+    SET clubname=#{clubname}, 
+        player=#{player}, 
+        headcoach=#{headcoach}, 
+        legend=#{legend}, 
+        history=#{history}, 
+        info=#{info}, 
+        rank=#{rank}, 
+        visible=#{visible}  
+    WHERE clubno=#{clubno} 
   </update> 
   
   <delete id="delete" parameterType="int">
@@ -91,7 +98,7 @@
             SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible
             FROM club
             WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(info) LIKE '%' || UPPER(#{word}) || '%')
-            ORDER BY seqno ASC
+            ORDER BY rank ASC
         )
     )
     WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}  <!-- WHERE r >= 1 AND r <= 3 -->
