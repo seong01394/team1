@@ -14,8 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
+import dev.mvc.admin.AdminProcInter;
+import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -38,6 +40,10 @@ public class ClubCont {
   public ClubCont() {
     System.out.println("-> ClubCont created."); 
   }  
+  
+  @Autowired
+  @Qualifier("dev.mvc.admin.AdminProc")
+  private AdminProcInter adminProc;
   
   /**
    * 등록 폼
@@ -78,6 +84,7 @@ public class ClubCont {
       model.addAttribute("code", "create_fail");
     }
     
+    model.addAttribute("cnt", cnt);
    
     return "/club/msg"; // /templates/club/msg.html
   } 
@@ -123,6 +130,15 @@ public class ClubCont {
     
     model.addAttribute("word", word);
     
+    int search_count = this.clubProc.list_search_count(word);
+    String paging = this.clubProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+        this.page_per_block);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    
+    int no = search_count - ((now_page - 1) * this.record_per_page);
+    model.addAttribute("no", no);
+    
     return "/club/read";
    }
                       
@@ -135,6 +151,243 @@ public class ClubCont {
                              @RequestParam(name="word", defaultValue="") String word,
                              @RequestParam(name="now_page", defaultValue="") int now_page) {
     
-    return"/club/update";
+    if(this.adminProc.isAdmin(session)) {
+      ClubVO clubVO = this.clubProc.read(clubno);
+      model.addAttribute("clubVO", clubVO);
+      
+      ArrayList<ClubVO> list =this.clubProc.list_search_paging(word, now_page, this.record_per_page);
+      model.addAttribute("list", list);
+      
+      ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+      model.addAttribute("menu", menu);
+      
+      ArrayList<String> list_clubname = this.clubProc.clubnameset();
+      model.addAttribute("list_clubname", String.join("/", list_clubname));
+
+      model.addAttribute("word", word);
+      
+      int search_count = this.clubProc.list_search_count(word);
+      String paging = this.clubProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+          this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      
+      return "/club/update"; 
+    } else {
+      return "redirect:/admin/login_cookie_need"; // redirect
+    }
+   } 
+  
+  /**
+   * 수정 처리
+   * @return
+   */
+  @PostMapping(value = "/update")
+  public String update(HttpSession session, Model model, @Valid 
+                              @ModelAttribute("clubVO") ClubVO clubVO, BindingResult bindingResult,
+                              @RequestParam(name = "word", defaultValue = "") String word,
+                              @RequestParam(name = "now_page", defaultValue = "") int now_page, 
+                              RedirectAttributes ra) {
+    if (this.adminProc.isAdmin(session)) {
+    if (bindingResult.hasErrors() == true) { 
+
+      return "/club/update"; 
+    }
+
+    int cnt = this.clubProc.update(clubVO);
+    System.out.println("-> cnt: " + cnt);
+
+    if (cnt == 1) {
+
+
+      ra.addAttribute("word", word); // redirect로 데이터 전송
+      ra.addAttribute("now_page", now_page); // redirect로 데이터 전송
+
+      return "redirect:/club/update/" + clubVO.getClubno();
+    } else {
+      model.addAttribute("code", "update_fail");
+    }
+
+    model.addAttribute("cnt", cnt);
+
+    int search_count = this.clubProc.list_search_count(word);
+    String paging = this.clubProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+        this.page_per_block);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+
+    int no = search_count - ((now_page - 1) * this.record_per_page);
+    model.addAttribute("no", no);
+
+    return "/club/msg";
+    } else {
+      return "redirect:/admin/login_cookie_need"; 
+    }  
   }
+  
+  @GetMapping(value = "/delete/{clubno}")
+  public String delete(HttpSession session, Model model, 
+                            @PathVariable("clubno") Integer clubno,
+                            @RequestParam(name = "word", defaultValue = "") String word,
+                            @RequestParam(name = "now_page", defaultValue = "") int now_page) {
+    if (this.adminProc.isAdmin(session)) {
+      ClubVO clubVO = this.clubProc.read(clubno);
+      model.addAttribute("clubVO", clubVO);
+      
+      ArrayList<ClubVO> list = this.clubProc.list_search_paging(word, now_page, this.record_per_page);
+      model.addAttribute("list", list);
+
+      ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+      model.addAttribute("menu", menu);
+
+      model.addAttribute("word", word);
+      model.addAttribute("now_page", now_page);
+
+      int search_count = this.clubProc.list_search_count(word);
+      String paging = this.clubProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+          this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+
+      return "/club/delete"; 
+
+    } else {
+      return "redirect:/admin/login_cookie_need";  
+    }   
+  }  
+  
+  /**
+   * 삭제 처리
+   * @return
+   */
+  @PostMapping(value = "/delete")
+  public String delete_process(HttpSession session, Model model, 
+                                       @RequestParam(name = "clubno", defaultValue = "0") Integer clubno,
+                                       @RequestParam(name = "word", defaultValue = "") String word,
+                                       @RequestParam(name = "now_page", defaultValue = "") int now_page, RedirectAttributes ra) {
+    if (this.adminProc.isAdmin(session)) {
+
+      ClubVO clubVO = this.clubProc.read(clubno); 
+      model.addAttribute("clubVO", clubVO);
+      
+      int cnt = this.clubProc.delete(clubno);
+      System.out.println("-> cnt: " + cnt);
+
+      if (cnt == 1) {
+
+        ra.addAttribute("word", word); // redirect로 데이터 전송
+
+        int search_cnt = this.clubProc.list_search_count(word);
+        if (search_cnt % this.record_per_page == 0) {
+          now_page = now_page - 1;
+          if (now_page < 1) {
+            now_page = 1;
+          }
+        }
+
+        ra.addAttribute("now_page", now_page); 
+
+        return "redirect:/club/list_search";
+      } else {
+        model.addAttribute("code", "delete_fail");
+      }
+
+      model.addAttribute("cnt", cnt);
+
+      return "/club/msg";
+    } else {
+      return "redirect:/admin/login_cookie_need";  
+    }
+
+  }
+
+  /**
+   * 구단 순위 높임, 10 등 -> 1 등
+   */
+  @GetMapping(value = "/update_rank_up/{clubno}")
+  public String update_rank_up(Model model, 
+                                         @PathVariable("clubno") Integer clubno,
+                                         @RequestParam(name = "word", defaultValue = "") String word,
+                                         @RequestParam(name = "now_page", defaultValue = "") int now_page, 
+                                         RedirectAttributes ra) {
+    
+    this.clubProc.update_rank_up(clubno);
+
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
+
+    return "redirect:/club/list_search";
+  }  
+ 
+  /**
+   * 구단 순위 낮춤, 1 등 -> 10 등
+   */
+  @GetMapping(value = "/update_rank_down/{clubno}")
+  public String update_rank_down(Model model, 
+                                             @PathVariable("clubno") Integer clubno,
+                                             @RequestParam(name = "word", defaultValue = "") String word,
+                                             @RequestParam(name = "now_page", defaultValue = "") int now_page, 
+                                             RedirectAttributes ra) {
+    
+    this.clubProc.update_rank_down(clubno);
+
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page); 
+
+    return "redirect:/club/list_search"; 
+  }  
+
+  /**
+   * 등록 폼 및 검색 목록 + 페이징
+   * @param model
+   * @return
+   */
+  @GetMapping(value = "/list_search")
+  public String list_search_paging(HttpSession session, Model model,
+      @RequestParam(name = "word", defaultValue = "") String word,
+      @RequestParam(name = "clubno", defaultValue = "0") int clubno,
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+   
+    if (this.adminProc.isAdmin(session)) {
+      ClubVO clubVO = new ClubVO();
+
+      ArrayList<String> list_clubname = this.clubProc.clubnameset();
+      clubVO.setClubname(String.join("/", list_clubname));
+      
+      model.addAttribute("clubVO", clubVO);
+      
+      word = Tool.checkNull(word);
+
+      ArrayList<ClubVO> list = this.clubProc.list_search_paging(word, now_page, this.record_per_page);
+      model.addAttribute("list", list);
+
+      ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+      model.addAttribute("menu", menu);
+
+      int search_cnt = this.clubProc.list_search_count(word);
+      model.addAttribute("search_cnt", search_cnt);
+
+      model.addAttribute("word", word); // 검색어
+
+      int search_count = this.clubProc.list_search_count(word);
+      String paging = this.clubProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+          this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+
+      return "/club/list_search"; 
+    } else {
+      return "redirect:/admin/login_cookie_need";
+    }
+  }
+  
 }

@@ -43,14 +43,14 @@
   
     <!-- 구단 목록 -->
   <select id="clubnameset" resultType="String">
-    SELECT clubname FROM club WHERE history = '--' ORDER BY rank ASC 
+    SELECT clubname FROM club WHERE info = '--' ORDER BY rank ASC 
   </select>
   
     <!-- 숨긴 '구단 명'을 제외하고 접속자에게 공개할 '구단명 출력 -->
   <select id="list_all_clubgrp_y" resultType="dev.mvc.club.ClubVO">
     SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible 
     FROM club 
-    WHERE history='--' AND visible='Y' 
+    WHERE info='--' AND visible='Y' 
     ORDER BY rank ASC 
   </select>
 
@@ -59,7 +59,42 @@
   <select id="list_all_club_y" resultType="dev.mvc.club.ClubVO" parameterType="String">
     SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible 
     FROM club 
-    WHERE history != '--' AND visible='Y' AND clubname=#{clubname}
+    WHERE info != '--' AND visible='Y' AND clubname=#{clubname}
     ORDER BY rank ASC 
   </select>
+  
+  <select id="list_search" resultType="dev.mvc.club.ClubVO" parameterType="String">
+    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visibleate
+    FROM club
+    <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
+      WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(info) LIKE '%' || UPPER(#{word}) || '%')
+    </if> 
+    ORDER BY rank ASC
+  </select>
+
+  <!-- 검색 갯수 -->
+  <select id="list_search_count" resultType="Integer" parameterType="String">
+    SELECT COUNT(*) as cnt
+    FROM club
+    <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
+      WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(info) LIKE '%' || UPPER(#{word}) || '%')
+    </if> 
+    ORDER BY rank ASC
+  </select>
+
+  <!-- 검색 + 페이징 -->
+  <select id="list_search_paging" resultType="dev.mvc.club.ClubVO" parameterType="Map">
+    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible, r
+    FROM (
+        SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible, rownum as r
+        FROM (
+            SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible
+            FROM club
+            WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(info) LIKE '%' || UPPER(#{word}) || '%')
+            ORDER BY seqno ASC
+        )
+    )
+    WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}  <!-- WHERE r >= 1 AND r <= 3 -->
+  </select>
+  
 </mapper>   

@@ -1,6 +1,8 @@
 package dev.mvc.club;
 
 import java.util.ArrayList;
+import java.util.Map;
+
 
 public interface ClubDAOInter {
   
@@ -69,5 +71,25 @@ public interface ClubDAOInter {
    * @return
    */
   public ArrayList<ClubVO> list_all_club_y(String clubname);  
+  
+  /**
+   * 검색 목록 
+   * @return
+   */
+  public ArrayList<ClubVO> list_search(String word);
+  
+  /**
+   * 검색 갯수
+   * @param word
+   * @return
+   */
+  public Integer list_search_count(String word);
+  
+  /**
+   * 검색 + 페이징 목록
+   * @param map
+   * @return
+   */
+  public ArrayList<ClubVO> list_search_paging(Map<String, Object> map);
   
 }
