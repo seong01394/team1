@@ -34,9 +34,9 @@
       <div>
         <label>구단 주요 선수</label>
         <input type="text" name="player" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{palyer}">
-        <div th:if="${#fields.hasErrors('palyer')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-          <div th:each="err: ${#lists.sort(#fields.errors('palyer'))}" th:text="${err}"></div>
+               class="form-control" style="width: 100%;" th:field="*{player}">
+        <div th:if="${#fields.hasErrors('player')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err: ${#lists.sort(#fields.errors('player'))}" th:text="${err}"></div>
         </div>  
       </div>
       <div>
@@ -84,7 +84,7 @@
       </div>
       <div class="content_body_bottom">
         <button type="submit" class="btn btn-secondary btn-sm">등록</button>
-        <button type="button" onclick="location.href='/cate/list_search'" class="btn btn-secondary btn-sm">목록</button>
+        <button type="button" onclick="location.href='/club/list_search'" class="btn btn-secondary btn-sm">목록</button>
       </div>
       
     </form>

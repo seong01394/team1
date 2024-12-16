@@ -26,18 +26,16 @@
                     </ul>
                 </li>
 
-                <li class="nav-item dropdown" th:if="${session.grade=='admin'}">
+                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="PL구단">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item"><a class="nav-link" th:href="@{|/club/list_search?word=${word}|}">클럽팀 목록</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{|/member/list|}">회원 목록</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{|/contents/list_all|}">전체 글 목록</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/club/list_search?word=${word}|}">클럽팀 목록</a></li>       
                     </ul>
                 </li>
                 
-                <li class="nav-item dropdown" th:if="${session.grade=='admin'}">
+                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
                     </a>

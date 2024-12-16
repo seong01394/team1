@@ -14,7 +14,7 @@
    font-size: 16px; 
    margin: 0px;  /* top right bottom left */
    padding: 0px;
-   color: #0f0f0e;
+   color: #555555;
 }  
 
 <<<<<<< HEAD
@@ -34,7 +34,7 @@
     position: relative; /* 속해 있는 부모 태그 기준 설정 */
     top: 80%;
     left: 0.5%;
-    color: #000000;
+    color: #FFFFFF;
     font-size: 2em;
   }
   
@@ -155,7 +155,7 @@
   padding-bottom: 20px;
   text-align: center;
   width: 100%;
-  background-color: #FAFAFA;
+  background-color: white;
 }
 
 .content_bottom {
@@ -197,7 +197,7 @@
 
 .copyright {
   margin-top: 10px;
-  border-top: solid 1px #FAFAFA;
+  border-top: solid 1px #999999;
   text-align: center; 
   clear: both;  /* 앞쪽 태그의 float 효과를 제거함. */    
 }
@@ -244,7 +244,7 @@
 
 .legend_basic {
   margin-left: 30px; 
-  border: solid 1px #FAFAFA; 
+  border: solid 1px #999999; 
   background-color: #A6C2FF; 
   color: #FFFFFF;
 }
@@ -252,16 +252,16 @@
 .input_basic {
   border-top: none;
   border-right: none;
-  border-bottom: solid 1px #FAFAFA;
+  border-bottom: solid 1px #999999;
   border-left: none;
   padding-left: 2px;
 }
 
 .textarea_basic {
-  border-top: solid 1px #FAFAFA;
-  border-right: solid 1px #FAFAFA;
-  border-bottom: solid 1px #FAFAFA;
-  border-left: solid 1px #FAFAFA;
+  border-top: solid 1px #999999;
+  border-right: solid 1px #999999;
+  border-bottom: solid 1px #999999;
+  border-left: solid 1px #999999;
   padding-left: 2px;
 }
 
@@ -351,22 +351,22 @@
 
 a:link{  /* 방문전 상태 */
   text-decoration: none; /* 밑줄 삭제 */
-  color: #FAFAFA;
+  color: #555555;
 }
 
 a:visited{  /* 방문후 상태 */
   text-decoration: none; /* 밑줄 삭제 */
-  color: #FAFAFA;
+  color: #555555;
 }
 
 a:hover{  /* A 태그에 마우스가 올라간 상태 */
   text-decoration: underline; /* 밑줄 출력 */
-  color: #FAFAFA;
+  color: #7777FF;
 }
 
 a:active{  /* A 태그를 클릭한 상태 */
   text-decoration: underline; /* 밑줄 출력 */
-  color: #FAFAFA;
+  color: #7777FF;
 }
 
 .menu_link:link{  /* 방문전 상태 */
@@ -391,25 +391,25 @@ a:active{  /* A 태그를 클릭한 상태 */
 
 .recom_link:link{  /* 방문전 상태 */
   text-decoration: none; /* 밑줄 삭제 */
-  color: #FAFAFA;
+  color: #555555;
   font-size: 0.8em;
 }
 
 .recom_link:visited{  /* 방문후 상태 */
   text-decoration: none; /* 밑줄 삭제 */
-  color: #FAFAFA;
+  color: #555555;
   font-size: 0.8em;
 }
 
 .recom_link:hover{  /* A 태그에 마우스가 올라간 상태 */
   text-decoration: none; /* 밑줄 출력 */
-  color: #FAFAFA;
+  color: #7777FF;
   font-size: 0.8em;
 }
 
 .recom_link:active{  /* A 태그를 클릭한 상태 */
   text-decoration: none; /* 밑줄 출력 */
-  color: #FAFAFA;
+  color: #7777FF;
   font-size: 0.8em;    
 }
 
@@ -565,7 +565,7 @@ a:active{  /* A 태그를 클릭한 상태 */
 }
 
 .display_table_cell {
-  color: #FFFFFF; 
+  color: #000000; 
   background-color: #FFFFFF; 
   display: table-cell; 
   vertical-align: middle;
@@ -633,7 +633,7 @@ a:active{  /* A 태그를 클릭한 상태 */
 }
 
 .nav-link {
-  color: #FAFAFA;
+  color: #000000;
 }
 
 .dropdown-menu.show {
@@ -642,16 +642,16 @@ a:active{  /* A 태그를 클릭한 상태 */
 }
 
 body {
-color: #FAFAFA;
+color: #000000;
 }
 
 .navbar-nav .nav-link.active, .navbar-nav .nav-link.show .nav-link:focus, .nav-link:hover {
-color: #FAFAFA;
+color: #000000;
 }
 .navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
-color: #FAFAFA;
+color: #000000;
 }
 
 .navbar-brand:focus, .navbar-brand:hover {
-color: #FAFAFA;
+color: #000000;
 }

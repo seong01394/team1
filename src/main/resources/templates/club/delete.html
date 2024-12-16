@@ -23,7 +23,7 @@
     <input type="hidden" name="clubno" th:value="${clubVO.clubno}"> <!-- /* 값 유지 */-->
     <input type="hidden" name="word" th:value="${word}"> <!-- /* 값 유지 */-->
     <input type="hidden" name="now_page" th:value="${now_page}"> <!-- /* 값 유지 */-->
-    <div class="msg_warning" th:if="${clubVO.cnt == 0}">
+    <div class="msg_warning">
       카테고리를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다.<br>      
     </div>
     <!-- <div class="msg_warning" th:if="${clubVO.cnt != 0}" style="background-color: #DDDDDD;">

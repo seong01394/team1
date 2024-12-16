@@ -32,7 +32,7 @@ public class ClubCont {
   public int record_per_page = 10;
 
   /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
-  public int page_per_block = 510;
+  public int page_per_block = 10;
 
   /** 페이징 목록 주소 */
   private String list_file_name = "/club/list_search";
@@ -125,7 +125,7 @@ public class ClubCont {
   @GetMapping(value="/read/{clubno}")
   public String read(Model model, @PathVariable("clubno") Integer clubno,
                           @RequestParam(name="word", defaultValue="") String word,
-                          @RequestParam(name="now_page", defaultValue="") int now_page) {
+                          @RequestParam(name="now_page", defaultValue="1") int now_page) {
                    
     ClubVO clubVO = this.clubProc.read(clubno);
     model.addAttribute("clubVO", clubVO);
@@ -154,7 +154,7 @@ public class ClubCont {
   public String update(HttpSession session, Model model,
                              @PathVariable("clubno") Integer clubno,
                              @RequestParam(name="word", defaultValue="") String word,
-                             @RequestParam(name="now_page", defaultValue="") int now_page) {
+                             @RequestParam(name="now_page", defaultValue="1") int now_page) {
     
     if(this.adminProc.isAdmin(session)) {
       ClubVO clubVO = this.clubProc.read(clubno);
@@ -194,7 +194,7 @@ public class ClubCont {
   public String update(HttpSession session, Model model, @Valid 
                               @ModelAttribute("clubVO") ClubVO clubVO, BindingResult bindingResult,
                               @RequestParam(name = "word", defaultValue = "") String word,
-                              @RequestParam(name = "now_page", defaultValue = "") int now_page, 
+                              @RequestParam(name = "now_page", defaultValue = "1") int now_page, 
                               RedirectAttributes ra) {
     if (this.adminProc.isAdmin(session)) {
     if (bindingResult.hasErrors() == true) { 
@@ -237,7 +237,7 @@ public class ClubCont {
   public String delete(HttpSession session, Model model, 
                             @PathVariable("clubno") Integer clubno,
                             @RequestParam(name = "word", defaultValue = "") String word,
-                            @RequestParam(name = "now_page", defaultValue = "") int now_page) {
+                            @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
     if (this.adminProc.isAdmin(session)) {
       ClubVO clubVO = this.clubProc.read(clubno);
       model.addAttribute("clubVO", clubVO);
@@ -275,7 +275,7 @@ public class ClubCont {
   public String delete_process(HttpSession session, Model model, 
                                        @RequestParam(name = "clubno", defaultValue = "0") Integer clubno,
                                        @RequestParam(name = "word", defaultValue = "") String word,
-                                       @RequestParam(name = "now_page", defaultValue = "") int now_page, RedirectAttributes ra) {
+                                       @RequestParam(name = "now_page", defaultValue = "1") int now_page, RedirectAttributes ra) {
     if (this.adminProc.isAdmin(session)) {
 
       ClubVO clubVO = this.clubProc.read(clubno); 
@@ -319,7 +319,7 @@ public class ClubCont {
   public String update_rank_up(Model model, 
                                          @PathVariable("clubno") Integer clubno,
                                          @RequestParam(name = "word", defaultValue = "") String word,
-                                         @RequestParam(name = "now_page", defaultValue = "") int now_page, 
+                                         @RequestParam(name = "now_page", defaultValue = "1") int now_page, 
                                          RedirectAttributes ra) {
     
     this.clubProc.update_rank_up(clubno);

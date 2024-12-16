@@ -39,17 +39,17 @@ public class ClubVO {
   /** 구단 주요 선수 */
   @NotEmpty(message="선수 이름 입력은 필수 항목입니다.")
   @Size(min=2, max=12, message="선수 이름은 최소 2자에서 최대 12자입니다.")
-  private String player = "";
+  private String player;
   
   /** 구단 감독 */
   @NotEmpty(message="감독 이름 입력은 필수 항목입니다.")
   @Size(min=2, max=12, message="감독 이름은 최소 2자에서 최대 12자입니다.")
-  private String headcoach = "";
+  private String headcoach;
   
   /** 구단 역대 선수 */
   @NotEmpty(message="레전드 이름 입력은 필수 항목입니다.")
   @Size(min=2, max=12, message="레전드 이름은 최소 2자에서 최대 12자입니다.")
-  private String legend = "";
+  private String legend;
   
   /** 구단 역사  */
   private String history = "";
