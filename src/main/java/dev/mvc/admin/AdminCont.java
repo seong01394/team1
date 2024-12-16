@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class AdminCont {
   @Autowired
-  @Qualifier("dev.mvc.club.AdminProc")
+  @Qualifier("dev.mvc.admin.AdminProc")
   private AdminProcInter adminProc;  
   
   @Autowired
