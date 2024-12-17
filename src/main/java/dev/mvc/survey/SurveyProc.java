@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 
 
 
+
+
+
+
 @Service("dev.mvc.survey.SurveyProc")
 public class SurveyProc implements SurveyProcInter{
   @Autowired
@@ -45,22 +49,13 @@ public class SurveyProc implements SurveyProcInter{
     return list;
   }
 
-
-  /** 
-   * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 
-   * 현재 페이지: 11 / 22   [이전] 11 12 13 14 15 16 17 18 19 20 [다음] 
-   *
-   * @param now_page  현재 페이지
-   * @param word 검색어
-   * @param list_file_name 목록 파일명
-   * @param search_count 검색 레코드수   
-   * @param record_per_page 페이지당 레코드 수
-   * @param page_per_block 블럭당 페이지 수
-   * @return 페이징 생성 문자열
-   */ 
   @Override
-  public String pagingBox(int now_page,   
-                                      int record_per_page, int page_per_block){    
+  public String pagingBox(int now_page, String word, String list_file_name, int search_count, int record_per_page,
+      int page_per_block) {
+    // 전체 페이지 수: (double)1/10 -> 0.1 -> 1 페이지, (double)12/10 -> 1.2 페이지 -> 2 페이지
+    int total_page = (int)(Math.ceil((double)search_count / record_per_page));
+    // 전체 그룹  수: (double)1/10 -> 0.1 -> 1 그룹, (double)12/10 -> 1.2 그룹-> 2 그룹
+    int total_grp = (int)(Math.ceil((double)total_page / page_per_block)); 
     // 현재 그룹 번호: (double)13/10 -> 1.3 -> 2 그룹
     int now_grp = (int)(Math.ceil((double)now_page / page_per_block));  
     
@@ -110,12 +105,12 @@ public class SurveyProc implements SurveyProcInter{
     // 현재 3그룹일 경우: (3 - 1) * 10 = 2그룹의 마지막 페이지 20
     int _now_page = (now_grp - 1) * page_per_block;  
     if (now_grp >= 2){ // 현재 그룹번호가 2이상이면 페이지수가 11페이지 이상임으로 이전 그룹으로 갈수 있는 링크 생성 
-      str.append("<span class='span_box_1'><a href='"+"&now_page="+_now_page+"'>이전</a></span>"); 
+      str.append("<span class='span_box_1'><a href='"+list_file_name+"?&word="+word+"&now_page="+_now_page+"'>이전</a></span>"); 
     } 
  
     // 중앙의 페이지 목록
     for(int i=start_page; i<=end_page; i++){ 
-      if (i > page_per_block){ // 마지막 페이지를 넘어갔다면 페이 출력 종료
+      if (i > total_page){ // 마지막 페이지를 넘어갔다면 페이 출력 종료
         break; 
       } 
   
@@ -123,7 +118,7 @@ public class SurveyProc implements SurveyProcInter{
         str.append("<span class='span_box_2'>"+i+"</span>"); // 현재 페이지, 강조 
       }else{
         // 현재 페이지가 아닌 페이지는 이동이 가능하도록 링크를 설정
-        str.append("<span class='span_box_1'><a href='"+"&now_page="+i+"'>"+i+"</a></span>");   
+        str.append("<span class='span_box_1'><a href='"+list_file_name+"?word="+word+"&now_page="+i+"'>"+i+"</a></span>");   
       } 
     } 
  
@@ -133,13 +128,57 @@ public class SurveyProc implements SurveyProcInter{
     // 현재 페이지 15일경우 -> 현재 2그룹: (2 * 10) + 1 = 3그룹의 시작페이지 21
     // 현재 페이지 25일경우 -> 현재 3그룹: (3 * 10) + 1 = 4그룹의 시작페이지 31
     _now_page = (now_grp * page_per_block)+1; //  최대 페이지수 + 1 
-    if (now_grp < page_per_block){ 
-      str.append("<span class='span_box_1'><a href='"+"&now_page="+_now_page+"'>다음</a></span>"); 
+    if (now_grp < total_grp){ 
+      str.append("<span class='span_box_1'><a href='"+list_file_name+"?&word="+word+"&now_page="+_now_page+"'>다음</a></span>"); 
     } 
     str.append("</div>"); 
      
     return str.toString(); 
   }
+
+  @Override
+  public ArrayList<SurveyVO> list_paging(String word, int now_page, int record_per_page) {
+    /*
+    페이지당 10개의 레코드 출력
+    1 page: WHERE r >= 1 AND r <= 10
+    2 page: WHERE r >= 11 AND r <= 20
+    3 page: WHERE r >= 21 AND r <= 30
+    
+    now_page 1: WHERE r >= 1 AND r <= 10
+    now_page 2: WHERE r >= 11 AND r <= 20
+    now_page 3: WHERE r >= 21 AND r <= 30
+    
+    int start_num = (now_page - 1) * record_per_page;
+    int end_num=start_num + record_per_page;
+    */
+
+   int start_num = ((now_page - 1) * record_per_page) + 1;
+   int end_num=(start_num + record_per_page) - 1;
+
+   // System.out.println("WHERE r >= "+start_num+" AND r <= " + end_num);
+   
+   Map<String, Object> map = new HashMap<String, Object>();
+   map.put("word", word);
+   map.put("start_num", start_num);
+   map.put("end_num", end_num);
+   
+   ArrayList<SurveyVO> list = this.surveyDAO.list_paging(map);
+   // System.out.println("-> " + list.size());
+   
+   return list;
+
+  }
+
+  @Override
+  public Integer list_search_count(String word) {
+    int cnt = this.surveyDAO.list_search_count(word);
+    return cnt;
+  }
+
+
+
+
+
 
 
 

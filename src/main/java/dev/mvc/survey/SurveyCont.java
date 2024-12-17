@@ -30,7 +30,7 @@ public class SurveyCont {
   public int page_per_block = 10;
   
   /** 페이징 목록 주소 */
-  private String list_file_name = "/survey/list_search";
+  private String list_file_name = "/survey/list_all";
   
   @Autowired
   @Qualifier("dev.mvc.survey.SurveyProc")
@@ -75,7 +75,7 @@ public class SurveyCont {
       System.out.println("-> cnt: " + cnt);
       
       if (cnt == 1) {
-        return "redirect:/survey/list_search";
+        return "redirect:/survey/list_all";
       } else {
         model.addAttribute("cnt", cnt);
       }
@@ -92,15 +92,41 @@ public class SurveyCont {
      * @return
      */
     @GetMapping(value = "/list_all")
-    public String list_all(Model model) {
+    public String list_all(HttpSession session, Model model,
+                                @RequestParam(name="word", defaultValue = "") String word,
+                                @RequestParam(name = "surveyno", defaultValue = "0") int surveyno,
+                                @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+      if (this.memberProc.isMemberAdmin(session)) {
       SurveyVO surveyVO = new SurveyVO();
       model.addAttribute("surveyVO", surveyVO);
       
-      ArrayList<SurveyVO> list = this.surveyProc.list_all();
+      ArrayList<SurveyVO> list = this.surveyProc.list_paging(word, now_page, now_page);
       model.addAttribute("list", list);
       
-      return "/return/list_all";
+      int search_cnt = this.surveyProc.list_search_count(word);
+      model.addAttribute("search_cnt", search_cnt);
+      
+      model.addAttribute("word", word);
+      
+      // 페이지 번호 목록 생성
+      int search_count = this.surveyProc.list_search_count(word);
+      String paging = this.surveyProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+          this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+
+      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      // --------------------------------------------------------------------------------------      
+     
+      return "/survey/list_all";
+      } else {
+        return "redirect:/member/login_cookie_need"; // redirect
+      }
     }
+    
+
     /**
      * 조회 http://localhost:9093/survey/read/1
      */
@@ -110,9 +136,7 @@ public class SurveyCont {
       SurveyVO surveyVO = this.surveyProc.read(surveyno);
       model.addAttribute("surveyVO", surveyVO);
       
-      String paging = this.surveyProc.pagingBox(now_page, this.record_per_page, this.page_per_block);
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
+
       
       return "/survey/read";    
     }
@@ -121,13 +145,18 @@ public class SurveyCont {
      * 수정폼 http://localhost:9093/survey/update/1
      */
     @GetMapping(value = "/update/{surveyno}")
-    public String update(HttpSession session, Model model, @PathVariable("surveyno") Integer surveyno,
-        @RequestParam(name = "now_page", defaultValue = "") int now_page) {
+    public String update(HttpSession session, Model model, 
+                                  @RequestParam(name="word", defaultValue = "") String word,
+                                  @PathVariable("surveyno") Integer surveyno,
+                                  @RequestParam(name = "now_page", defaultValue = "") int now_page) {
       if (this.memberProc.isMemberAdmin(session)) {
         SurveyVO surveyVO = this.surveyProc.read(surveyno);
         model.addAttribute("surveyVO", surveyVO);
 
-        String paging = this.surveyProc.pagingBox(now_page, this.record_per_page, this.page_per_block);
+        // 페이지 번호 목록 생성
+        int search_count = this.surveyProc.list_search_count(word);
+        String paging = this.surveyProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+            this.page_per_block);
         model.addAttribute("paging", paging);
         model.addAttribute("now_page", now_page);
 
@@ -148,7 +177,9 @@ public class SurveyCont {
      */
     @PostMapping(value = "/update")
     public String update(HttpSession session, Model model, @Valid @ModelAttribute("surveyVO") SurveyVO surveyVO, BindingResult bindingResult,
-        @RequestParam(name = "now_page", defaultValue = "") int now_page, RedirectAttributes ra) {
+                                    @RequestParam(name = "now_page", defaultValue = "") int now_page, 
+                                    @RequestParam(name="word", defaultValue = "") String word,
+                                    RedirectAttributes ra) {
       if (this.memberProc.isMemberAdmin(session)) {
         
         if (bindingResult.hasErrors() == true) { // 에러가 있으면 폼으로 돌아갈 것.
@@ -172,10 +203,10 @@ public class SurveyCont {
 
       model.addAttribute("cnt", cnt);
 
-      // --------------------------------------------------------------------------------------
       // 페이지 번호 목록 생성
-      // --------------------------------------------------------------------------------------
-      String paging = this.surveyProc.pagingBox(now_page, this.record_per_page, this.page_per_block);
+      int search_count = this.surveyProc.list_search_count(word);
+      String paging = this.surveyProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+          this.page_per_block);
       model.addAttribute("paging", paging);
       model.addAttribute("now_page", now_page);
 
@@ -198,10 +229,10 @@ public class SurveyCont {
         model.addAttribute("surveyVO", surveyVO);
         model.addAttribute("now_page", now_page);
 
-        // --------------------------------------------------------------------------------------
         // 페이지 번호 목록 생성
-        // --------------------------------------------------------------------------------------
-        String paging = this.surveyProc.pagingBox(now_page, this.record_per_page, this.page_per_block);
+        int search_count = this.surveyProc.list_search_count(word);
+        String paging = this.surveyProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+            this.page_per_block);
         model.addAttribute("paging", paging);
         model.addAttribute("now_page", now_page);
 

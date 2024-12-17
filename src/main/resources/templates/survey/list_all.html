@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">설문조사</div>
+  <aside class="aside_right">
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+  
+  <div class="flex_div_center title_line" style="width: 90%; margin: 0px auto;">  
+    <form name="frm" method="post" action="/survey/create" th:object="${surveyVO}">
+      <div style="margin-right: 2px; width: 22%; float: left;">
+        <input type="text" name="survey_title" value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{survey_title}" placeholder="설문조사 타이틀">
+      </div>
+      <div style="margin-right: 2px; width: 32%; float: left;">
+        <input type="number" name="seqno" value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{seqno}" placeholder="출력순서">
+      </div>
+      <div style="margin-right: 2px; width: 13%; float: left;">
+        <input type="number" name="qa_num" value="" min="1" max="5" step="1"
+               class="form-control" style="width: 100%;" th:field="*{qa_num}" placeholder="질문 수">
+      </div>
+      <div style="margin-right: 2px; width: 13%; float: left;">
+        <input type="text" name="qa_contents"  value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{qa_contents}" placeholder="질문 내용">
+      </div>
+      <div style="margin-right: 2px; width: 13%; float: left;">
+        <input type="text" name="start_date"  value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{start_date}" placeholder="시작 날">
+      </div>
+      <div style="margin-right: 2px; width: 13%; float: left;">
+        <input type="text" name="fin_date"  value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{fin_date}" placeholder="종료 날">
+      </div>
+      <div style="margin-right: 2px; width: 13%; float: left; margin-top: 3px; margin-left: 5px;">
+        <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+        <button type="reset" class="btn btn-secondary btn-sm">취소</button>
+      </div>
+      
+    </form>
+  </div>  
+
+  <!--/* '/survey/list_all_com.html' 파일의 list_all_fragment를 가져다 사용 */--> 
+  <div th:replace="~{survey/list_all_com::list_all_fragment}"></div> 
+  
+</div>
+</html>
+

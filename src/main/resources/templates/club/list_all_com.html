@@ -24,25 +24,25 @@
       </tr>
     </thead>
     <tbody>
-      <tr th:each="clubVO, status:${list}">
+      <tr th:each="clubVO, status:${list}" >
         <td class="td_bs" th:text="${status.index}"></td>
         <td class="td_bs">
-          <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.clubname}"></a>
+          <a1 th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.clubname}"></a1>
         </td>
         <td class="td_bs">
-          <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.info}"></a>
+          <a1 th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.info}"></a1>
         </td>
         <td class="td_bs">
-        <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.player}"></a>
+        <a1 th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.player}"></a1>
         </td>
         <td class="td_bs">
-          <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.headcoach}"></a>
+          <a1 th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.headcoach}"></a1>
           </td>
           <td class="td_bs">
-            <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.legend}"></a>
+            <a1 th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.legend}"></a1>
             </td>          
             <td class="td_bs">
-              <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.history}"></a>
+              <a1 th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${clubVO.history}"></a1>
               </td>          
         <td class="td_bs">
           <span th:text="${clubVO.rank}"></span>

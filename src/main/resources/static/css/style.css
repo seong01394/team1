@@ -17,7 +17,7 @@
    color: #555555;
 }  
 
-<<<<<<< HEAD
+
   .bar_img {
     margin-top: 0;
     width: 100%;
@@ -56,12 +56,12 @@
     width: 100%; /* 컨테이너 너비를 부모에 맞춤 */
     margin-top: 20px; /* 상단 여백 추가 */
   }
-=======
+
 .container_main {
   width: 100%; 
   margin: 7px auto;
 }
->>>>>>> 6a4f14e305d277703b5c6a09184c5481466a8b0a
+
 
 /* 이미지 사용시 경로 지정
 /static/css/images/top1.png
@@ -110,7 +110,7 @@
 
 .menu_line {
   width: 100%;
-  border-bottom: dotted 1px #000000;
+  border-bottom: dotted 1px #FAFAFA;
   margin: 2px 0px 10px 0px; /* top -> right -> bottom -> left */
   clear: both;
 } 
@@ -205,6 +205,7 @@
 .li_none {
   list-style: none;
   margin: 15px 10px;
+  
 }
 
 .li_none_left {
@@ -274,17 +275,20 @@
 }
 
 .title_line_text {
-  font-size: 20px;    
+  font-size: 20px;  
+    
 }
   
 .title_link:link{  /* 방문전 상태 */
   font-size: 20px;    
   text-decoration: none; /* 밑줄 삭제 */
+  color: #FAFAFA;
 }
 
 .title_link:visited{  /* 방문후 상태 */
   font-size: 20px;
   text-decoration: none; /* 밑줄 삭제 */
+  color: #FAFAFA;
 }
 
 .title_link:hover{  /* A 태그에 마우스가 올라간 상태 */
@@ -351,12 +355,12 @@
 
 a:link{  /* 방문전 상태 */
   text-decoration: none; /* 밑줄 삭제 */
-  color: #555555;
+  color: #FAFAFA;
 }
 
 a:visited{  /* 방문후 상태 */
   text-decoration: none; /* 밑줄 삭제 */
-  color: #555555;
+  color: #FAFAFA;
 }
 
 a:hover{  /* A 태그에 마우스가 올라간 상태 */
@@ -565,7 +569,7 @@ a:active{  /* A 태그를 클릭한 상태 */
 }
 
 .display_table_cell {
-  color: #000000; 
+  color: #FAFAFA; 
   background-color: #FFFFFF; 
   display: table-cell; 
   vertical-align: middle;
@@ -633,25 +637,37 @@ a:active{  /* A 태그를 클릭한 상태 */
 }
 
 .nav-link {
-  color: #000000;
+  color: #FAFAFA;
 }
 
 .dropdown-menu.show {
   display: block;
-  background-color: #000000;
+  background-color: #FAFAFA;
 }
 
 body {
-color: #000000;
+color: #FAFAFA;
 }
 
 .navbar-nav .nav-link.active, .navbar-nav .nav-link.show .nav-link:focus, .nav-link:hover {
-color: #000000;
+color: #FAFAFA;
 }
 .navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
-color: #000000;
+color: #FAFAFA;
 }
 
 .navbar-brand:focus, .navbar-brand:hover {
-color: #000000;
+color: #FAFAFA;
 }
+
+.menu_line {
+   margin: 10px 0;
+   border-bottom: 1px solid #ddd; /* 또는 원하는 색상 */
+}
+
+ .list-group-item {
+   background-color: #f8f9fa; /* Bootstrap의 배경색에 맞춤 */
+   border: 1px solid #ced4da; /* 기본 테두리 색상 */
+   border-radius: 0.25rem; /* 각 항목의 둥근 모서리 */
+   margin-bottom: 15px; /* 각 항목 사이의 간격 */
+ }

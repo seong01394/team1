@@ -1,0 +1,56 @@
+<div th:fragment="list_all_fragment"> 
+  <table class="table table-hover" style="width: 100%;">
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 10%;'/>    
+      <col style='width: 20%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="th_bs">순서</th>
+        <th class="th_bs">제목</th>
+        <th class="th_bs">출력순서</th>
+        <th class="th_bs">질문수</th>
+        <th class="th_bs">질문내용</th>
+        <th class="th_bs">시작 날</th>
+        <th class="th_bs">종료 날</th>
+        <th class="th_bs">작성 일자</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="surveyVO, status:${list}">
+        <td class="td_bs" th:text="${no-status.index}"></td>
+        <td class="td_bs">
+          <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.survey_title}"></a>
+        </td>
+        <td class="td_bs">
+          <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.seqno}"></a>
+        </td>
+        <td class="td_bs">
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.qa_num}"></a>
+        </td>
+        <td class="td_bs">
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.qa_contents}"></a>
+        </td>
+        <td class="td_bs">
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.start_date}"></a>
+        </td>
+        <td class="td_bs">
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.fin_date}"></a>
+        </td>     
+        <td class="td_bs" th:text="${surveyVO.write_date.substring(0, 10)}"></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="Bottom_menu" th:utext="${paging}"></div> 
+  <!-- 페이지 버튼 목록 출력 종료 -->
+
+</div>
+

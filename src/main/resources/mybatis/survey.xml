@@ -4,13 +4,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.survey.SurveyDAOInter"> 
   <insert id="create" parameterType="dev.mvc.survey.SurveyVO">
-    INSERT INTO survey
-    (surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date, adminno, memberno) 
-    VALUES(survey_seq.nextval, #{survey_title}, #{seqno}, #{qa_num}, #{qa_contents}, #{start_date}, #{fin_date}, sysdate, #{adminno}, #{memberno})
+    INSERT INTO survey(surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date) 
+    VALUES(survey_seq.nextval, #{survey_title}, #{seqno}, #{qa_num}, #{qa_contents}, #{start_date}, #{fin_date}, sysdate)
   </insert>
   
   <select id="read" resultType="dev.mvc.survey.SurveyVO" parameterType="Integer">
-    SELECT surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date, adminno, memberno
+    SELECT surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date
     FROM survey
     WHERE surveyno=#{surveyno}
   </select>  
@@ -26,9 +25,30 @@
   </delete>
   
   <select id="list_all" resultType="dev.mvc.survey.SurveyVO">
-    SELECT surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date, adminno, memberno
+    SELECT surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date
     FROM survey 
     ORDER BY surveyno ASC
+  </select>
+  
+    <!-- 검색 갯수 -->
+  <select id="list_search_count" resultType="Integer" parameterType="String">
+    SELECT COUNT(*) as cnt
+    FROM survey
+    <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
+      WHERE (UPPER(survey_title) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(qa_contents) LIKE '%' || UPPER(#{word}) || '%')
+    </if> 
+    ORDER BY seqno ASC
+  </select>
+  
+    <!-- 페이징 -->
+  <select id="list_paging" resultType="dev.mvc.survey.SurveyVO" parameterType="Map">
+    SELECT surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date, r
+    FROM (
+        SELECT surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date, 
+               ROW_NUMBER() OVER (ORDER BY seqno ASC) as r
+        FROM survey
+    ) 
+    WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
   </select>
   
 </mapper>
