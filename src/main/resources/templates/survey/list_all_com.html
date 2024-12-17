@@ -26,22 +26,22 @@
       <tr th:each="surveyVO, status:${list}">
         <td class="td_bs" th:text="${no-status.index}"></td>
         <td class="td_bs">
-          <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.survey_title}"></a>
+          <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}"  style="display:block; color:black;"  th:text="${surveyVO.survey_title}"></a>
         </td>
         <td class="td_bs">
-          <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.seqno}"></a>
+          <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.seqno}"></a>
         </td>
         <td class="td_bs">
-        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.qa_num}"></a>
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.qa_num}"></a>
         </td>
         <td class="td_bs">
-        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.qa_contents}"></a>
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.qa_contents}"></a>
         </td>
         <td class="td_bs">
-        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.start_date}"></a>
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.start_date}"></a>
         </td>
         <td class="td_bs">
-        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block;" th:text="${surveyVO.fin_date}"></a>
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.fin_date}"></a>
         </td>     
         <td class="td_bs" th:text="${surveyVO.write_date.substring(0, 10)}"></td>
       </tr>
