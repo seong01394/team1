@@ -10,7 +10,7 @@ CREATE TABLE club (
   HEADCOACH     VARCHAR(30)       NOT NULL,
   LEGEND        VARCHAR(30)       NOT NULL,
   HISTORY       CLOB              NOT NULL,
-  INFO          CLOB              NOT NULL,
+  INFO          VARCHAR(255)      NOT NULL,
   RANK          NUMBER(5)         DEFAULT 1   NOT NULL,
   visible      CHAR(1)           DEFAULT 'Y' NOT NULL,
   FOREIGN KEY (ADMINNO) REFERENCES admin (ADMINNO)
