@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.admin.AdminProcInter;
 import dev.mvc.club.ClubVO;
 import dev.mvc.club.ClubVOMenu;
 import dev.mvc.member.MemberProcInter;
@@ -39,7 +40,7 @@ public class SurveyCont {
   private SurveyProcInter surveyProc;
   
   @Autowired
-  @Qualifier("dev.mvc.member.MemberProc") // @Service("dev.mvc.member.MemberProc")
+  @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
   
   /**
@@ -282,7 +283,7 @@ public class SurveyCont {
     @GetMapping(value = "/list_search")
     public String list_search_paging(HttpSession session, Model model,
         @RequestParam(name = "word", defaultValue = "") String word,
-        @RequestParam(name = "clubno", defaultValue = "0") int clubno,
+        @RequestParam(name = "surveyno", defaultValue = "0") int surveyno,
         @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
      
       if (this.memberProc.isMemberAdmin(session)) {

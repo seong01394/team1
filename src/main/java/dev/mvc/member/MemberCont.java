@@ -82,7 +82,7 @@ public class MemberCont {
       
       if (cnt == 1) {
         model.addAttribute("code", "create_success");
-        model.addAttribute("mname", memberVO.getMname());
+        model.addAttribute("mname", memberVO.getName());
         model.addAttribute("id", memberVO.getId());
       } else {
         model.addAttribute("code", "create_fail");
@@ -188,7 +188,7 @@ public class MemberCont {
       
       if (cnt == 1) {
         model.addAttribute("code", "update_success");
-        model.addAttribute("mname", memberVO.getMname());
+        model.addAttribute("mname", memberVO.getName());
         model.addAttribute("id", memberVO.getId());
       } else {
         model.addAttribute("code", "update_fail");
@@ -398,17 +398,17 @@ public class MemberCont {
     
     if (cnt == 1) {
       // id를 이용하여 회원 정보 조회
-      MemberVO memverVO = this.memberProc.readById(id);
-      session.setAttribute("memberno", memverVO.getMemberno());
-      session.setAttribute("id", memverVO.getId());
-      session.setAttribute("mname", memverVO.getMname());
+      MemberVO memberVO = this.memberProc.readById(id);
+      session.setAttribute("memberno", memberVO.getMemberno());
+      session.setAttribute("id", memberVO.getId());
+      session.setAttribute("name", memberVO.getName());
       // session.setAttribute("grade", memverVO.getGrade());
       
-      if (memverVO.getGrade() >= 1 && memverVO.getGrade() <= 10) {
+      if (memberVO.getGrade() >= 1 && memberVO.getGrade() <= 10) {
         session.setAttribute("grade", "admin");
-      } else if (memverVO.getGrade() >= 11 && memverVO.getGrade() <= 20) {
+      } else if (memberVO.getGrade() >= 11 && memberVO.getGrade() <= 20) {
         session.setAttribute("grade", "member");
-      } else if (memverVO.getGrade() >= 21) {
+      } else if (memberVO.getGrade() >= 21) {
         session.setAttribute("grade", "guest");
       }
       
@@ -632,5 +632,3 @@ public class MemberCont {
   
   
 }
-
-

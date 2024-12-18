@@ -137,6 +137,18 @@ public class MemberProc implements MemberProcInter {
     
     return cnt;
   }
+
+  @Override
+  public boolean isMemberPlant2(HttpSession session) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean isMemberPlant3(HttpSession session) {
+    // TODO Auto-generated method stub
+    return false;
+  }
   
   
 }
