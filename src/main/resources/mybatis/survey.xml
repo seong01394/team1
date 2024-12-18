@@ -40,6 +40,15 @@
     ORDER BY seqno ASC
   </select>
   
+   <select id="list_search" resultType="dev.mvc.club.ClubVO" parameterType="String">
+    SELECT surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date
+    FROM survey
+    <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
+      WHERE (UPPER(survey_title) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(qa_contents) LIKE '%' || UPPER(#{word}) || '%')
+    </if> 
+    ORDER BY seqno ASC
+  </select>
+  
     <!-- 페이징 -->
   <select id="list_paging" resultType="dev.mvc.survey.SurveyVO" parameterType="Map">
     SELECT surveyno, survey_title, seqno, qa_num, qa_contents, start_date, fin_date, write_date, r

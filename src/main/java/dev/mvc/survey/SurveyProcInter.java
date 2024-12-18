@@ -3,6 +3,8 @@ package dev.mvc.survey;
 import java.util.ArrayList;
 import java.util.Map;
 
+import dev.mvc.club.ClubVO;
+
 public interface SurveyProcInter {
   /**
    * 등록
@@ -41,6 +43,12 @@ public interface SurveyProcInter {
    * @return
    */
   public Integer list_search_count(String word);
+  
+  /**
+   * 검색 목록 
+   * @return
+   */
+  public ArrayList<SurveyVO> list_search(String word);
   
   /** 
    * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 

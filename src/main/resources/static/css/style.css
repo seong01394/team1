@@ -642,7 +642,7 @@ a:active{  /* A 태그를 클릭한 상태 */
 
 .dropdown-menu.show {
   display: block;
-  background-color: #FAFAFA;
+  background-color: #000000;
 }
 
 body {

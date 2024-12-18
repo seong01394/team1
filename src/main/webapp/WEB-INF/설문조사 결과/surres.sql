@@ -4,7 +4,7 @@ CREATE TABLE surres (
     resultno    NUMBER(10)   NOT NULL  PRIMARY KEY,  -- 설문조사 참여 번호
     memberno    NUMBER(10)   NOT NULL, -- 회원 번호
     surveyno    NUMBER(10)   NOT NULL, -- 설문조사 번호
-    result_contents     VARCHAR(20)     NOT NULL, -- 결과 내용
+    result_contents     VARCHAR(100)     NOT NULL, -- 결과 내용
     FOREIGN KEY (memberno) REFERENCES member(memberno),
     FOREIGN KEY (surveyno) REFERENCES survey(surveyno)
 )
@@ -19,7 +19,7 @@ CACHE 2              -- 2번은 메모리에서만 계산
 NOCYCLE;             -- 다시 1부터 생성되는 것을 방지
 
 -- 등록
-INSERT INTO surres(resultno, memberno, surveyno, result_contents) VALUES(SURRES_SEQ.nextval, 1, 1, '한국인 고름');
+INSERT INTO surres(resultno, memberno, surveyno, result_contents) VALUES(SURRES_SEQ.nextval, 1, 1, '강팀, 한국인 고름, 프랜차이즈 선수, 패스 플레이');
 
 -- 조회
 select resultno, memberno, surveyno, result_contents FROM surres WHERE resultno = 1; 

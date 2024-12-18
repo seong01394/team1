@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.club.ClubVO;
+
 
 
 
@@ -174,6 +176,14 @@ public class SurveyProc implements SurveyProcInter{
     int cnt = this.surveyDAO.list_search_count(word);
     return cnt;
   }
+
+  @Override
+  public ArrayList<SurveyVO> list_search(String word) {
+    ArrayList<SurveyVO> list = this.surveyDAO.list_search(word);
+    return list;
+  }
+
+
 
 
 

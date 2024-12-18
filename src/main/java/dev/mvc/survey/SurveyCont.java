@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
+import dev.mvc.club.ClubVO;
+import dev.mvc.club.ClubVOMenu;
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -24,13 +26,13 @@ import jakarta.validation.Valid;
 @RequestMapping("/survey")
 public class SurveyCont {
   /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
-  public int record_per_page = 10;
+  public int record_per_page = 5;
 
   /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
-  public int page_per_block = 10;
+  public int page_per_block = 5;
   
   /** 페이징 목록 주소 */
-  private String list_file_name = "/survey/list_all";
+  private String list_file_name = "/survey/list_search";
   
   @Autowired
   @Qualifier("dev.mvc.survey.SurveyProc")
@@ -75,7 +77,7 @@ public class SurveyCont {
       System.out.println("-> cnt: " + cnt);
       
       if (cnt == 1) {
-        return "redirect:/survey/list_all";
+        return "redirect:/survey/list_search";
       } else {
         model.addAttribute("cnt", cnt);
       }
@@ -103,8 +105,6 @@ public class SurveyCont {
       ArrayList<SurveyVO> list = this.surveyProc.list_paging(word, now_page, now_page);
       model.addAttribute("list", list);
       
-      int search_cnt = this.surveyProc.list_search_count(word);
-      model.addAttribute("search_cnt", search_cnt);
       
       model.addAttribute("word", word);
       
@@ -267,10 +267,53 @@ public class SurveyCont {
         int cnt = this.surveyProc.delete(surveyno);
         System.out.println("-> cnt: " + cnt);
 
-        return "/cate/msg"; // /templates/cate/msg.html
+        return "/survey/msg"; // /templates/cate/msg.html
       } else {
         return "redirect:/member/login_cookie_need";  // redirect
       }
 
+    }
+    
+    /**
+     * 등록 폼 및 검색 목록 + 페이징
+     * @param model
+     * @return
+     */
+    @GetMapping(value = "/list_search")
+    public String list_search_paging(HttpSession session, Model model,
+        @RequestParam(name = "word", defaultValue = "") String word,
+        @RequestParam(name = "clubno", defaultValue = "0") int clubno,
+        @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+     
+      if (this.memberProc.isMemberAdmin(session)) {
+        SurveyVO surveyVO = new SurveyVO();
+
+        
+        model.addAttribute("surveyVO", surveyVO);
+        
+        word = Tool.checkNull(word);
+
+        ArrayList<SurveyVO> list = this.surveyProc.list_paging(word, now_page, this.record_per_page);
+        model.addAttribute("list", list);
+
+
+        int search_cnt = this.surveyProc.list_search_count(word);
+        model.addAttribute("search_cnt", search_cnt);
+
+        model.addAttribute("word", word); // 검색어
+
+        int search_count = this.surveyProc.list_search_count(word);
+        String paging = this.surveyProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+            this.page_per_block);
+        model.addAttribute("paging", paging);
+        model.addAttribute("now_page", now_page);
+
+        int no = search_count - ((now_page - 1) * this.record_per_page);
+        model.addAttribute("no", no);
+
+        return "/survey/list_search"; 
+      } else {
+        return "redirect:/member/login_cookie_need";
+      }
     }
 }
