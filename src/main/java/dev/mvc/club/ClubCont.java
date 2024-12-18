@@ -52,15 +52,18 @@ public class ClubCont {
    * @return
    */
   @GetMapping(value="/create")
-  public String create(Model model) {
+  public String create(HttpSession session,Model model) {
+    
+    if(this.adminProc.isAdmin(session)) {
+    
     ClubVO clubVO = new ClubVO();
     model.addAttribute("clubVO", clubVO);
     
-    clubVO.setClubname("구단명");
-    clubVO.setInfo("구단 정보 입력하기");
-
-    return "/club/create"; // /templates/club/create.html
-    }    
+    return "/club/create";
+    } else{
+      return "redirect:/admin/login_cookie_need";
+    }
+ }
     
   /**
    * 등록 처리
@@ -76,7 +79,7 @@ public class ClubCont {
     
     if (bindingResult.hasErrors() == true) {
 
-    return "/club/create"; // /templates/club/create.html
+    return "/club/create"; 
     } 
 
     clubVO.setClubname(clubVO.getClubname().trim());
@@ -101,7 +104,11 @@ public class ClubCont {
    * @return
    */
   @GetMapping(value = "/list_all")
-  public String list_all(Model model) {
+  public String list_all(HttpSession session, Model model,
+                           @RequestParam(name="word", defaultValue="") String word,
+                           @RequestParam(name="clubno", defaultValue="") String clubno,
+                           @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+                                                 
     ClubVO clubVO = new ClubVO();
     
     ArrayList<String> list_clubname = this.clubProc.clubnameset();
@@ -114,7 +121,16 @@ public class ClubCont {
     
     ArrayList<ClubVOMenu> menu = this.clubProc.menu();
     model.addAttribute("menu", menu);
+    
+    int search_count = this.clubProc.list_search_count(word);
+    String paging = this.clubProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+        this.page_per_block);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
 
+
+    int no = search_count - ((now_page - 1) * this.record_per_page);
+    model.addAttribute("no", no);
 
     return "/club/list_all"; // /templates/club/list_all.html
   }  

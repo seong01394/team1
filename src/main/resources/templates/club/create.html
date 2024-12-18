@@ -18,7 +18,7 @@
       <div>
         <label>구단명</label>
         <input type="text" name="clubname" value="" autofocus="autofocus"
-               class="form-control" style="width: 50%;" th:field="*{clubname}">
+               class="form-control" style="width: 50%;" th:field="*{clubname}" placeholder="구단명 작성하기">
         <div th:if="${#fields.hasErrors('clubname')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err: ${#lists.sort(#fields.errors('clubname'))}" th:text="${err}"></div>
         </div>  
@@ -26,7 +26,7 @@
       <div>
         <label>구단 정보</label>
         <input type="text" name="info" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{info}">
+               class="form-control" style="width: 100%;" th:field="*{info}" placeholder="구단을 대표할 수 있는 간단한 정보">
         <div th:if="${#fields.hasErrors('info')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err: ${#lists.sort(#fields.errors('info'))}" th:text="${err}"></div>
         </div>  
@@ -34,7 +34,7 @@
       <div>
         <label>구단 주요 선수</label>
         <input type="text" name="player" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{player}">
+               class="form-control" style="width: 100%;" th:field="*{player}" placeholder="현재 팀에서 에이스를 작성하세요(복수 가능)">
         <div th:if="${#fields.hasErrors('player')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err: ${#lists.sort(#fields.errors('player'))}" th:text="${err}"></div>
         </div>  
@@ -42,7 +42,7 @@
       <div>
         <label>구단 감독</label>
         <input type="text" name="headcoach" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{headcoach}">
+               class="form-control" style="width: 100%;" th:field="*{headcoach}" placeholder="현재 팀을 이끄는 감독을 작성하세요" >
         <div th:if="${#fields.hasErrors('headcoach')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err: ${#lists.sort(#fields.errors('headcoach'))}" th:text="${err}"></div>
         </div>  
@@ -50,7 +50,7 @@
       <div>
         <label>구단 역대 선수</label>
         <input type="text" name="legend" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{legend}">
+               class="form-control" style="width: 100%;" th:field="*{legend}" placeholder="팀을 상징하는 선수 및 감독을 작성하세요(복수 가능)">
         <div th:if="${#fields.hasErrors('legend')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err: ${#lists.sort(#fields.errors('legend'))}" th:text="${err}"></div>
         </div>  
@@ -58,7 +58,7 @@
       <div>
         <label>구단 역사</label>
         <input type="text" name="history" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{history}">
+               class="form-control" style="width: 100%;" th:field="*{history}" placeholder="팀의 자랑거리 및 역사적인 순간들을 작성하셔도 됩니다.">
         <div th:if="${#fields.hasErrors('history')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err: ${#lists.sort(#fields.errors('history'))}" th:text="${err}"></div>
         </div>  

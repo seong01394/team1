@@ -6,7 +6,9 @@
     구단 <span th:if="${word != null and word != ''}" th:text="|${word} ${search_cnt} 건|"></span>
   </div>
   <aside class="aside_right">
-    <a href="javascript: location.reload();">새로 고침</a>
+    <a th:href="@{|/club/create|}" style="color: black;">등록</a>
+    <span class="menu_divide">|</span>
+    <a href="javascript: location.reload();" style="color: black;">새로 고침</a>
   </aside>
   
   <!--/* '/club/list_search_com.html' 파일의 list_search_fragment를 가져다 사용 */--> 
