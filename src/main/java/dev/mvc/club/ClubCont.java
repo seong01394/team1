@@ -75,7 +75,8 @@ public class ClubCont {
   @PostMapping(value="/create")
   public String create(Model model, @Valid
                            @ModelAttribute("clubVO") ClubVO clubVO,
-                           BindingResult bindingResult) {
+                           BindingResult bindingResult,
+                           RedirectAttributes ra) {
     
     if (bindingResult.hasErrors() == true) {
 
@@ -224,9 +225,8 @@ public class ClubCont {
 
     if (cnt == 1) {
 
-
-      ra.addAttribute("word", word); // redirect로 데이터 전송
-      ra.addAttribute("now_page", now_page); // redirect로 데이터 전송
+      ra.addAttribute("word", word); 
+      ra.addAttribute("now_page", now_page); 
 
       return "redirect:/club/update/" + clubVO.getClubno();
     } else {
@@ -254,7 +254,8 @@ public class ClubCont {
   public String delete(HttpSession session, Model model, 
                             @PathVariable("clubno") Integer clubno,
                             @RequestParam(name = "word", defaultValue = "") String word,
-                            @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+                            @RequestParam(name = "now_page", defaultValue = "1") int now_page,
+                            RedirectAttributes ra) {
     if (this.adminProc.isAdmin(session)) {
       ClubVO clubVO = this.clubProc.read(clubno);
       model.addAttribute("clubVO", clubVO);
@@ -292,7 +293,8 @@ public class ClubCont {
   public String delete_process(HttpSession session, Model model, 
                                        @RequestParam(name = "clubno", defaultValue = "0") Integer clubno,
                                        @RequestParam(name = "word", defaultValue = "") String word,
-                                       @RequestParam(name = "now_page", defaultValue = "1") int now_page, RedirectAttributes ra) {
+                                       @RequestParam(name = "now_page", defaultValue = "1") int now_page, 
+                                       RedirectAttributes ra) {
     if (this.adminProc.isAdmin(session)) {
 
       ClubVO clubVO = this.clubProc.read(clubno); 
@@ -374,7 +376,8 @@ public class ClubCont {
   public String list_search_paging(HttpSession session, Model model,
       @RequestParam(name = "word", defaultValue = "") String word,
       @RequestParam(name = "clubno", defaultValue = "0") int clubno,
-      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page,
+      RedirectAttributes ra) {
    
     if (this.adminProc.isAdmin(session)) {
       ClubVO clubVO = new ClubVO();

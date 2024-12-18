@@ -46,12 +46,6 @@
               </td>          
         <td class="td_bs">
           <span th:text="${clubVO.rank}"></span>
-          <span th:if="${clubVO.visible == 'Y'}">
-            <a th:href="@{|/club/update_visible_n/${clubVO.clubno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/show.png" class="icon" title="출력"></a>
-          </span>
-          <span th:if="${clubVO.visible == 'N'}">
-            <a th:href="@{|/club/update_visible_y/${clubVO.clubno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/hide.png" class="icon" title="숨김"></a>  
-          </span>
           <a th:href="@{|/club/update_rank_up/${clubVO.clubno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/decrease.png" class="icon" title="구단순위 높임"></a>
           <a th:href="@{|/club/update_rank_down/${clubVO.clubno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/increase.png" class="icon" title="구단순위 낮춤"></a>
           <a th:href="@{|/club/update/${clubVO.clubno}?word=${word}&now_page=${now_page}|}"><img src="/club/images/update.png" class="icon" title="수정"></a> <!-- /static 기준 -->
