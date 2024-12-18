@@ -58,7 +58,7 @@ public class ClubCont {
     
     ClubVO clubVO = new ClubVO();
     model.addAttribute("clubVO", clubVO);
-    
+
     return "/club/create";
     } else{
       return "redirect:/admin/login_cookie_need";
@@ -88,6 +88,7 @@ public class ClubCont {
     
     if (cnt == 1) {
 
+      return "redirect:/club/list_search"; 
     } else {
       model.addAttribute("code", "create_fail");
     }
@@ -98,7 +99,7 @@ public class ClubCont {
   } 
   
   /**
-   * 등록 폼 및 목록
+   * 목록
    * 
    * @param model
    * @return

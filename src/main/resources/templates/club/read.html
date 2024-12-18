@@ -4,20 +4,17 @@
 <div layout:fragment="content">
   <div class="title_line">구단 조회</div>
   <aside class="aside_right">
-    <a th:href="@{|/club/list_search?word=${word}&now_page=${now_page}|}">목록</a>
+    <a th:href="@{|/club/list_search?word=${word}&now_page=${now_page}|}" style="color: black;">목록</a>
     <span class="menu_divide">|</span>
-    <a th:href="@{|/club/update/${clubVO.clubno}?word=${word}&now_page=${now_page}|}">수정</a>
+    <a th:href="@{|/club/update/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="color: black;">수정</a>
     <span class="menu_divide">|</span>
-    <a th:href="@{|/club/delete/${clubVO.clubno}?word=${word}&now_page=${now_page}|}">삭제</a>
+    <a th:href="@{|/club/delete/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="color: black;">삭제</a>
     <span class="menu_divide">|</span>
-    <a th:href="@{|/club/list_search|}">등록</a>
+    <a th:href="@{|/club/create|}" style="color: black;">등록</a>
     <span class="menu_divide">|</span>
-    <a href="javascript: location.reload();">새로 고침</a>
+    <a href="javascript: location.reload();" style="color: black;">새로 고침</a>
   </aside>
-  
-  <!--/* '/club/list_search_com.html' 파일의 list_search_fragment를 가져다 사용 */--> 
-  <div th:replace="~{club/list_search_com::list_search_fragment}"></div> 
-  
+
   <div class="menu_line"></div>
   
   <div class="container mt-3" style="width: 60%; margin: 5px auto;"> <!--/* mt-3: margin top 16px */-->
@@ -35,8 +32,6 @@
       </li>
     </ul>  
   </div>
-
-  <div th:replace="~{club/list_all_com::list_all_fragment}"></div> 
     
 </div>
 </html>
