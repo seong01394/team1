@@ -183,6 +183,12 @@ public class SurveyProc implements SurveyProcInter{
     return list;
   }
 
+  @Override
+  public int list_by_survey_search_count(HashMap<String, Object> hashMap) {
+    int cnt = this.surveyDAO.list_by_survey_search_count(hashMap);
+    return cnt;
+  }
+
 
 
 

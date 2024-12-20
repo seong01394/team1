@@ -30,6 +30,7 @@ public class SurveyVO {
   @Size(min=2, max=40, message="시작 날은 10자.")
   private String start_date;
   /** 완료 날 */
+  @NotEmpty(message="종료 날은 수정 안함")
   @Size(min=2, max=40, message="완료 날은 10자.")
   private String fin_date;
   /** 진행 여부 */

@@ -1,6 +1,7 @@
 package dev.mvc.survey;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-
 
 
 import dev.mvc.member.MemberProcInter;
@@ -206,18 +205,20 @@ public class SurveyCont {
     public String update(HttpSession session, Model model, 
                                   @RequestParam(name="word", defaultValue = "") String word,
                                   @PathVariable("surveyno") Integer surveyno,
-                                  @RequestParam(name = "now_page", defaultValue = "") int now_page) {
+                                  @RequestParam(name = "now_page", required = false) Integer  now_page) {
       if (this.memberProc.isMemberAdmin(session)) {
         SurveyVO surveyVO = this.surveyProc.read(surveyno);
         model.addAttribute("surveyVO", surveyVO);
-
+        ArrayList<SurveyVO> list = this.surveyProc.list_paging(word, now_page, this.record_per_page);
+        model.addAttribute("list", list);
+        
         // 페이지 번호 목록 생성
         int search_count = this.surveyProc.list_search_count(word);
         String paging = this.surveyProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
             this.page_per_block);
         model.addAttribute("paging", paging);
         model.addAttribute("now_page", now_page);
-
+        
         return "/survey/update"; // templaes/cate/update.html
       } else {
         return "redirect:/member/login_cookie_need"; // redirect
@@ -235,13 +236,14 @@ public class SurveyCont {
      */
     @PostMapping(value = "/update")
     public String update(HttpSession session, Model model, @Valid @ModelAttribute("surveyVO") SurveyVO surveyVO, BindingResult bindingResult,
-                                    @RequestParam(name = "now_page", defaultValue = "") int now_page, 
+                                    @RequestParam(name = "now_page", required = false) Integer  now_page, 
                                     @RequestParam(name="word", defaultValue = "") String word,
                                     RedirectAttributes ra) {
       if (this.memberProc.isMemberAdmin(session)) {
         
         if (bindingResult.hasErrors() == true) { // 에러가 있으면 폼으로 돌아갈 것.
-          return "/cate/update"; // /templates/cate/update.html
+          model.addAttribute("surveyVO", surveyVO);
+          return "/survey/update"; // /templates/survey/update.html
         }
 
 //      System.out.println(cateVO.getName());
@@ -252,14 +254,16 @@ public class SurveyCont {
       System.out.println("-> cnt: " + cnt);
 
       if (cnt == 1) {
+        ra.addAttribute("word", word);
         ra.addAttribute("now_page", now_page); // redirect로 데이터 전송
 
-        return "redirect:/survey/update/" + surveyVO.getSurveyno(); // @GetMapping(value="/update/{cateno}")
+        return "redirect:/survey/list_search"; // @GetMapping(value="/update/{cateno}")
       } else {
         model.addAttribute("code", "update_fail");
       }
 
       model.addAttribute("cnt", cnt);
+      model.addAttribute("surveyVO", surveyVO);
 
       // 페이지 번호 목록 생성
       int search_count = this.surveyProc.list_search_count(word);
@@ -314,13 +318,16 @@ public class SurveyCont {
      */
     @PostMapping(value = "/delete")
     public String delete_process(HttpSession session, Model model, @RequestParam(name = "surveyno", defaultValue = "0") Integer surveyno,
-        @RequestParam(name = "now_page", defaultValue = "") int now_page, RedirectAttributes ra) {
+        @RequestParam(name = "now_page", defaultValue = "") int now_page, 
+        @RequestParam(name="word", defaultValue = "") String word, 
+        RedirectAttributes ra) {
       if (this.memberProc.isMemberAdmin(session)) {
         System.out.println("-> delete_process");
-
+            
+        this.surveyProc.delete(surveyno); // DBMS 글 삭제
+              
         SurveyVO surveyVO = this.surveyProc.read(surveyno); // 삭제전에 삭제 결과를 출력할 레코드 조회
         model.addAttribute("surveyVO", surveyVO);
-        
         
         int cnt = this.surveyProc.delete(surveyno);
         System.out.println("-> cnt: " + cnt);

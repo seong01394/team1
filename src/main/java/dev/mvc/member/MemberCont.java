@@ -411,6 +411,10 @@ public class MemberCont {
       } else if (memberVO.getGrade() >= 21) {
         session.setAttribute("grade", "guest");
       }
+      System.out.println("grade:" + memberVO.getGrade());
+      
+      
+      
       
       // Cookie 관련 코드---------------------------------------------------------
       // -------------------------------------------------------------------

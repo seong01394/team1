@@ -1,6 +1,7 @@
 package dev.mvc.survey;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import dev.mvc.club.ClubVO;
@@ -72,5 +73,11 @@ public interface SurveyDAOInter {
    */
   public ArrayList<SurveyVO> list_paging(Map<String, Object> map);
 
+  /**
+   * 설문조사 검색된 레코드 갯수
+   * @param map
+   * @return
+   */
+  public int list_by_survey_search_count(HashMap<String, Object> hashMap);
 }
 

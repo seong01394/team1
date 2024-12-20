@@ -53,11 +53,29 @@
   <select id="list_paging" resultType="dev.mvc.survey.SurveyVO" parameterType="Map">
     SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, r
     FROM (
-        SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, 
-               ROW_NUMBER() OVER (ORDER BY start_date ASC) as r
-        FROM survey
-    ) 
+        SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, rownum as r
+        FROM (
+           SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize
+           FROM survey
+           WHERE (UPPER(survey_title) LIKE '%' || UPPER(#{word}) || '%') 
+           ORDER BY start_date ASC
+       ) 
+    )
     WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
   </select>
+  
+    <!-- 설문조사 검색 레코드 갯수 -->
+  <select id="list_by_survey_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM survey
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+        WHERE y_n=#{y_n}
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE y_n=#{y_n} AND (UPPER(survey_title) LIKE '%' || UPPER(#{word}) || '%')
+      </otherwise>
+    </choose>
+  </select>  
   
 </mapper>

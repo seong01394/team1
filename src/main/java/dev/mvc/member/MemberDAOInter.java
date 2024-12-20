@@ -10,7 +10,9 @@ import java.util.List;
 // Payend pay = new Payend2023();
 // Payend pay = new Payend2024();
 // pay.calc();
-import java.util.Map;         
+import java.util.Map;
+
+     
 
 public interface MemberDAOInter {
   /**
@@ -80,5 +82,11 @@ public interface MemberDAOInter {
    */
   public int login(HashMap<String, Object> map);
   
+  /**
+   * 카테고리별 검색된 레코드 갯수
+   * @param map
+   * @return
+   */
+  public int list_by_cateno_search_count(HashMap<String, Object> hashMap);
 }
  
