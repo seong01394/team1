@@ -79,7 +79,7 @@ public class MemberProc implements MemberProcInter {
   }
   
   /**
-   * 관리자, 회원인지 검사
+   * 관리자인지 검사
    */  
   @Override
   public boolean isMemberAdmin(HttpSession session){

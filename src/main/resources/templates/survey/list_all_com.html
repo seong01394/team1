@@ -38,12 +38,7 @@
                 <div th:if="${surveyVO.postersize == 0}">
                     <img src="/survey/images/none1.png" style="width: 120px; height: 90px;">
                 </div>
-            
         </td>
- 
-    
-
-
         <td class="td_bs">
           <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}"  style="display:block; color:black;"  th:text="${surveyVO.survey_title}"></a>
         </td>

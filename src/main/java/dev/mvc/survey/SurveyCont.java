@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.member.MemberVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -113,14 +114,14 @@ public class SurveyCont {
 
             surveyVO.setPoster(poster); // 순수 원본 파일명
             surveyVO.setPostersaved(postersaved); // 저장된 파일명(파일명 중복 처리)
-            surveyVO.setPosterthumb1(posterthumb); // 원본이미지 축소판
-            surveyVO.setPostersize1(postersize); // 파일 크기
+            surveyVO.setPosterthumb(posterthumb); // 원본이미지 축소판
+            surveyVO.setPostersize(postersize); // 파일 크기
 
           } else { // 전송 못하는 파일 형식
             ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 할 수 없는 파일
             ra.addFlashAttribute("cnt", 0); // 업로드 실패
             ra.addFlashAttribute("url", "/contents/msg"); // msg.html, redirect parameter 적용
-            return "redirect:/contents/msg"; // Post -> Get - param...
+            return "redirect:/survey/msg"; // Post -> Get - param...
           }
           
       if (bindingResult.hasErrors() == true) {
@@ -139,7 +140,7 @@ public class SurveyCont {
         ra.addFlashAttribute("code", "create_fail"); // DBMS 등록 실패
         ra.addFlashAttribute("cnt", 0); // 업로드 실패
         ra.addFlashAttribute("url", "/contents/msg"); // msg.html, redirect parameter 적용
-        return "redirect:/contents/msg"; // Post -> Get - param...
+        return "redirect:/survey/msg"; // Post -> Get - param...
       } 
       }else { // 로그인 실패 한 경우
         return "redirect:/member/login_cookie_need"; // /member/login_cookie_need.html
@@ -344,8 +345,9 @@ public class SurveyCont {
     public String list_search_paging(HttpSession session, Model model,
         @RequestParam(name = "word", defaultValue = "") String word,
         @RequestParam(name = "surveyno", defaultValue = "0") int surveyno,
-        @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
-     
+        @RequestParam(name = "now_page", defaultValue = "1") int now_page,
+        @ModelAttribute("memberVO") MemberVO memberVO) {
+      System.out.println("grade:" + memberVO.getGrade());
       if (this.memberProc.isMemberAdmin(session)) {
         SurveyVO surveyVO = new SurveyVO();
 

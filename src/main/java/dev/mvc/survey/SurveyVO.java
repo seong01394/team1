@@ -48,9 +48,9 @@ public class SurveyVO {
   /** 메인 이미지 */
   private String poster = "";
   /** 메인 이미지 크기 */
-  private long postersize1 = 0;
+  private long postersize = 0;
   /** 썸네일 이미지 */
-  private String posterthumb1 = "";
+  private String posterthumb = "";
   
 
 
