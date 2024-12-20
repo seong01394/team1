@@ -47,9 +47,13 @@
                 </li>
               
                 <li class="nav-item down-text" >
-                    <a th:if="${session.memberno == null}" class="nav-link" href="/member/login" th:text="@{|로그인|}"></a>
-                    <a th:if="${session.memberno != null}" class="nav-link" href="/member/logout" th:text="@{|${session.id} 로그아웃|}"></a>
+                    <a th:if="${session.memberno == null}" class="nav-link" href="/member/login" th:text="@{|회원 로그인|}"></a>
+                    <a th:if="${session.grade == 'member'}" class="nav-link" href="/member/logout" th:text="@{|${session.id} 로그아웃|}"></a>
                 </li>
+                <li class="nav-item down-text" >
+                    <a th:if="${session.memberno == null}" class="nav-link" href="/admin/login" th:text="@{|관리자 로그인|}"></a>
+                    <a th:if="${session.grade == 'admin'}" class="nav-link" href="/admin/logout" th:text="@{|${session.id} 로그아웃|}"></a>
+                </li>               
                   
             </ul>
         </div>
