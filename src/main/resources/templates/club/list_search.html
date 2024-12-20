@@ -6,8 +6,6 @@
     구단 <span th:if="${word != null and word != ''}" th:text="|${word} ${search_cnt} 건|"></span>
   </div>
   <aside class="aside_right">
-    <a th:href="@{|/club/list_search?word=${word}&now_page=${now_page}|}" style ="color: black">목록</a>
-    <span class="menu_divide">|</span>
     <a th:href="@{|/club/create|}" style ="color: black">등록</a>
     <span class="menu_divide" style ="color: black">|</span>
     <a href="javascript: location.reload();" style ="color: black">새로 고침</a>

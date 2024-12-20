@@ -23,16 +23,11 @@
       <input type="hidden" name="clubno" th:value="${clubVO.clubno}"> <!--/* 값 유지 */-->
       <input type="hidden" name="word" th:value="${word}"> <!--/* 값 유지 */-->
       <input type="hidden" name="now_page" th:value="${now_page}"> <!--/* 값 유지 */-->
-       
-      <div>
-        <label>엠블럼</label>
-        <input type='file' class="form-control" name='emblemMF' id='emblemMF' value='' placeholder="파일 선택">
-     </div> 
+
       <div>
         <label>구단명</label>
         <input type="text" name="clubname" value="" autofocus="autofocus"
-               class="form-control fom-control-sm" style="width: 50%;" th:field="*{clubname}">
-        <span th:text="|등록된 구단명: ${list_clubname}|"></span>       
+               class="form-control fom-control-sm" style="width: 50%;" th:field="*{clubname}">    
         <div th:if="${#fields.hasErrors('clubname')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err: ${#lists.sort(#fields.errors('clubname'))}" th:text="${err}"></div>
         </div>  

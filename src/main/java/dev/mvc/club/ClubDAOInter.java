@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
+
+
 public interface ClubDAOInter {
   
   /**
@@ -92,9 +94,5 @@ public interface ClubDAOInter {
    */
   public ArrayList<ClubVO> list_search_paging(Map<String, Object> map);
   
-  /**
-   * 파일 정보 수정
-   */
-  public int update_emblem(ClubVO clubVO);
   
 }
