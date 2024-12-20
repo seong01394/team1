@@ -3,9 +3,8 @@
     <colgroup>
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
-      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>      
       <col style='width: 10%;'/>    
-      <col style='width: 10%;'/>
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
@@ -14,39 +13,53 @@
     <thead>
       <tr>
         <th class="th_bs">순서</th>
+        <th class="th_bs">포스터</th>        
         <th class="th_bs">제목</th>
-        <th class="th_bs">출력순서</th>
-        <th class="th_bs">질문수</th>
-        <th class="th_bs">질문내용</th>
         <th class="th_bs">시작 날</th>
         <th class="th_bs">종료 날</th>
-        <th class="th_bs">작성 일자</th>
+        <th class="th_bs">진행여부</th>
+        <th class="th_bs">인원 수</th>
         <th class="th_bs">기타</th>
       </tr>
     </thead>
     <tbody>
-      <tr th:each="surveyVO, status:${list}">
+    <tr th:each="surveyVO, status:${list}">
         <td class="td_bs" th:text="${no-status.index}"></td>
+    
+        <td class='td_basic' style="vertical-align: middle; text-align: center;">
+                <div th:if="${surveyVO.poster.endsWith('jpg') or surveyVO.poster.endsWith('png') or surveyVO.poster.endsWith('gif')}">
+                    <img th:src="@{|/store/storage/${surveyVO.posterthumb}|}" style="width: 120px; height: 90px;">
+                </div>
+    
+                <div th:if="${((surveyVO.poster.endsWith('jpg') or surveyVO.poster.endsWith('png')  or surveyVO.poster.endsWith('gif')) == false) and (surveyVO.poster > 0)}">
+                  <span th:text="${surveyVO.poster}"></span>
+                </div>
+    
+                <div th:if="${surveyVO.postersize == 0}">
+                    <img src="/survey/images/none1.png" style="width: 120px; height: 90px;">
+                </div>
+            
+        </td>
+ 
+    
+
+
         <td class="td_bs">
           <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}"  style="display:block; color:black;"  th:text="${surveyVO.survey_title}"></a>
         </td>
         <td class="td_bs">
-          <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.seqno}"></a>
-        </td>
-        <td class="td_bs">
-        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.qa_num}"></a>
-        </td>
-        <td class="td_bs">
-        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.qa_contents}"></a>
-        </td>
-        <td class="td_bs">
-        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.start_date}"></a>
+          <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.start_date}"></a>
         </td>
         <td class="td_bs">
         <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.fin_date}"></a>
-        </td>     
-        <td class="td_bs" th:text="${surveyVO.write_date.substring(0, 10)}"></td>
-        <td>
+        </td>
+        <td class="td_bs">
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.y_n}"></a>
+        </td>
+        <td class="td_bs">
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.cnt}"></a>
+        </td> 
+        <td style="vertical-align: middle; text-align: center;">
           <a th:href="@{|/survey/update/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}"><img src="/survey/update.png" class="icon" title="수정"></a> <!-- /static 기준 -->
           <a th:href="@{|/survey/delete/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}"><img src="/survey/delete.png" class="icon" title="삭제"></a> <!--/* /static 기준 */-->
           <a th:href="@{|/survey/create|}"><img src="/survey/create.png" class="icon" title="추가"></a> <!--/* /static 기준 */-->

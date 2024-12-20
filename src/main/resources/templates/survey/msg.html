@@ -8,14 +8,13 @@
     <a href="javascript: location.reload();">새로 고침</a>
   </aside>
   
-  <!--/* '/club/list_search_com.html' 파일의 list_search_fragment를 가져다 사용 */--> 
-  <div th:replace="~{survey/list_search_com::list_search_fragment}"></div> 
+
 
   <div class="menu_line"></div>
   
   <div class="message">
     <fieldset class="fieldset_basic">
-      <ul>
+      <ul style = "margin-right: 50px">
         <li th:switch="${code}" class="li_none">
           <div th:case="create_success">
             <span class="span_success">설문조사을 등록했습니다.</span><br>
@@ -27,9 +26,6 @@
           </div>
           <div th:case="update_success">
             <span class="span_success">수정을 완료 했습니다.</span><br>
-            출력 순서: <span th:text="${seqno}"></span><br>
-            질문 수: <span th:text="${qa_num}"></span><br>
-            질문 내용: <span th:text="${qa_contents}"></span><br>
             시작 날: <span th:text="${start_date}"></span><br>
             완료 날: <span th:text="${fin_date}"></span>
           </div>
@@ -39,9 +35,6 @@
           </div>
           <div th:case="delete_success">
             <span class="span_success">삭제를 완료 했습니다.</span><br>
-            출력 순서: <span th:text="${seqno}"></span><br>
-            질문 수: <span th:text="${qa_num}"></span><br>
-            질문 내용: <span th:text="${qa_contents}"></span><br>
             시작 날: <span th:text="${start_date}"></span><br>
             완료 날: <span th:text="${fin_date}"></span>
           </div>

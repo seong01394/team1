@@ -2,6 +2,7 @@ package dev.mvc.survey;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -13,13 +14,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import dev.mvc.admin.AdminProcInter;
-import dev.mvc.club.ClubVO;
-import dev.mvc.club.ClubVOMenu;
+
+
+
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -42,6 +46,10 @@ public class SurveyCont {
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
+  
+  
+  
+
   
   /**
    * 등록 폼
@@ -66,10 +74,55 @@ public class SurveyCont {
   * 등록 처리, http://localhost:9093/cate/create
   */ 
     @PostMapping(value = "/create")
-    public String create(Model model, 
-                                @Valid
+    public String create(HttpServletRequest request,
+                                HttpSession session,
+                                Model model, 
                                 @ModelAttribute("surveyVO") SurveyVO surveyVO, 
-                                BindingResult bindingResult) {
+                                BindingResult bindingResult,
+                                RedirectAttributes ra) {
+      if (memberProc.isMemberAdmin(session)) { // 관리자로 로그인한경우
+        // ------------------------------------------------------------------------------
+        // 파일 전송 코드 시작
+        // ------------------------------------------------------------------------------
+        String poster = ""; // 원본 파일명 image
+        String postersaved = ""; // 저장된 파일명, image
+        String posterthumb = ""; // preview image
+
+        String upDir = Surveys.getUploadDir(); // 파일을 업로드할 폴더 준비
+        // upDir = upDir + "/" + 한글을 제외한 카테고리 이름
+        System.out.println("-> upDir: " + upDir);
+
+        // 전송 파일이 없어도 file1MF 객체가 생성됨.
+        // <input type='file' class="form-control" name='file1MF' id='file1MF'
+        // value='' placeholder="파일 선택">
+        MultipartFile mf = surveyVO.getFile1MF();
+        System.out.println("-> mf: " + mf);
+        poster = mf.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
+        System.out.println("-> 원본 파일명 산출 file1: " + poster);
+
+        long postersize = mf.getSize(); // 파일 크기
+        if (postersize > 0) { // 파일 크기 체크, 파일을 올리는 경우
+          if (Tool.checkUploadFile(poster) == true) { // 업로드 가능한 파일인지 검사
+            // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg, spring_2.jpg...
+            postersaved = Upload.saveFileSpring(mf, upDir);
+
+            if (Tool.isImage(postersaved)) { // 이미지인지 검사
+              // thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
+              posterthumb = Tool.preview(upDir, postersaved, 200, 150);
+            }
+
+            surveyVO.setPoster(poster); // 순수 원본 파일명
+            surveyVO.setPostersaved(postersaved); // 저장된 파일명(파일명 중복 처리)
+            surveyVO.setPosterthumb1(posterthumb); // 원본이미지 축소판
+            surveyVO.setPostersize1(postersize); // 파일 크기
+
+          } else { // 전송 못하는 파일 형식
+            ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 할 수 없는 파일
+            ra.addFlashAttribute("cnt", 0); // 업로드 실패
+            ra.addFlashAttribute("url", "/contents/msg"); // msg.html, redirect parameter 적용
+            return "redirect:/contents/msg"; // Post -> Get - param...
+          }
+          
       if (bindingResult.hasErrors() == true) {
         return "/survey/create";
        }
@@ -80,14 +133,20 @@ public class SurveyCont {
       if (cnt == 1) {
         return "redirect:/survey/list_search";
       } else {
-        model.addAttribute("cnt", cnt);
-      }
+        return "redirect:/survey/msg"; // Post -> Get - param...
+      } 
+        }else {
+        ra.addFlashAttribute("code", "create_fail"); // DBMS 등록 실패
+        ra.addFlashAttribute("cnt", 0); // 업로드 실패
+        ra.addFlashAttribute("url", "/contents/msg"); // msg.html, redirect parameter 적용
+        return "redirect:/contents/msg"; // Post -> Get - param...
+      } 
+      }else { // 로그인 실패 한 경우
+        return "redirect:/member/login_cookie_need"; // /member/login_cookie_need.html
+      }     
       
-      model.addAttribute("cnt", cnt);
-      
-      return "/survey/msg";
-    }
     
+    }   
     /**
      * 등록 폼 및 목록
      * http://localhost:9093/survey/list_all
@@ -132,15 +191,12 @@ public class SurveyCont {
      * 조회 http://localhost:9093/survey/read/1
      */
     @GetMapping(value = "/read/{surveyno}")
-    public String read(Model model, @PathVariable("surveyno") Integer surveyno,
-        @RequestParam(name = "now_page", defaultValue = "") int now_page) {
+    public String read(Model model, @PathVariable("surveyno") Integer surveyno) {
       SurveyVO surveyVO = this.surveyProc.read(surveyno);
       model.addAttribute("surveyVO", surveyVO);
-      
 
-      
       return "/survey/read";    
-    }
+    }    
     
     /**
      * 수정폼 http://localhost:9093/survey/update/1
@@ -267,7 +323,11 @@ public class SurveyCont {
         
         int cnt = this.surveyProc.delete(surveyno);
         System.out.println("-> cnt: " + cnt);
-
+        
+        if (cnt == 1) {
+          model.addAttribute("code", "delete_success");
+        }
+        
         return "/survey/msg"; // /templates/cate/msg.html
       } else {
         return "redirect:/member/login_cookie_need";  // redirect
