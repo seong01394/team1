@@ -1,5 +1,6 @@
 package dev.mvc.club;
 
+import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -18,8 +19,11 @@ import lombok.ToString;
 //    HEADCOACH     VARCHAR(30)       NOT NULL,
 //    LEGEND        VARCHAR(30)       NOT NULL,
 //    HISTORY       CLOB              NOT NULL,
-//    INFO          VARCHAR(255)             NOT NULL,
+//    INFO          VARCHAR(255)      NOT NULL,
+//    EMBLEM        VARCHAR(300)      NULL,
+//    EMBLEMSAVED   VARCHAR(300)      NULL,  
 //    RANK          NUMBER(5)         DEFAULT 1   NOT NULL,
+//    visible       CHAR(1)           DEFAULT 'Y' NOT NULL,
 //    FOREIGN KEY (ADMINNO) REFERENCES admin (ADMINNO)
 //  );
 
@@ -67,4 +71,17 @@ public class ClubVO {
   @NotEmpty(message="출력 모드는 필수 항목입니다.")
   @Pattern(regexp="^[YN]$", message="Y 또는 N만 입력 가능합니다.")
   private String visible;
+  
+  /** 이미지 파일*/
+  private MultipartFile file1MF = null;
+  
+  /** 메인 이미지 크기 단위, 파일 크기 */
+  private String size1_label = "";
+  
+  /** 구단 엠블럼 이미지 */
+  private String emblem = "";
+  
+  /** 실제 저장된 메인 엠블럼 이미지 */
+  private String emblemsaved = "";
+  
 }

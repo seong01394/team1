@@ -16,6 +16,8 @@ CREATE TABLE news(
 
 COMMENT ON TABLE news is '구단 뉴스';
 COMMENT ON COLUMN news.NEWSNO is '뉴스 번호';
+COMMENT ON COLUMN news.CLUBNO is '구단 번호';
+COMMENT ON COLUMN news.ADMINNO is '관리자 번호';
 COMMENT ON COLUMN news.NEWSADD is '뉴스 주소';
 COMMENT ON COLUMN news.NEWSINFO is '뉴스 내용';
 

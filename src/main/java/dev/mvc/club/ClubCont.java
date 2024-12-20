@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.admin.AdminProcInter;
 import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -73,11 +75,42 @@ public class ClubCont {
    * @return
    */
   @PostMapping(value="/create")
-  public String create(Model model, @Valid
+  public String create(HttpSession session, Model model, @Valid
                            @ModelAttribute("clubVO") ClubVO clubVO,
                            BindingResult bindingResult,
                            RedirectAttributes ra) {
-    
+    if (adminProc.isAdmin(session)) { 
+
+      String emblem = ""; 
+      String emblemsaved = "";
+
+      String upDir = Club.getUploadDir();
+      System.out.println("-> upDir: " + upDir);
+
+      MultipartFile mf = clubVO.getFile1MF();
+
+      emblem = mf.getOriginalFilename(); 
+      System.out.println("-> 원본 파일명 산출 emblem: " + emblem);
+
+      long size1 = mf.getSize(); 
+      if (size1 > 0) { 
+        if (Tool.checkUploadFile(emblem) == true) { 
+          emblemsaved = Upload.saveFileSpring(mf, upDir);
+         
+          clubVO.setEmblem(emblem); 
+          clubVO.setEmblem(emblemsaved); 
+
+        } else { // 전송 못하는 파일 형식
+          ra.addFlashAttribute("code", "check_upload_file_fail"); 
+          ra.addFlashAttribute("cnt", 0);
+          ra.addFlashAttribute("url", "/club/msg"); 
+          return "redirect:/club/msg"; 
+        }
+      } else { // 글만 등록하는 경우
+        System.out.println("-> 글만 등록");
+      }
+    }
+          
     if (bindingResult.hasErrors() == true) {
 
     return "/club/create"; 
@@ -214,12 +247,13 @@ public class ClubCont {
                               @RequestParam(name = "word", defaultValue = "") String word,
                               @RequestParam(name = "now_page", defaultValue = "1") int now_page, 
                               RedirectAttributes ra) {
+  
     if (this.adminProc.isAdmin(session)) {
     if (bindingResult.hasErrors() == true) { 
 
       return "/club/update"; 
     }
-
+    
     int cnt = this.clubProc.update(clubVO);
     System.out.println("-> cnt: " + cnt);
 
@@ -228,7 +262,8 @@ public class ClubCont {
       ra.addAttribute("word", word); 
       ra.addAttribute("now_page", now_page); 
 
-      return "redirect:/club/update/" + clubVO.getClubno();
+      ra.addAttribute("clubno", clubVO.getClubno());
+      return "redirect:/club/read/" + clubVO.getClubno();
     } else {
       model.addAttribute("code", "update_fail");
     }
@@ -244,7 +279,7 @@ public class ClubCont {
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no", no);
 
-    return "/club/msg";
+    return "redirect:/club/read";
     } else {
       return "redirect:/admin/login_cookie_need"; 
     }  
@@ -415,4 +450,26 @@ public class ClubCont {
     }
   }
   
+// @GetMapping(value = "/update_emblem")
+// public String update_emblem(HttpSession session, Model model,
+//                                        @RequestParam(name="clubno", defaultValue="")int clubno,
+//                                        @RequestParam(name="word", defaultValue = "") String word, 
+//                                        @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+//   
+//   ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+//   model.addAttribute("menu", menu);
+//   
+//   model.addAttribute("word", word);
+//   model.addAttribute("now_page", now_page);
+//   
+//   ClubVO clubVO = this.clubProc.read(clubno);
+//   model.addAttribute("clubVO", clubVO);
+//
+//   clubVO = this.clubProc.read(clubVO.getClubno());
+//   model.addAttribute("clubVO", clubVO);
+//
+//   return "/club/update_emblem";
+//   
+// }
+ 
 }

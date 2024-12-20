@@ -3,12 +3,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.club.ClubDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
   <insert id="create" parameterType="dev.mvc.club.ClubVO">
-    INSERT INTO club(clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible) 
-    VALUES(club_seq.nextval, #{adminno}, #{clubname}, #{player}, #{headcoach}, #{legend}, #{history}, #{info}, #{rank}, #{visible})
+    INSERT INTO club(clubno, adminno, clubname, player, headcoach,
+                            legend, history, info, rank, visible, emblem, emblemsaved) 
+    VALUES(club_seq.nextval, #{adminno}, #{clubname}, #{player}, #{headcoach},
+              #{legend}, #{history}, #{info}, #{rank}, #{visible}, #{emblem}, #{emblemsaved})
   </insert>
   
   <select id="read" resultType="dev.mvc.club.ClubVO" parameterType="Integer">
-    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible
+    SELECT clubno, adminno, clubname, player, headcoach,
+              legend, history, info, rank, visible, emblem, emblemsaved
     FROM club
     WHERE clubno=#{clubno}
   </select>  
@@ -22,7 +25,7 @@
         history=#{history}, 
         info=#{info}, 
         rank=#{rank}, 
-        visible=#{visible}  
+        visible=#{visible}
     WHERE clubno=#{clubno} 
   </update> 
   
@@ -31,7 +34,8 @@
   </delete>  
   
    <select id="list_all" resultType="dev.mvc.club.ClubVO">
-    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible
+    SELECT clubno, adminno, clubname, player, headcoach,
+              legend, history, info, rank, visible, emblem, emblemsaved
     FROM club
     ORDER BY rank ASC
   </select> 
@@ -55,7 +59,8 @@
   
     <!-- 숨긴 '구단 명'을 제외하고 접속자에게 공개할 '구단명 출력 -->
   <select id="list_all_clubgrp_y" resultType="dev.mvc.club.ClubVO">
-    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible 
+    SELECT clubno, adminno, clubname, player, headcoach,
+              legend, history, info, rank, visible, emblem, emblemsaved
     FROM club 
     WHERE info='--' AND visible='Y' 
     ORDER BY rank ASC 
@@ -64,14 +69,16 @@
   <!-- 특정 장르에 속하면서,
         숨긴 '구단명을 제외하고 접속자에게 공개할 '구단명' 출력 -->
   <select id="list_all_club_y" resultType="dev.mvc.club.ClubVO" parameterType="String">
-    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible 
+    SELECT clubno, adminno, clubname, player, headcoach,
+              legend, history, info, rank, visible, emblem, emblemsaved
     FROM club 
     WHERE info != '--' AND visible='Y' AND clubname=#{clubname}
     ORDER BY rank ASC 
   </select>
   
   <select id="list_search" resultType="dev.mvc.club.ClubVO" parameterType="String">
-    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visibleate
+    SELECT clubno, adminno, clubname, player, headcoach,
+              legend, history, info, rank, visible, emblem, emblemsaved
     FROM club
     <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
       WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(info) LIKE '%' || UPPER(#{word}) || '%')
@@ -91,11 +98,14 @@
 
   <!-- 검색 + 페이징 -->
   <select id="list_search_paging" resultType="dev.mvc.club.ClubVO" parameterType="Map">
-    SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible, r
+    SELECT clubno, adminno, clubname, player, headcoach,
+              legend, history, info, rank, visible, emblem, emblemsaved, r
     FROM (
-        SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible, rownum as r
+              SELECT clubno, adminno, clubname, player, headcoach,
+                        legend, history, info, rank, visible, emblem, emblemsaved, rownum as r
         FROM (
-            SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible
+                SELECT clubno, adminno, clubname, player, headcoach,
+                legend, history, info, rank, visible, emblem, emblemsaved
             FROM club
             WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(info) LIKE '%' || UPPER(#{word}) || '%')
             ORDER BY rank ASC

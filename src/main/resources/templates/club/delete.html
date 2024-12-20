@@ -35,6 +35,19 @@
         <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
         <button type="button" onclick="location.href='/club/list_search'" class="btn btn-secondary btn-sm">목록</button>
       </div>
+
+    <div th:if="${clubVO.emblem.endsWith('jpg') or clubVO.emblem.endsWith('png')  or clubVO.emblem.endsWith('gif')}"
+      style="text-align: center; width: 50%; float: left;">
+      <img th:src="@{|/club/storage/${clubVO.emblemsaved}|}" style="width: 90%;">
+    </div>
+
+    <div th:if="${!(clubVO.emblem.endsWith('jpg') || clubVO.emblem.endsWith('png') || clubVO.emblem.endsWith('gif'))}"
+    class="display_table" style="float: left; width: 50%;">
+      <div class="display_table_cell">
+       <span th:text="${clubVO.emblem}"></span>
+      </div>
+    </div>
+
       
     </form>  
   </div>

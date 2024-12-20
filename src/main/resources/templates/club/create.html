@@ -14,7 +14,11 @@
   <div class="menu_line"></div>
     
   <div style="width: 50%; margin: 0px auto;">  
-    <form name="frm" method="post" action="/club/create" th:object="${clubVO}">
+    <form name="frm" method="post" action="/club/create" th:object="${clubVO}" enctype="multipart/form-data">
+      <div>
+        <label>엠블럼</label>
+        <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
+     </div> 
       <div>
         <label>구단명</label>
         <input type="text" name="clubname" value="" autofocus="autofocus"
