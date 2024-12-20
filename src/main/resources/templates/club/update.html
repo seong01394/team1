@@ -25,6 +25,10 @@
       <input type="hidden" name="now_page" th:value="${now_page}"> <!--/* 값 유지 */-->
        
       <div>
+        <label>엠블럼</label>
+        <input type='file' class="form-control" name='emblemMF' id='emblemMF' value='' placeholder="파일 선택">
+     </div> 
+      <div>
         <label>구단명</label>
         <input type="text" name="clubname" value="" autofocus="autofocus"
                class="form-control fom-control-sm" style="width: 50%;" th:field="*{clubname}">

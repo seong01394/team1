@@ -112,4 +112,9 @@ public interface ClubProcInter {
    */
   String pagingBox(int now_page, String word, String list_file_name, int search_count, int record_per_page,
       int page_per_block);
+  
+  /**
+   * 파일 정보 수정
+   */
+  public int update_emblem(ClubVO clubVO);
 }

@@ -252,4 +252,11 @@ public class ClubProc implements ClubProcInter {
      
     return str.toString(); 
   }
+  
+  @Override
+  public int update_emblem(ClubVO clubVO) {
+    int cnt = this.clubDAO.update_emblem(clubVO);
+    
+    return cnt;
+  }
 }

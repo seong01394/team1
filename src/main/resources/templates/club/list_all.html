@@ -11,6 +11,10 @@
   <div class="flex_div_center " style="width: 90%; margin: 0px auto; ">  
     <form name="frm" method="post" action="/club/create" th:object="${clubVO}">
       <div style="margin-right: 2px; width: 10%; float: left;">
+        <input type="text" name="emblem" value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{emblem}" placeholder="구단 엠블럼">
+      </div>      
+      <div style="margin-right: 2px; width: 10%; float: left;">
         <input type="text" name="clubname" value="" autofocus="autofocus"
                class="form-control" style="width: 100%;" th:field="*{clubname}" placeholder="구단명">
       </div>

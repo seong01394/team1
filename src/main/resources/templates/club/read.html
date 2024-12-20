@@ -19,17 +19,21 @@
   
   <div class="container mt-3" style="width: 60%; margin: 5px auto;"> <!--/* mt-3: margin top 16px */-->
     <ul class="list-group list-group-flush">
-      <li class="list-group-item">구단번호: <span th:text="${clubVO.clubno}"></span></li>
+      <li class="li_none">
+        <div style="width: 100%; word-break: break-all;">
+        
+          <div th:if="${clubVO.emblem.endsWith('jpg') or clubVO.emblem.endsWith('png') or clubVO.emblem.endsWith('gif')}">
+            <img th:src="@{|/club/storage/${clubVO.emblem}|}" style="width: 120px; height: 90px; display: block; margin: 0 auto;">
+        </div>
+
+        </div>
+      </li>   
       <li class="list-group-item">구단명: <span th:text="${clubVO.clubname}"></span></li>
       <li class="list-group-item">구단정보: <span th:text="${clubVO.info}"></span></li>
       <li class="list-group-item">구단 주요선수: <span th:text="${clubVO.player}"></span></li>
       <li class="list-group-item">구단 감독: <span th:text="${clubVO.headcoach}"></span></li>
       <li class="list-group-item">구단 역대선수: <span th:text="${clubVO.legend}"></span></li>
       <li class="list-group-item">구단 역사: <span th:text="${clubVO.history}"></span></li>
-      <li class="list-group-item">
-        출력 순서: <span th:text="${clubVO.rank}" style="margin-right: 10px;"></span>
-        출력 모드: <span th:text="${clubVO.visible}"></span>
-      </li>
     </ul>  
   </div>
     

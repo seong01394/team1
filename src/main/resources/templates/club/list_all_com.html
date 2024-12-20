@@ -2,18 +2,18 @@
 <div th:fragment="list_all_fragment"> 
   <table class="table table-hover" style="width: 100%;">
     <colgroup>
-      <col style='width: 8%;'/>
+      <col style='width: 5%;'/>
       <col style='width: 10%;'/>
-      <col style='width: 20%;'/>
+      <col style='width: 22%;'/>
       <col style='width: 11%;'/>    
       <col style='width: 10%;'/>
       <col style='width: 11%;'/>
-      <col style='width: 20%;'/>
+      <col style='width: 24%;'/>
       <col style='width: 8%;'/>
     </colgroup>
     <thead>
       <tr>
-        <th class="th_bs">구단 번호</th>
+        <th class="th_bs">구단 엠블럼</th>
         <th class="th_bs">구단명</th>
         <th class="th_bs">구단 정보</th>
         <th class="th_bs">구단 주요 선수</th>
@@ -25,7 +25,15 @@
     </thead>
     <tbody>
       <tr th:each="clubVO, status:${list}" >
-        <td class="td_bs" th:text="${status.index}"></td>
+        <td class='td_basic' style="vertical-align: middle; text-align: center;">
+          <div th:if="${clubVO.emblem.endsWith('jpg') or clubVO.emblem.endsWith('png') or clubVO.emblem.endsWith('gif')}">
+              <img th:src="@{|/club/storage/${clubVO.emblem}|}" style="width: 120px; height: 90px;">
+          </div>
+
+          <div th:if="${((clubVO.emblem.endsWith('jpg') or clubVO.emblem.endsWith('png')  or clubVO.emblem.endsWith('gif')) == false)}">
+            <span th:text="${clubVO.emblem}"></span>
+          </div>
+        </td>
         <td class="td_bs">
           <a th:href="@{|/club/read/${clubVO.clubno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${clubVO.clubname}"></a>
         </td>

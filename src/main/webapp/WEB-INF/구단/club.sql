@@ -11,8 +11,10 @@ CREATE TABLE club (
   LEGEND        VARCHAR(30)       NOT NULL,
   HISTORY       CLOB              NOT NULL,
   INFO          VARCHAR(255)      NOT NULL,
+  EMBLEM        VARCHAR(300)      NULL,
+  EMBLEMSAVED   VARCHAR(300)      NULL,  
   RANK          NUMBER(5)         DEFAULT 1   NOT NULL,
-  visible      CHAR(1)           DEFAULT 'Y' NOT NULL,
+  visible       CHAR(1)           DEFAULT 'Y' NOT NULL,
   FOREIGN KEY (ADMINNO) REFERENCES admin (ADMINNO)
 );
 
@@ -25,6 +27,8 @@ COMMENT ON COLUMN club.HEADCOACH is '구단 감독';
 COMMENT ON COLUMN club.LEGEND is '구단 역대 선수';
 COMMENT ON COLUMN club.HISTORY is '구단 역사';
 COMMENT ON COLUMN club.INFO is '구단 정보';
+COMMENT ON COLUMN club.EMBLEM is '구단 엠블럼';
+COMMENT ON COLUMN club.EMBLEMSAVED is '저장된 엠블럼';
 COMMENT ON COLUMN club.RANK is '출력 순서';
 COMMENT ON COLUMN club.visible is '출력 모드';
 

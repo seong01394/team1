@@ -6,60 +6,17 @@
     구단 <span th:if="${word != null and word != ''}" th:text="|${word} ${search_cnt} 건|"></span>
   </div>
   <aside class="aside_right">
-    <a th:href="@{|/club/create|}" style="color: black;">등록</a>
+    <a th:href="@{|/club/list_search?word=${word}&now_page=${now_page}|}" style ="color: black">목록</a>
     <span class="menu_divide">|</span>
-    <a href="javascript: location.reload();" style="color: black;">새로 고침</a>
+    <a th:href="@{|/club/create|}" style ="color: black">등록</a>
+    <span class="menu_divide" style ="color: black">|</span>
+    <a href="javascript: location.reload();" style ="color: black">새로 고침</a>
+    <span class="menu_divide" style ="color: black">|</span>
   </aside>
   
   <!--/* '/club/list_search_com.html' 파일의 list_search_fragment를 가져다 사용 */--> 
   <div th:replace="~{club/list_search_com::list_search_fragment}"></div> 
 
-  <div class="menu_line"></div>
-  
-  <div class="flex_div_center" style="width: 90%; margin: 0px auto;">  
-    <form name="frm" method="post" action="/club/create" th:object="${clubVO}">
-      <div style="margin-right: 2px; width: 11%; float: left;">
-        <input type="text" name="clubname" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{clubname}" placeholder="구단명">
-      </div>
-      <div style="margin-right: 2px; width: 11%; float: left;">
-        <input type="text" name="info" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{info}" placeholder="구단 정보">
-      </div>
-      <div style="margin-right: 2px; width: 11%; float: left;">
-        <input type="text" name="player" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{player}" placeholder="구단 주요 선수">
-      </div>
-      <div style="margin-right: 2px; width: 11%; float: left;">
-        <input type="text" name="headcoach" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{headcoach}" placeholder="구단 감독">
-      </div>
-      <div style="margin-right: 2px; width: 11%; float: left;">
-        <input type="text" name="legend" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{legend}" placeholder="구단 역대 선수">
-      </div>  
-      <div style="margin-right: 2px; width: 11%; float: left;">
-        <input type="text" name="history" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{history}" placeholder="구단 역사">
-      </div>                             
-      <div style="margin-right: 2px; width: 10%; float: left;">
-        <input type="number" name="rank" value="" min="1" max="1000000" step="1"
-               class="form-control" style="width: 100%;" th:field="*{rank}" placeholder="출력 순서">
-      </div>
-      <div style="margin-right: 2px; width: 12%; float: left;">
-        <select id="visible" name="visible" class="form-control">
-          <option value="출력 모드" selected="selected">출력 모드</option>
-          <option value="Y">Y</option>
-          <option value="N">N</option>
-        </select>
-      </div>
-      <div style="margin-right: 2px; width: 11%; float: left; margin-top: 3px; margin-left: 5px;">
-        <button type="submit" class="btn btn-secondary btn-sm">등록</button>
-        <button type="reset" class="btn btn-secondary btn-sm">취소</button>
-      </div>
-      
-    </form>
-  </div>  
 
   <!--/* '/club/list_all_com.html' 파일의 list_all_fragment를 가져다 사용 */--> 
   <div th:replace="~{club/list_all_com::list_all_fragment}"></div> 
