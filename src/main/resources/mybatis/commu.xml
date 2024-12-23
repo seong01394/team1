@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.commu.CommuDAOInter">
+  
+  <insert id="create" parameterType="dev.mvc.commu.CommuVO">
+    INSERT INTO commu(communo, clubno, memberno, headline, contents, looking, 
+                                 rdate, commuthumb, image, imagesaved, imagesize )
+    VALUES(commu_seq.nextval, #{communo}, #{clubno}, #{memberno}, #{headline}, #{contents}, #{looking},
+              #{commuthumb}, #{image}, #{imagesaved}, #{imagesize}, sysdate)
+  </insert>
+  
+  
+  <select id="list_all" resultType="dev.mvc.commu.CommuVO">
+    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+              image, imagesaved, imagesize
+    FROM commu
+    ORDER BY communo DESC
+  </select>
+  
+  
+  <select id="list_by_clubno" resultType="dev.mvc.commu.CommuVO" parameterType="int">
+    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, rdate,
+              LOWER(image) as image, imagesaved, commuthumb, imagesize
+    FROM commu 
+    WHERE clubno = #{clubno}
+    ORDER BY communo DESC
+  </select> 
+  
+
+  <select id="read" resultType="dev.mvc.commu.CommuVO" parameterType="int">
+    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+              image, imagesaved, imagesize, youtube
+    FROM commu
+    WHERE communo = #{communo}
+  </select>
+  
+
+  <!-- Youtube 등록, 수정, 삭제 -->
+  <update id="youtube" parameterType="HashMap">
+    UPDATE commu SET youtube=#{youtube} WHERE communo = #{communo}
+  </update>
+  
+    <!-- 클럽별 검색 목록 -->
+  <select id="list_by_clubno_search" resultType="dev.mvc.commu.CommuVO" parameterType="HashMap">
+    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+              image, imagesaved, imagesize, youtube
+    FROM commu
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+        WHERE clubno=#{clubno}
+      </when>
+      <otherwise> <!-- 검색하는 경우 -->
+        WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{looking}) || '%' 
+                                                  OR UPPER(contents) LIKE '%' || UPPER(#{looking}) || '%' 
+                                                  OR UPPER(looking) LIKE '%' || UPPER(#{looking}) || '%')
+      </otherwise>
+    </choose>
+    ORDER BY communo DESC   
+  </select>
+  
+    <!-- 카테고리별 검색 레코드 갯수 -->
+  <select id="list_by_clubno_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM commu
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+        WHERE clubno=#{clubno}
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{looking}) || '%' 
+                                                  OR UPPER(contents) LIKE '%' || UPPER(#{looking}) || '%' 
+                                                  OR UPPER(looking) LIKE '%' || UPPER(#{looking}) || '%')
+      </otherwise>
+    </choose>
+  </select>   
+  
+  
+  <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_by_clubno_search_paging" resultType="dev.mvc.commu.CommuVO" parameterType="HashMap">
+    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+              image, imagesaved, imagesize, youtube, r
+   FROM (
+               SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+              image, imagesaved, imagesize, youtube, rownum as r
+              FROM (
+                         SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+              image, imagesaved, imagesize, youtube
+                        FROM commu
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                            WHERE clubno=#{clubno}
+                          </when>
+                          <otherwise>
+                            WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{looking}) || '%' 
+                                                              OR UPPER(contents) LIKE '%' || UPPER(#{looking}) || '%' 
+                                                              OR UPPER(looking) LIKE '%' || UPPER(#{looking}) || '%')
+                          </otherwise>
+                        </choose>
+                        ORDER BY communo DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>  
+  
+  
+  <!-- 글 수정 -->
+  <update id="update_text" parameterType="dev.mvc.commu.CommuVO">
+    UPDATE commu
+    SET headline=#{headline}, contents=#{contents},  looking=#{looking}
+    WHERE communo = #{communo}
+  </update>
+
+  <!-- 파일 수정 -->
+  <update id="update_file" parameterType="dev.mvc.commu.CommuVO">
+    UPDATE commu
+    SET image=#{image}, imagesaved=#{imagesaved}, commuthumb=#{commuthumb}, imagesize=#{imagesize}
+    WHERE communo = #{communo}
+  </update>  
+
+  <!-- 글 삭제 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM commu
+    WHERE communo=#{communo}
+  </delete>
+  
+  <select id="count_by_clubno" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt 
+    FROM commu 
+    WHERE clubno=#{clubno}
+  </select>
+  
+  <delete id="delete_by_clubno" parameterType="int">
+    DELETE FROM commu
+    WHERE clubno=#{clubno}
+  </delete>
+
+  <select id="count_by_memberno" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt 
+    FROM commu 
+    WHERE memberno=#{memberno}
+  </select>
+  
+
+  <delete id="delete_by_memberno" parameterType="int">
+    DELETE FROM commu
+    WHERE memberno=#{memberno}
+  </delete>
+
+   <!-- 댓글 수 증가 -->
+   <update id="increaseReplycnt" parameterType="int">
+     UPDATE commu
+     SET reply = reply + 1
+     WHERE communo = #{communo}
+   </update>
+
+   <!-- 댓글 수 감소 -->
+   <update id="decreaseReplycnt" parameterType="int">
+     UPDATE commu
+     SET reply = reply - 1
+     WHERE communo = #{communo}
+   </update>
+   
+    
+</mapper>

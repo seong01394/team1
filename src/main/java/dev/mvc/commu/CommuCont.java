@@ -1,0 +1,394 @@
+package dev.mvc.commu;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import dev.mvc.club.ClubProcInter;
+import dev.mvc.club.ClubVO;
+import dev.mvc.club.ClubVOMenu;
+import dev.mvc.member.MemberProcInter;
+import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
+
+@RequestMapping(value="/commu")
+@Controller
+public class CommuCont {
+  @Autowired
+  @Qualifier("dev.mvc.member.MemberProc")
+  private MemberProcInter memberProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.club.ClubProc")
+  private ClubProcInter clubProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.commu.CommuProc")
+  private CommuProcInter commuProc;
+  
+  public CommuCont() {
+    System.out.println("-> CommuCont created");
+  }
+  
+  @GetMapping(value = "/post2get")
+  public String post2get(Model model, 
+      @RequestParam(name="url", defaultValue = "") String url) {
+    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+    model.addAttribute("menu", menu);
+
+    return url; 
+  }
+  
+  @GetMapping(value = "/create")
+  public String create(Model model, 
+      @ModelAttribute("commuVO") CommuVO commuVO, 
+      @RequestParam(name="clubno", defaultValue="0") int clubno) {
+    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+    model.addAttribute("menu", menu);
+
+    ClubVO clubVO = this.clubProc.read(clubno); 
+    model.addAttribute("clubVO", clubVO);
+
+    return "/commu/create"; 
+  }
+  
+ @PostMapping(value = "/create")
+ public String create(HttpServletRequest request,
+                            HttpSession session, Model model,
+                            @ModelAttribute("commuVO") CommuVO commuVO,
+                            @RequestParam(name="clubno", defaultValue="")int clubno,
+                            RedirectAttributes ra) {
+    
+    if (memberProc.isMemberAdmin(session)) { 
+      // ------------------------------------------------------------------------------
+      // 파일 전송 코드 시작
+      // ------------------------------------------------------------------------------
+      String image = ""; 
+      String imagesaved = ""; 
+      String commuthumb = ""; 
+
+      String upDir = Commu.getUploadDir();
+     
+      System.out.println("-> upDir: " + upDir);
+
+      MultipartFile mf = commuVO.getFile1MF();
+
+      image = mf.getOriginalFilename(); 
+      System.out.println("-> 원본 파일명 산출 image: " + image);
+
+      long imagesize = mf.getSize(); // 파일 크기
+      if (imagesize > 0) {
+        if (Tool.checkUploadFile(image) == true) { 
+          
+          imagesaved = Upload.saveFileSpring(mf, upDir);
+
+          if (Tool.isImage(imagesaved)) { 
+            commuthumb = Tool.preview(upDir, imagesaved, 200, 150);
+          }
+
+          commuVO.setImage(image); 
+          commuVO.setImagesaved(imagesaved); 
+          commuVO.setCommuthumb(commuthumb);
+          commuVO.setImagesize(imagesize); 
+
+        } else {
+          ra.addFlashAttribute("code", "check_upload_file_fail"); 
+          ra.addFlashAttribute("cnt", 0); 
+          ra.addFlashAttribute("url", "/commu/msg"); 
+          return "redirect:/commu/msg"; 
+        }
+      } else { // 글만 등록하는 경우
+        System.out.println("-> 글만 등록");
+      }
+
+      // ------------------------------------------------------------------------------
+      // 파일 전송 코드 종료
+      // ------------------------------------------------------------------------------
+
+      // Call By Reference: 메모리 공유, Hashcode 전달
+      int memberno = (int) session.getAttribute("memberno"); 
+      commuVO.setMemberno(memberno);
+      int cnt = this.commuProc.create(commuVO);
+
+      if (cnt == 1) {
+
+        ra.addAttribute("clubno", commuVO.getClubno()); 
+        return "redirect:/commu/list_by_clubno";
+
+      } else {
+        ra.addFlashAttribute("code", "create_fail"); 
+        ra.addFlashAttribute("cnt", 0); 
+        ra.addFlashAttribute("url", "/commu/msg"); 
+        return "redirect:/commu/msg";
+      }
+    } else { // 로그인 실패 한 경우
+      return "redirect:/member/login_cookie_need"; 
+    }
+  }
+    
+ 
+ /**
+  * 전체 목록
+  */
+ @GetMapping(value="/list_all")
+ public String list_all(HttpSession session, Model model) {
+   
+   ArrayList<ClubVOMenu>menu = this.clubProc.menu();
+   model.addAttribute("menu", menu);
+   
+   if(this.memberProc.isMemberAdmin(session)) {
+     ArrayList<CommuVO> list = this.commuProc.list_all();
+     
+     model.addAttribute("list", list);
+     return"/commu/list_all";
+     
+   } else {
+     return "redirect:/member/login_cookie_need";
+   }
+ }
+
+ /**
+  * 클럽별 목록 + 검색 + 페이징
+  * @return
+  */
+ @GetMapping(value = "/list_by_clubno")
+ public String list_by_cateno_search_paging(HttpSession session, Model model, 
+     @RequestParam(name = "clubno", defaultValue = "1") int clubno,
+     @RequestParam(name = "word", defaultValue = "") String word,
+     @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+
+
+   ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+   model.addAttribute("menu", menu);
+
+   ClubVO clubVO = this.clubProc.read(clubno);
+   model.addAttribute("clubVO", clubVO);
+
+   word = Tool.checkNull(word).trim();
+
+   HashMap<String, Object> map = new HashMap<>();
+   map.put("clubno", clubno);
+   map.put("word", word);
+   map.put("now_page", now_page);
+
+   ArrayList<CommuVO> list = this.commuProc.list_by_clubno_search_paging(map);
+   model.addAttribute("list", list);
+
+   model.addAttribute("word", word);
+
+   int search_count = this.commuProc.list_by_clubno_search_count(map);
+   String paging = this.commuProc.pagingBox(clubno, now_page, word, "/commu/list_by_clubno", search_count,
+       Commu.RECORD_PER_PAGE, Commu.PAGE_PER_BLOCK);
+   model.addAttribute("paging", paging);
+   model.addAttribute("now_page", now_page);
+
+   model.addAttribute("search_count", search_count);
+
+   // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+   int no = search_count - ((now_page - 1) * Commu.RECORD_PER_PAGE);
+   model.addAttribute("no", no);
+
+   return "/commu/list_by_clubno_search_paging";
+ }  
+ 
+ /**
+  * 클럽별 목록 + 검색 + 페이징 + Grid
+  * @return
+  */
+ @GetMapping(value = "/list_by_clubno_grid")
+ public String list_by_clubno_search_paging_grid(HttpSession session, Model model, 
+     @RequestParam(name = "clubno", defaultValue = "0") int clubno,
+     @RequestParam(name = "word", defaultValue = "") String word,
+     @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+
+   ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+   model.addAttribute("menu", menu);
+
+   ClubVO clubVO = this.clubProc.read(clubno);
+   model.addAttribute("clubVO", clubVO);
+
+   word = Tool.checkNull(word).trim();
+
+   HashMap<String, Object> map = new HashMap<>();
+   map.put("clubno", clubno);
+   map.put("word", word);
+   map.put("now_page", now_page);
+
+   ArrayList<CommuVO> list = this.commuProc.list_by_clubno_search_paging(map);
+   model.addAttribute("list", list);
+
+   model.addAttribute("word", word);
+
+   int search_count = this.commuProc.list_by_clubno_search_count(map);
+   String paging = this.commuProc.pagingBox(clubno, now_page, word, "/commu/list_by_clubno_grid", search_count,
+       Commu.RECORD_PER_PAGE, Commu.PAGE_PER_BLOCK);
+   model.addAttribute("paging", paging);
+   model.addAttribute("now_page", now_page);
+
+   model.addAttribute("search_count", search_count);
+
+   int no = search_count - ((now_page - 1) * Commu.RECORD_PER_PAGE);
+   model.addAttribute("no", no);
+
+
+   return "/commu/list_by_clubno_search_paging_grid";
+ }
+
+ /**
+  * 조회 
+  */
+ @GetMapping(value = "/read")
+ public String read(Model model, 
+     @RequestParam(name="communo", defaultValue = "0") int communo, 
+     @RequestParam(name="word", defaultValue = "") String word, 
+     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+   
+   ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+   model.addAttribute("menu", menu);
+
+   CommuVO commuVO = this.commuProc.read(communo);
+
+   long imagesize = commuVO.getImagesize();
+   String size1_label = Tool.unit(imagesize);
+   commuVO.setSize1_label(size1_label);
+
+   model.addAttribute("commuVO", commuVO);
+
+   ClubVO clubVO = this.clubProc.read(commuVO.getClubno());
+   model.addAttribute("clubVO", clubVO);
+
+   model.addAttribute("word", word);
+   model.addAttribute("now_page", now_page);
+
+   return "/commu/read";
+ }
+ 
+ /**
+  * Youtube 등록/수정/삭제 폼 
+  */
+ @GetMapping(value = "/youtube")
+ public String youtube(Model model, 
+     @RequestParam(name="communo", defaultValue="0") int communo,
+     @RequestParam(name="word", defaultValue="")  String word, 
+     @RequestParam(name="now_page", defaultValue="0") int now_page) {
+   
+   ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+   model.addAttribute("menu", menu);
+
+   CommuVO commuVO = this.commuProc.read(communo); 
+   model.addAttribute("commuVO", commuVO); 
+   
+   ClubVO clubVO = this.clubProc.read(commuVO.getClubno()); 
+   model.addAttribute("clubVO", clubVO);
+
+   model.addAttribute("word", word);
+   model.addAttribute("now_page", now_page);
+   
+   return "/commu/youtube";  
+ }
+
+ /**
+  * Youtube 등록/수정/삭제 처리
+  */
+ @PostMapping(value = "/youtube")
+ public String youtube_update(Model model, 
+                                           RedirectAttributes ra,
+                                           @RequestParam(name="communo", defaultValue = "0") int communo, 
+                                           @RequestParam(name="youtube", defaultValue = "") String youtube, 
+                                           @RequestParam(name="word", defaultValue = "") String word, 
+                                           @RequestParam(name="now_page", defaultValue = "0") int now_page) {
+
+   if (youtube.trim().length() > 0) { 
+     youtube = Tool.youtubeResize(youtube, 640); 
+   }
+
+   HashMap<String, Object> hashMap = new HashMap<String, Object>();
+   hashMap.put("communo", communo);
+   hashMap.put("youtube", youtube);
+
+   this.commuProc.youtube(hashMap);
+   
+   ra.addAttribute("communo", communo);
+   ra.addAttribute("word", word);
+   ra.addAttribute("now_page", now_page);
+
+   return "redirect:/commu/read";
+ }
+
+ /**
+  * 수정 폼
+  *
+  */
+ @GetMapping(value = "/update_text")
+ public String update_text(HttpSession session, Model model, RedirectAttributes ra,
+     @RequestParam(name="communo", defaultValue = "0") int communo,       
+     @RequestParam(name="word", defaultValue = "") String word,
+     @RequestParam(name="now_page", defaultValue = "0") int now_page) {
+   
+   ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+   model.addAttribute("menu", menu);
+
+   model.addAttribute("word", word);
+   model.addAttribute("now_page", now_page);
+
+   if (this.memberProc.isMemberAdmin(session)) { 
+     CommuVO commuVO = this.commuProc.read(communo);
+     model.addAttribute("commuVO", commuVO);
+
+     ClubVO clubVO = this.clubProc.read(commuVO.getClubno());
+     model.addAttribute("clubVO", clubVO);
+
+     return "/commu/update_text"; 
+
+
+   } else {
+ 
+     return "/member/login_cookie_need";
+   }
+
+ }
+
+ /**
+  * 수정 처리 http://localhost:9091/contents/update_text?contentsno=1
+  * 
+  * @return
+  */
+ @PostMapping(value = "/update_text")
+ public String update_text(HttpSession session, Model model, RedirectAttributes ra,
+     @ModelAttribute("commuVO") CommuVO commuVO,
+     @RequestParam(name = "search_word", defaultValue = "") String search_word,
+     @RequestParam(name = "now_page", defaultValue = "0") int now_page) {
+
+   ra.addAttribute("word", search_word);
+   ra.addAttribute("now_page", now_page);
+
+   if (this.memberProc.isMemberAdmin(session)) { // 관리자 로그인 확인
+     this.commuProc.update_text(commuVO); // 글수정
+
+     ra.addAttribute("communo", commuVO.getCommuno());
+     ra.addAttribute("cateno", commuVO.getClubno());
+     return "redirect:/commu/read";
+
+   } else { // 정상적인 로그인이 아닌 경우 로그인 유도
+     ra.addAttribute("url", "/member/login_cookie_need");
+     return "redirect:/commu/post2get";
+   }
+
+ }
+ 
+  
+}

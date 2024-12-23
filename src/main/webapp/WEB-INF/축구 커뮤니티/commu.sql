@@ -11,7 +11,8 @@ CREATE TABLE commu(
     CONTENTS      CLOB           NOT NULL, 
     RECOM         NUMBER(7)      DEFAULT 0    NOT NULL,
     REPLY         NUMBER(7)      DEFAULT 0    NOT NULL,
-    VIEW          NUMBER(7)      DEFAULT 0    NOT NULL,
+    VIEWCNT      NUMBER(7)      DEFAULT 0    NOT NULL,
+    LOOKING       VARCHAR(200)   NULL,
     RDATE         DATE           NOT NULL,
     COMMUTHUMB    VARCHAR(300)   NULL,
     IMAGE         VARCHAR(300)   NULL,
@@ -32,7 +33,8 @@ COMMENT ON COLUMN commu.HEADLINE is '본문 제목';
 COMMENT ON COLUMN commu.CONTENTS is '본문 내용';
 COMMENT ON COLUMN commu.RECOM is '추천수';
 COMMENT ON COLUMN commu.REPLY is '댓글수';
-COMMENT ON COLUMN commu.VIEW is '조회수';
+COMMENT ON COLUMN commu.VIEWCNT is '조회수';
+COMMENT ON COLUMN commu.LOOKING is '검색 찾기';
 COMMENT ON COLUMN commu.RDATE is '등록일';
 COMMENT ON COLUMN commu.COMMUTHUMB is '본문 섬네일';
 COMMENT ON COLUMN commu.IMAGE is '메인 이미지';
@@ -51,7 +53,7 @@ CREATE SEQUENCE commu_SEQ
   NOCYCLE;                   -- 다시 1부터 생성되는 것을 방지
   
 -- 조회
-SELECT communo, clubno, memberno, headline, contents, recom, reply,view, rdate, commuthumb, image, imagesaved, imagesize FROM commu ORDER BY communo;
+SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, image, imagesaved, imagesize FROM commu ORDER BY communo;
 
 -- 등록
 INSERT INTO match(matchno, clubno, preview, review)
