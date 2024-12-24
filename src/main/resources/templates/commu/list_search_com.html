@@ -1,0 +1,17 @@
+<div th:fragment="list_search_fragment"> <!-- <div th:replace=... -->
+  <div style="text-align: right; clear: both;">
+  <form name="frm_search" method="get" action="/commu/list_by_clubno">
+    <input type="hidden" name="clubno" id="clubno" th:value="${clubVO.clubno}" >
+    
+    <input type="text" name="hashtag" id="hashtag" th:value="${hashtag}" >
+    <button type='submit' class='btn btn-secondary btn-sm' 
+                 style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>
+    <span th:if="${word != null and word != ''}">
+      <button type='button' class='btn btn-secondary btn-sm' 
+                   style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;"
+                   th:onclick="|location.href='/commu/list_by_clubno?clubno=${clubVO.clubno}'|">검색 취소</button>
+    </span>
+                  
+  </form>
+</div>
+</div>

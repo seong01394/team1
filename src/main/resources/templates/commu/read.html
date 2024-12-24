@@ -1,0 +1,76 @@
+<!DOCTYPE html> 
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span th:text="${clubVO.clubname }" class="title_line_text"></span >   
+    > 글 조회
+  </div>
+  
+  <aside class="aside_right" th:if="${session.grade == 'member'}">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>    
+    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}">기본 목록형</a>    
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_by_clubno_grid?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}">갤러리형</a>
+    <span class='menu_divide' >│</span>
+    <a href="./create?clubno=${clubno}">등록</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|/commu/update_text?communo=${commuVO.communo}&now_page=${now_page}&word=${word}|}">글 수정</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./update_file?communo=${commuVO.communo}&word=${word}&now_page=${now_page}|}">파일 수정</a>  
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|/commu/youtube?clubno=${commuVO.clubno}&communo=${commuVO.communo}&word=${word}&now_page=${now_page}|}">Youtube</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./delete?communo=${commuVO.communo}&word=${word}&now_page=${now_page}&cateno=${commuVO.clubno}|}">삭제</a>  
+ </aside> 
+
+  <aside class="aside_right" th:if="${session.grade != 'member'}">
+     <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>    
+    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}">기본 목록형</a>    
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_by_clubno_grid?clubno=${clubVO.clubno}&word=${word }&now_page=${now_page}|}">갤러리형</a>
+  </aside> 
+ 
+  <div class='menu_line'></div>
+
+  <fieldset class="fieldset_basic">
+    <ul>
+      <li class="li_none">
+        <div style="width: 100%; word-break: break-all;">
+        
+          <div th:if="${commuVO.image.endsWith('jpg') or commuVO.image.endsWith('png')  or commuVO.image.endsWith('gif')}">
+            <img th:src="@{|/commu/storage/${commuVO.imagesaved}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+          </div>
+
+          <span style="font-size: 1.5em; font-weight: bold;" th:text="${commuVO.headline}"></span>
+          <span style="font-size: 1em;" th:text="${commuVO.rdate }"></span><br><br>
+          <div style="white-space: pre-wrap;"><span th:text="${commuVO.contents}"></span></div>
+        </div>
+      </li>
+
+      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;" 
+          th:if="${commuVO.youtube.length() > 0}">
+        <div style='text-align: center; width:640px; margin: 0px auto;'
+           th:utext = "${commuVO.youtube }">
+        </div>
+      </li>
+
+      <li class="li_none" th:text="해시태그(키워드): ${commuVO.hashtag}|">
+      </li>
+      
+      <li class="li_none" th:if="${commuVO.imagesize > 0}">
+        <div >
+          첨부 파일: <a th:href='@{|/download?dir=commu/storage&filename=${commuVO.imagesaved}&downname=${commuVO.image}|}'
+                             th:text='|${commuVO.image}|'></a> <span th:text="|(${commuVO.size1_label})|"></span>  
+                         <a th:href='@{|/download?dir=commu/storage&filename=${commuVO.imagesaved}&downname=${commuVO.image}|}'><img src="/commu/images/download.png"></a>
+        </div>
+      </li>   
+    </ul>
+  </fieldset>
+
+</div>
+
+</html>
+

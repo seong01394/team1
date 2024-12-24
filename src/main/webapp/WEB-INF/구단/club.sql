@@ -5,10 +5,10 @@ DROP TABLE club CASCADE CONSTRAINTS;
 CREATE TABLE club (
   CLUBNO        NUMBER(10)        NOT NULL  PRIMARY KEY,
   ADMINNO       NUMBER(10)        NOT NULL,  
-  CLUBNAME      VARCHAR(30)       NOT NULL,
-  PLAYER        VARCHAR(30)       NOT NULL,
-  HEADCOACH     VARCHAR(30)       NOT NULL,
-  LEGEND        VARCHAR(30)       NOT NULL,
+  CLUBNAME      VARCHAR(50)       NOT NULL,
+  PLAYER        VARCHAR(50)       NOT NULL,
+  HEADCOACH     VARCHAR(50)       NOT NULL,
+  LEGEND        VARCHAR(50)       NOT NULL,
   HISTORY       CLOB              NOT NULL,
   INFO          VARCHAR(255)      NOT NULL,
   EMBLEM        VARCHAR(300)      NULL,
@@ -24,7 +24,7 @@ COMMENT ON COLUMN club.ADMINNO is '관리자 번호';
 COMMENT ON COLUMN club.CLUBNAME is '구단명';
 COMMENT ON COLUMN club.PLAYER is '구단 주요 선수';
 COMMENT ON COLUMN club.HEADCOACH is '구단 감독';
-COMMENT ON COLUMN club.LEGEND is '구단 역대 선수';
+COMMENT ON COLUMN club.LEGEND is '구단 레전드';
 COMMENT ON COLUMN club.HISTORY is '구단 역사';
 COMMENT ON COLUMN club.INFO is '구단 정보';
 COMMENT ON COLUMN club.EMBLEM is '구단 엠블럼';

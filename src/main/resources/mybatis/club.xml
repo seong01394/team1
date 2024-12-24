@@ -81,7 +81,7 @@
               legend, history, info, rank, visible, emblem, emblemsaved
     FROM club
     <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
-      WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(info) LIKE '%' || UPPER(#{word}) || '%')
+      WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(history) LIKE '%' || UPPER(#{word}) || '%')
     </if> 
     ORDER BY rank ASC
   </select>
@@ -91,7 +91,7 @@
     SELECT COUNT(*) as cnt
     FROM club
     <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
-      WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(info) LIKE '%' || UPPER(#{word}) || '%')
+      WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(history) LIKE '%' || UPPER(#{word}) || '%')
     </if> 
     ORDER BY rank ASC
   </select>
@@ -107,7 +107,7 @@
                 SELECT clubno, adminno, clubname, player, headcoach,
                 legend, history, info, rank, visible, emblem, emblemsaved
             FROM club
-            WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(info) LIKE '%' || UPPER(#{word}) || '%')
+            WHERE (UPPER(clubname) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(history) LIKE '%' || UPPER(#{word}) || '%')
             ORDER BY rank ASC
         )
     )
