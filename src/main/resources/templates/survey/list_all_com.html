@@ -38,6 +38,9 @@
                 <div th:if="${surveyVO.postersize == 0}">
                     <img src="/survey/images/none1.png" style="width: 120px; height: 90px;">
                 </div>
+          <div >
+          첨부 파일:  <a th:href='@{|/download?dir=store/storage&filename=${surveyVO.postersaved}&downname=${surveyVO.poster}|}'><img src="/survey/download.png"></a>
+          </div>
         </td>
         <td class="td_bs">
           <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}"  style="display:block; color:black;"  th:text="${surveyVO.survey_title}"></a>
@@ -48,8 +51,18 @@
         <td class="td_bs">
         <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.fin_date}"></a>
         </td>
-        <td class="td_bs">
-        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.y_n}"></a>
+        <!-- 진행 여부 -->
+        <td class="td_bs" style="text-align: center;">
+          <span th:if="${surveyVO.y_n == 'Y'}">
+            <a th:href="@{|/survey/update_y_n_n/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}">
+              <img src="/survey/show_2.png" class="icon" title="출력">
+            </a>
+          </span>
+          <span th:if="${surveyVO.y_n == 'N'}">
+            <a th:href="@{|/survey/update_y_n_y/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}">
+              <img src="/survey/hide_2.png" class="icon" title="숨김">
+            </a>
+          </span>
         </td>
         <td class="td_bs">
         <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.cnt}"></a>
@@ -57,7 +70,7 @@
         <td style="vertical-align: middle; text-align: center;">
           <a th:href="@{|/survey/update/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}"><img src="/survey/update.png" class="icon" title="수정"></a> <!-- /static 기준 -->
           <a th:href="@{|/survey/delete/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}"><img src="/survey/delete.png" class="icon" title="삭제"></a> <!--/* /static 기준 */-->
-          <a th:href="@{|/survey/create|}"><img src="/survey/create.png" class="icon" title="추가"></a> <!--/* /static 기준 */-->
+          <a th:href="@{|/survey_topic/create?surveyno=${surveyVO.surveyno}|}"><img src="/survey/create.png" class="icon" title="추가"></a> <!--/* /static 기준 */-->
         </td>
       </tr>
     </tbody>
