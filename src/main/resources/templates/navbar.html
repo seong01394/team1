@@ -11,21 +11,6 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                
-                <li class="nav-item dropdown down-text" >
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                       role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{|/member/create|}">회원 가입</a>
-                        </li>
-                        <li class="nav-item" th:if="${session.memberno != null}">
-                            <a class="nav-link" th:href="@{|/member/passwd_update|}">비밀 번호 변경</a>
-                        </li>  
-                    </ul>
-                </li>
-
                 <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="PL구단">                                                            
@@ -37,12 +22,45 @@
                 
                 <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="설문조사">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey/list_search|}">설문조사 목록</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey/create|}">설문조사 등록</a></li>
 
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown down-text" >
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="커뮤니티">                                                            
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li class="nav-item dropdown" th:each="clubVOMenu:${menu}">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${clubVOMenu.clubname}">                                                            
+                            </a>
+
+                            <!-- <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li th:each="clubVO:${clubVOMenu.list_name}">
+                                    <a class="dropdown-item" th:href="@{|/commu/list_by_clubno?clubno=${clubVO.clubno}|}" th:text="${clubVO.clubname}"></a>
+                                </li>
+                            </ul> -->
+                        </li> 
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown down-text" >
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{|/member/create|}">회원 가입</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.memberno != null}">
+                            <a class="nav-link" th:href="@{|/member/passwd_update|}">비밀 번호 변경</a>
+                        </li>  
                     </ul>
                 </li>
               

@@ -5,15 +5,15 @@
 <mapper namespace="dev.mvc.commu.CommuDAOInter">
   
   <insert id="create" parameterType="dev.mvc.commu.CommuVO">
-    INSERT INTO commu(communo, clubno, memberno, headline, contents, looking, 
+    INSERT INTO commu(communo, clubno, memberno, headline, contents, hashtag, 
                                  rdate, commuthumb, image, imagesaved, imagesize )
-    VALUES(commu_seq.nextval, #{communo}, #{clubno}, #{memberno}, #{headline}, #{contents}, #{looking},
+    VALUES(commu_seq.nextval, #{clubno}, #{memberno}, #{headline}, #{contents}, #{hashtag},
               #{commuthumb}, #{image}, #{imagesaved}, #{imagesize}, sysdate)
   </insert>
   
   
   <select id="list_all" resultType="dev.mvc.commu.CommuVO">
-    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, hashtag, rdate, commuthumb, 
               image, imagesaved, imagesize
     FROM commu
     ORDER BY communo DESC
@@ -30,7 +30,7 @@
   
 
   <select id="read" resultType="dev.mvc.commu.CommuVO" parameterType="int">
-    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, hashtag, rdate, commuthumb, 
               image, imagesaved, imagesize, youtube
     FROM commu
     WHERE communo = #{communo}
@@ -38,13 +38,13 @@
   
 
   <!-- Youtube 등록, 수정, 삭제 -->
-  <update id="youtube" parameterType="HashMap">
+  <update id="youtube" parameterType="hashMap">
     UPDATE commu SET youtube=#{youtube} WHERE communo = #{communo}
   </update>
   
     <!-- 클럽별 검색 목록 -->
-  <select id="list_by_clubno_search" resultType="dev.mvc.commu.CommuVO" parameterType="HashMap">
-    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+  <select id="list_by_clubno_search" resultType="dev.mvc.commu.CommuVO" parameterType="hashMap">
+    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, hashtag, rdate, commuthumb, 
               image, imagesaved, imagesize, youtube
     FROM commu
     <choose>
@@ -52,16 +52,16 @@
         WHERE clubno=#{clubno}
       </when>
       <otherwise> <!-- 검색하는 경우 -->
-        WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{looking}) || '%' 
-                                                  OR UPPER(contents) LIKE '%' || UPPER(#{looking}) || '%' 
-                                                  OR UPPER(looking) LIKE '%' || UPPER(#{looking}) || '%')
+        WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(contents) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(hashtag) LIKE '%' || UPPER(#{word}) || '%')
       </otherwise>
     </choose>
     ORDER BY communo DESC   
   </select>
   
     <!-- 카테고리별 검색 레코드 갯수 -->
-  <select id="list_by_clubno_search_count" resultType="int" parameterType="HashMap">
+  <select id="list_by_clubno_search_count" resultType="int" parameterType="hashMap">
     SELECT COUNT(*) as cnt
     FROM commu
     <choose>
@@ -69,23 +69,23 @@
         WHERE clubno=#{clubno}
       </when>
       <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
-        WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{looking}) || '%' 
-                                                  OR UPPER(contents) LIKE '%' || UPPER(#{looking}) || '%' 
-                                                  OR UPPER(looking) LIKE '%' || UPPER(#{looking}) || '%')
+        WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(contents) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(hashtag) LIKE '%' || UPPER(#{word}) || '%')
       </otherwise>
     </choose>
   </select>   
   
   
   <!-- 카테고리별 검색 + 페이징 목록 -->
-  <select id="list_by_clubno_search_paging" resultType="dev.mvc.commu.CommuVO" parameterType="HashMap">
-    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+  <select id="list_by_clubno_search_paging" resultType="dev.mvc.commu.CommuVO" parameterType="hashMap">
+    SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, hashtag, rdate, commuthumb, 
               image, imagesaved, imagesize, youtube, r
    FROM (
-               SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+               SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, hashtag, rdate, commuthumb, 
               image, imagesaved, imagesize, youtube, rownum as r
               FROM (
-                         SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, looking, rdate, commuthumb, 
+                         SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, hashtag, rdate, commuthumb, 
               image, imagesaved, imagesize, youtube
                         FROM commu
                         <choose>
@@ -93,9 +93,9 @@
                             WHERE clubno=#{clubno}
                           </when>
                           <otherwise>
-                            WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{looking}) || '%' 
-                                                              OR UPPER(contents) LIKE '%' || UPPER(#{looking}) || '%' 
-                                                              OR UPPER(looking) LIKE '%' || UPPER(#{looking}) || '%')
+                            WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{word}) || '%' 
+                                                              OR UPPER(contents) LIKE '%' || UPPER(#{word}) || '%' 
+                                                              OR UPPER(hashtag) LIKE '%' || UPPER(#{word}) || '%')
                           </otherwise>
                         </choose>
                         ORDER BY communo DESC
@@ -112,7 +112,7 @@
   <!-- 글 수정 -->
   <update id="update_text" parameterType="dev.mvc.commu.CommuVO">
     UPDATE commu
-    SET headline=#{headline}, contents=#{contents},  looking=#{looking}
+    SET headline=#{headline}, contents=#{contents},  hashtag=#{hashtag}
     WHERE communo = #{communo}
   </update>
 

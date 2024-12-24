@@ -71,14 +71,14 @@ public class ClubProc implements ClubProcInter {
     // 대분류+중분류의 결합 목록
     ArrayList<ClubVOMenu> menu = new ArrayList<ClubVOMenu>();
     
-    ArrayList<ClubVO> clubname = this.clubDAO.list_all_clubgrp_y(); // 대분류 목록 추출
-    for (ClubVO clubVO:clubname) {
+    ArrayList<ClubVO> clubnames = this.clubDAO.list_all_clubgrp_y(); // 대분류 목록 추출
+    for (ClubVO clubVO:clubnames) {
       ClubVOMenu clubVOMenu = new ClubVOMenu(); // 대분류+중분류의 결합 객체
       
-      // System.out.println(cateVO.getGenre());
+    
       clubVOMenu.setClubname(clubVO.getClubname()); // 대분류명 저장
       
-      // 카테고리 그룹(대분류)에 해당하는 카테고리 목록(중분류) 로딩
+      
       ArrayList<ClubVO> list_name = this.clubDAO.list_all_club_y(clubVO.getClubname());
       clubVOMenu.setList_name(list_name);
       

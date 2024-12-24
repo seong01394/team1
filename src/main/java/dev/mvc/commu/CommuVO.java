@@ -15,7 +15,7 @@ import lombok.ToString;
 //    RECOM         NUMBER(7)      DEFAULT 0    NOT NULL,
 //    REPLY         NUMBER(7)      DEFAULT 0    NOT NULL,
 //    VIEWCNT      NUMBER(7)      DEFAULT 0    NOT NULL,
-//    LOOKING       VARCHAR(200)   NULL,
+//    hashtag       VARCHAR(200)   NULL,
 //    RDATE         DATE           NOT NULL,
 //    COMMUTHUMB    VARCHAR(300)   NULL,
 //    IMAGE         VARCHAR(300)   NULL,
@@ -55,7 +55,7 @@ public class CommuVO {
   private int viewcnt = 0;
   
   /** 검색 찾기 */
-  private String looking = "";
+  private String hashtag = "";
   
   /** 등록일 */
   private String rdate = "";  

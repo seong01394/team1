@@ -3,6 +3,9 @@ package dev.mvc.commu;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -21,8 +24,6 @@ import dev.mvc.club.ClubVOMenu;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 
 @RequestMapping(value="/commu")
@@ -57,6 +58,7 @@ public class CommuCont {
   public String create(Model model, 
       @ModelAttribute("commuVO") CommuVO commuVO, 
       @RequestParam(name="clubno", defaultValue="0") int clubno) {
+    
     ArrayList<ClubVOMenu> menu = this.clubProc.menu();
     model.addAttribute("menu", menu);
 
@@ -328,9 +330,10 @@ public class CommuCont {
 
    return "redirect:/commu/read";
  }
+ 
 
  /**
-  * 수정 폼
+  * 파일 수정 폼
   *
   */
  @GetMapping(value = "/update_text")
@@ -363,7 +366,7 @@ public class CommuCont {
  }
 
  /**
-  * 수정 처리 http://localhost:9091/contents/update_text?contentsno=1
+  * 파일 수정 처리 
   * 
   * @return
   */
@@ -390,5 +393,97 @@ public class CommuCont {
 
  }
  
-  
+ 
+ /**
+  * 파일 삭제 폼
+  * @return
+  */
+ @GetMapping(value = "/delete")
+ public String delete(HttpSession session, Model model, RedirectAttributes ra,
+     @RequestParam(name="clubno", defaultValue = "0") int clubno,
+     @RequestParam(name="communo", defaultValue = "0") int communo,
+     @RequestParam(name="word", defaultValue = "") String word, 
+     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+   
+   if (this.memberProc.isMemberAdmin(session)) { 
+     model.addAttribute("clubno", clubno);
+     model.addAttribute("word", word);
+     model.addAttribute("now_page", now_page);
+     
+     ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+     model.addAttribute("menu", menu);
+     
+     CommuVO commuVO = this.commuProc.read(communo);
+     model.addAttribute("commuVO", commuVO);
+     
+     ClubVO clubVO = this.clubProc.read(commuVO.getClubno());
+     model.addAttribute("clubVO", clubVO);
+     
+     return "/cmmou/delete"; 
+     
+   } else {
+     ra.addAttribute("url", "/member/login_cookie_need");
+     return "redirect:/commu/msg"; 
+   }
+
+ }
+ 
+ 
+ /**
+  * 파일 삭제 처리
+  * 
+  * @return
+  */
+ @PostMapping(value = "/delete")
+ public String delete(RedirectAttributes ra,
+     @RequestParam(name="clubno", defaultValue = "0") int clubno,
+     @RequestParam(name="communo", defaultValue = "0") int communo,
+     @RequestParam(name="word", defaultValue = "") String word, 
+     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+   
+   // -------------------------------------------------------------------
+   // 파일 삭제 시작
+   // -------------------------------------------------------------------
+   // 삭제할 파일 정보를 읽어옴.
+   CommuVO commuVO_read = commuProc.read(communo);
+       
+   String imagesaved = commuVO_read.getImagesaved();
+   String commuthumb = commuVO_read.getCommuthumb();
+   
+   String uploadDir = Commu.getUploadDir();
+   Tool.deleteFile(uploadDir, imagesaved); 
+   Tool.deleteFile(uploadDir, commuthumb);   
+   // -------------------------------------------------------------------
+   // 파일 삭제 종료
+   // -------------------------------------------------------------------
+       
+   this.commuProc.delete(communo);
+       
+   // -------------------------------------------------------------------------------------
+   // 마지막 페이지의 마지막 레코드 삭제시의 페이지 번호 -1 처리
+   // -------------------------------------------------------------------------------------    
+   // 마지막 페이지의 마지막 10번째 레코드를 삭제후
+   // 하나의 페이지가 3개의 레코드로 구성되는 경우 현재 9개의 레코드가 남아 있으면
+   // 페이지수를 4 -> 3으로 감소 시켜야함, 마지막 페이지의 마지막 레코드 삭제시 나머지는 0 발생
+   
+   HashMap<String, Object> map = new HashMap<String, Object>();
+   map.put("clubno", clubno);
+   map.put("word", word);
+   
+   if (this.commuProc.list_by_clubno_search_count(map) % Commu.RECORD_PER_PAGE == 0) {
+     now_page = now_page - 1; // 삭제시 DBMS는 바로 적용되나 크롬은 새로고침등의 필요로 단계가 작동 해야함.
+     if (now_page < 1) {
+       now_page = 1; // 시작 페이지
+     }
+   }
+   // -------------------------------------------------------------------------------------
+
+   ra.addAttribute("clubno", clubno);
+   ra.addAttribute("word", word);
+   ra.addAttribute("now_page", now_page);
+   
+   return "redirect:/commu/list_by_clubno";    
+   
+ }   
+    
 }

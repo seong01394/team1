@@ -3,6 +3,8 @@ package dev.mvc.commu;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dev.mvc.club.ClubVO;
+
 public interface CommuDAOInter {
   
   /**
