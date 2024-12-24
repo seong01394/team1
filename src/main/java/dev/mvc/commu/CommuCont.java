@@ -75,7 +75,7 @@ public class CommuCont {
                             @RequestParam(name="clubno", defaultValue="")int clubno,
                             RedirectAttributes ra) {
     
-    if (memberProc.isMemberAdmin(session)) { 
+    if (memberProc.isMember(session)) { 
       // ------------------------------------------------------------------------------
       // 파일 전송 코드 시작
       // ------------------------------------------------------------------------------
@@ -84,15 +84,15 @@ public class CommuCont {
       String commuthumb = ""; 
 
       String upDir = Commu.getUploadDir();
-     
       System.out.println("-> upDir: " + upDir);
-
+      
       MultipartFile mf = commuVO.getFile1MF();
 
       image = mf.getOriginalFilename(); 
       System.out.println("-> 원본 파일명 산출 image: " + image);
 
       long imagesize = mf.getSize(); // 파일 크기
+      
       if (imagesize > 0) {
         if (Tool.checkUploadFile(image) == true) { 
           
@@ -152,7 +152,7 @@ public class CommuCont {
    ArrayList<ClubVOMenu>menu = this.clubProc.menu();
    model.addAttribute("menu", menu);
    
-   if(this.memberProc.isMemberAdmin(session)) {
+   if(this.memberProc.isMember(session)) {
      ArrayList<CommuVO> list = this.commuProc.list_all();
      
      model.addAttribute("list", list);
@@ -348,7 +348,7 @@ public class CommuCont {
    model.addAttribute("word", word);
    model.addAttribute("now_page", now_page);
 
-   if (this.memberProc.isMemberAdmin(session)) { 
+   if (this.memberProc.isMember(session)) { 
      CommuVO commuVO = this.commuProc.read(communo);
      model.addAttribute("commuVO", commuVO);
 
@@ -379,7 +379,7 @@ public class CommuCont {
    ra.addAttribute("word", search_word);
    ra.addAttribute("now_page", now_page);
 
-   if (this.memberProc.isMemberAdmin(session)) { // 관리자 로그인 확인
+   if (this.memberProc.isMember(session)) { // 관리자 로그인 확인
      this.commuProc.update_text(commuVO); // 글수정
 
      ra.addAttribute("communo", commuVO.getCommuno());
@@ -393,7 +393,112 @@ public class CommuCont {
 
  }
  
- 
+ /**
+  * 파일 수정 폼 
+  * 
+  * @return
+  */
+ @GetMapping(value = "/update_file")
+ public String update_file(HttpSession session, Model model, 
+                                    @RequestParam(name="communo", defaultValue = "0") int communo,
+                                    @RequestParam(name="word", defaultValue = "") String word, 
+                                    @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+   
+   ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+   model.addAttribute("menu", menu);
+   
+   model.addAttribute("word", word);
+   model.addAttribute("now_page", now_page);
+   
+   CommuVO commuVO = this.commuProc.read(communo);
+   model.addAttribute("commuVO", commuVO);
+
+   ClubVO clubVO = this.clubProc.read(commuVO.getClubno());
+   model.addAttribute("clubVO", clubVO);
+
+   return "/commu/update_file";
+
+ }
+
+ /**
+  * 파일 수정 처리
+  * @return
+  */
+ @PostMapping(value = "/update_file")
+ public String update_file(HttpSession session, Model model, RedirectAttributes ra,
+                                    @ModelAttribute("commuVO") CommuVO commuVO,
+                                    @RequestParam(name="word", defaultValue = "") String word, 
+                                    @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+   if (this.memberProc.isMember(session)) {
+
+     CommuVO commuVO_old = commuProc.read(commuVO.getCommuno());
+
+     // -------------------------------------------------------------------
+     // 파일 삭제 시작
+     // -------------------------------------------------------------------
+     String imagesaved = commuVO_old.getImagesaved(); // 실제 저장된 파일명
+     String commuthumb = commuVO_old.getCommuthumb(); // 실제 저장된 preview 이미지 파일명
+     long imagesize = 0;
+
+     String upDir = Commu.getUploadDir(); 
+
+     Tool.deleteFile(upDir, imagesaved); // 실제 저장된 파일삭제
+     Tool.deleteFile(upDir, commuthumb); // preview 이미지 삭제
+     // -------------------------------------------------------------------
+     // 파일 삭제 종료
+     // -------------------------------------------------------------------
+
+     // -------------------------------------------------------------------
+     // 파일 전송 시작
+     // -------------------------------------------------------------------
+     String image = ""; // 원본 파일명 image
+
+     // 전송 파일이 없어도 file1MF 객체가 생성됨.
+     // <input type='file' class="form-control" name='file1MF' id='file1MF'
+     // value='' placeholder="파일 선택">
+     MultipartFile mf = commuVO.getFile1MF();
+
+     image = mf.getOriginalFilename(); // 원본 파일명
+     imagesize = mf.getSize(); // 파일 크기
+
+     if (imagesize > 0) { // 폼에서 새롭게 올리는 파일이 있는지 파일 크기로 체크 ★
+       // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
+       imagesaved = Upload.saveFileSpring(mf, upDir);
+
+       if (Tool.isImage(imagesaved)) { // 이미지인지 검사
+         // thumb 이미지 생성후 파일명 리턴됨, width: 250, height: 200
+         commuthumb = Tool.preview(upDir, imagesaved, 250, 200);
+       }
+
+     } else { // 파일이 삭제만 되고 새로 올리지 않는 경우
+       image = "";
+       imagesaved = "";
+       commuthumb = "";
+       imagesize = 0;
+     }
+
+     commuVO.setImage(image);
+     commuVO.setImagesaved(imagesaved);
+     commuVO.setCommuthumb(commuthumb);
+     commuVO.setImagesize(imagesize);
+     // -------------------------------------------------------------------
+     // 파일 전송 코드 종료
+     // -------------------------------------------------------------------
+
+     this.commuProc.update_file(commuVO); // Oracle 처리
+     ra.addAttribute ("communo", commuVO.getCommuno());
+     ra.addAttribute("cateno", commuVO.getClubno());
+     ra.addAttribute("word", word);
+     ra.addAttribute("now_page", now_page);
+     
+     return "redirect:/commu/read";
+   } else {
+     ra.addAttribute("url", "/member/login_cookie_need"); 
+     return "redirect:/commu/msg"; // GET
+   }
+ }
+
+
  /**
   * 파일 삭제 폼
   * @return
@@ -405,7 +510,7 @@ public class CommuCont {
      @RequestParam(name="word", defaultValue = "") String word, 
      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
    
-   if (this.memberProc.isMemberAdmin(session)) { 
+   if (this.memberProc.isMember(session)) { 
      model.addAttribute("clubno", clubno);
      model.addAttribute("word", word);
      model.addAttribute("now_page", now_page);
@@ -419,7 +524,7 @@ public class CommuCont {
      ClubVO clubVO = this.clubProc.read(commuVO.getClubno());
      model.addAttribute("clubVO", clubVO);
      
-     return "/cmmou/delete"; 
+     return "/commu/delete"; 
      
    } else {
      ra.addAttribute("url", "/member/login_cookie_need");

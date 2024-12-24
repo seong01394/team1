@@ -6,7 +6,7 @@
   
   <insert id="create" parameterType="dev.mvc.commu.CommuVO">
     INSERT INTO commu(communo, clubno, memberno, headline, contents, hashtag, 
-                                 rdate, commuthumb, image, imagesaved, imagesize )
+                                  commuthumb, image, imagesaved, imagesize, rdate )
     VALUES(commu_seq.nextval, #{clubno}, #{memberno}, #{headline}, #{contents}, #{hashtag},
               #{commuthumb}, #{image}, #{imagesaved}, #{imagesize}, sysdate)
   </insert>
@@ -41,6 +41,7 @@
   <update id="youtube" parameterType="hashMap">
     UPDATE commu SET youtube=#{youtube} WHERE communo = #{communo}
   </update>
+  
   
     <!-- 클럽별 검색 목록 -->
   <select id="list_by_clubno_search" resultType="dev.mvc.commu.CommuVO" parameterType="hashMap">
