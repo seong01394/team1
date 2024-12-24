@@ -29,8 +29,8 @@ public class SurveyProc implements SurveyProcInter{
 
   @Override
   public SurveyVO read(int surveyno) {
-    SurveyVO surveyVO = this.surveyDAO.read(surveyno);
-    return surveyVO;
+    surveyDAO.increaseCnt(surveyno);
+    return surveyDAO.read(surveyno);
   }
 
   @Override
@@ -183,10 +183,23 @@ public class SurveyProc implements SurveyProcInter{
     return list;
   }
 
+
   @Override
-  public int list_by_survey_search_count(HashMap<String, Object> hashMap) {
-    int cnt = this.surveyDAO.list_by_survey_search_count(hashMap);
+  public int update_y_n_y(int surveyno) {
+    int cnt = this.surveyDAO.update_y_n_y(surveyno);
     return cnt;
+  }
+
+  @Override
+  public int update_y_n_n(int surveyno) {
+    int cnt = this.surveyDAO.update_y_n_n(surveyno);
+    return cnt;
+  }
+
+  @Override
+  public int increaseCnt(int surveyno) {
+    // TODO Auto-generated method stub
+    return 0;
   }
 
 

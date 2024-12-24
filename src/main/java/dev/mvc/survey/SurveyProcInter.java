@@ -69,10 +69,20 @@ public interface SurveyProcInter {
    * @return
    */
   public ArrayList<SurveyVO> list_paging(String word, int now_page, int record_per_page);
+  
   /**
-   * 설문조사 검색된 레코드 갯수
-   * @param map
-   * @return
+   * 공개 설정
    */
-  public int list_by_survey_search_count(HashMap<String, Object> hashMap);
+  public int update_y_n_y(int surveyno);
+
+  /**
+   * 비공개 설정
+   */
+  public int update_y_n_n(int surveyno);
+  
+  /**
+   * 조회수
+   */
+  public int increaseCnt(int surveyno);
+
 }

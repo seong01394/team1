@@ -64,18 +64,23 @@
     WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
   </select>
   
-    <!-- 설문조사 검색 레코드 갯수 -->
-  <select id="list_by_survey_search_count" resultType="int" parameterType="HashMap">
-    SELECT COUNT(*) as cnt
-    FROM survey
-    <choose>
-      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
-        WHERE y_n=#{y_n}
-      </when>
-      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
-        WHERE y_n=#{y_n} AND (UPPER(survey_title) LIKE '%' || UPPER(#{word}) || '%')
-      </otherwise>
-    </choose>
-  </select>  
+  <!-- 공개 설정 -->
+  <update id="update_y_n_y" parameterType="Integer">
+    UPDATE survey SET y_n='Y' 
+    WHERE surveyno=#{surveyno}
+  </update>
+
+  <!-- 비공개 설정 -->
+  <update id="update_y_n_n" parameterType="Integer">
+    UPDATE survey SET y_n='N' 
+    WHERE surveyno=#{surveyno}
+  </update>
+  
+<!-- 조회수 증가 -->
+  <update id="increaseCnt" parameterType="int">
+    UPDATE survey
+    SET cnt = cnt + 1
+    WHERE surveyno = #{surveyno}
+  </update>
   
 </mapper>

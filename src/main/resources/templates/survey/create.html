@@ -32,7 +32,7 @@
       </div>
       <div>
         <label>시작 날</label>
-        <input type="text" name="start_date" value="" autofocus="autofocus"
+        <input type="date" name="start_date" value="" autofocus="autofocus"
                class="form-control" style="width: 100%;" th:field="*{start_date}">
         <div th:if="${#fields.hasErrors('start_date')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err: ${#lists.sort(#fields.errors('start_date'))}" th:text="${err}"></div>
@@ -40,7 +40,7 @@
       </div>      
       <div>
         <label>완료 날</label>
-        <input type="text" name="fin_date" value="" autofocus="autofocus"
+        <input type="date" name="fin_date" value="" autofocus="autofocus"
                class="form-control" style="width: 100%;" th:field="*{fin_date}">
         <div th:if="${#fields.hasErrors('fin_date')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err: ${#lists.sort(#fields.errors('fin_date'))}" th:text="${err}"></div>
