@@ -57,7 +57,7 @@ public interface ClubDAOInter {
    * 구단 목록
    * @return
    */
-  public ArrayList<String> clubnameset();
+  public ArrayList<String> plset();
   
   /**
    * 숨긴 '구단 명'을 제외하고 접속자에게 공개할 '구단명' 출력
@@ -69,7 +69,7 @@ public interface ClubDAOInter {
    * 숨긴 '구단명들'을 제외하고 접속자에게 공개할 '구단명' 출력"
    * @return
    */
-  public ArrayList<ClubVO> list_all_club_y(String clubname);  
+  public ArrayList<ClubVO> list_all_club_y(String pl);  
   
   /**
    * 검색 목록 

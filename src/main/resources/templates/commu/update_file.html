@@ -45,11 +45,11 @@
             <input type="hidden" name="clubno" th:value="${clubVO.clubno}">
             <input type="hidden" name="communo" th:value="${commuVO.communo}">
             <input type="hidden" name="now_page" th:value="${now_page}">
-            <input type="hidden" name="search_word" th:value="${word}">
+            <input type="hidden" name="search_hashtag" th:value="${hashtag}">
                 
             <br><br> 
             변경 이미지 선택<br>  
-            <input type='image' name='file1MF' id='file1MF' value='' placeholder="파일 선택"><br>
+            <input type='file' name='file1MF' id='file1MF' value='' placeholder="파일 선택"><br>
             <br>
             <div style='margin-top: 20px; clear: both;'>  
               <button type="submit" class="btn btn-secondary btn-sm">파일 변경 처리</button>

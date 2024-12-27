@@ -11,7 +11,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}">
+                <li class="nav-item dropdown down-text" >
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="PL구단">                                                            
                     </a>
@@ -19,8 +19,25 @@
                         <li class="nav-item"><a class="nav-link" th:href="@{|/club/list_search?word=${word}|}">클럽팀 목록</a></li>       
                     </ul>
                 </li>
+
+                <li class="nav-item dropdown down-text"th:each="clubVOMenu:${menu}"> <!--/* 대분류 */-->
                 
-                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}">
+                    <!--/* 대분류명 출력 */-->
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                         role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${clubVOMenu.pl}">                                                            
+                    </a>
+                    
+                    <!--/* 중분류명 */-->
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li th:each="clubVO:${clubVOMenu.list_name}">
+                            <a class="dropdown-item" th:href="@{|/commu/list_by_clubno?clubno=${clubVO.clubno}|}" th:text="${clubVO.clubname}"></a>
+                        </li>
+                    </ul>
+                    
+                </li>
+
+                
+                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin' or session.grade=='member'}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="설문조사">                                                            
                     </a>
@@ -31,26 +48,8 @@
 
                     </ul>
                 </li>
-
-                <li class="nav-item dropdown down-text" >
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                       role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="커뮤니티">                                                            
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item dropdown" th:each="clubVOMenu:${menu}">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${clubVOMenu.clubname}">                                                            
-                            </a>
-
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li th:each="clubVO:${clubVOMenu.list_name}">
-                                    <a class="dropdown-item" th:href="@{|/commu/list_by_clubno?clubno=${clubVO.clubno}|}" th:text="${clubVO.clubname}"></a>
-                                </li>
-                            </ul>
-                        </li> 
-                    </ul>
-                </li>
-
+                
+                
                 <li class="nav-item dropdown down-text" >
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                        role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            

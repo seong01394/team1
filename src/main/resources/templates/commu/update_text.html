@@ -19,10 +19,10 @@
   <div class='menu_line'></div>
   
   <form name='frm' method='post' th:object="${commuVO}" action='./update_text'>
-    <input type="hidden" name="clubno" th:value="${clubVO.clubno }">
-    <input type="hidden" name="contentsno" th:value="${commuVO.communo }">
+    <input type="hidden" name="clubno" th:value="${clubVO.clubno}">
+    <input type="hidden" name="communo" th:value="${commuVO.communo}">
     <input type="hidden" name="now_page" th:value="${now_page}">
-    <input type="hidden" name="search_word" th:value="${word}">
+    <input type="hidden" name="search_hashtag" th:value="${hashtag}">
     
     <div>
        <label>제목</label>

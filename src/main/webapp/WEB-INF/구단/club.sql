@@ -31,6 +31,7 @@ COMMENT ON COLUMN club.EMBLEM is '구단 엠블럼';
 COMMENT ON COLUMN club.EMBLEMSAVED is '저장된 엠블럼';
 COMMENT ON COLUMN club.RANK is '출력 순서';
 COMMENT ON COLUMN club.visible is '출력 모드';
+COMMENT ON COLUMN club.pl is '프리미엄 리그';
 
 DROP SEQUENCE club_SEQ;
 CREATE SEQUENCE club_SEQ
@@ -52,7 +53,7 @@ VALUES (club_seq.nextval, 1, '맨체스터 시티', '로드리', '펩 과르디�
         '로드리는 맨시티 역사상 첫 발롱도르를 받았다.', 5,'Y');         
   
 -- 전체 목록
-SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible
+SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible, pl
 FROM club
 ORDER BY clubno ASC;  
 
@@ -75,3 +76,12 @@ WHERE clubno=1;
 DELETE FROM club WHERE clubno=3;
 SELECT clubno, adminno, clubname, player, headcoach, legend, history, info, rank, visible FROM club ORDER BY clubno ASC;
 
+
+-- 1단계: NOT NULL 없이 컬럼 추가
+ALTER TABLE club ADD pl VARCHAR(100);
+
+-- 2단계: 데이터를 업데이트 (예: 빈 문자열로 설정)
+UPDATE club SET pl = '';
+
+-- 3단계: 컬럼에 NOT NULL 제약 추가
+ALTER TABLE club MODIFY pl VARCHAR(100) NOT NULL;

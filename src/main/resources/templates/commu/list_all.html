@@ -8,30 +8,47 @@
   <aside class="aside_right">
     <a href="javascript:location.reload();" style="color: black;"></a>새로고침</a>
   </aside> 
+  
+  <div th:replace="~{commu/list_search_com::list_search_fragment}"></div>
    
   <div class='menu_line'></div>
        
   <table class="table table-striped" style='width: 100%;'>
     <colgroup>
-      <col style='width: 10%;'/>
-      <col style='width: 90%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 80%;'/>
     </colgroup>
     <tr>
       <th class='th_bs'>파일</TH>
       <th class='th_bs'>제목</th>
     </tr>
    
-    <tr th:each="commuVO, status:${list}" 
-        th:attr="onclick=|location.href='/commu/read?communo=${commuVO.communo}'|"
-        style="cursor: pointer;">
-      <td class='td_basic' th:text="${commuVO.image}"></td>
-      <td class='td_left'>
+    <tr th:if="${list.size() > 0}" th:each="commuVO, status:${list}" 
+      th:attr="onclick=|location.href='/commu/read?communo=${commuVO.communo}'|"
+      style="cursor: pointer; height: 90px;">
+    
+    <!-- 이미지 출력 -->
+      <td class='td_basic' style="vertical-align: middle; text-align: center;">
+
+        <div th:if="${commuVO.image.endsWith('jpg') or commuVO.image.endsWith('png') or commuVO.image.endsWith('gif')}">
+          <img th:src="@{|/commu/storage/${commuVO.commuthumb}|}" style="width: 120px; height: 90px;">
+        </div>
+      
+        <div th:if="${((commuVO.image.endsWith('jpg') or commuVO.image.endsWith('png') or commuVO.image.endsWith('gif')) == false) and (commuVO.imagesize > 0)}">
+          <span th:text="${commuVO.image}"></span>
+        </div>
+
+        <div th:if="${commuVO.imagesize == 0}">
+          <img src="/commu/images/none1.png" style="width: 120px; height: 90px;">
+        </div>
+      </td>
+
+      <td class="td_left" style="vertical-align: middle; text-align: left;">
         <span th:text="${commuVO.headline}" style="font-weight: bold;"></span><br>
         <span th:if="${commuVO.contents.length() > 160 }" 
               th:text="|${commuVO.contents.substring(0, 160) }...|"></span>
         <span th:if="${commuVO.contents.length() <= 160 }" 
               th:text="|${commuVO.contents}|"></span>
-
       </td>
     </tr>
   </table>

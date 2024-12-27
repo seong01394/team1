@@ -81,4 +81,6 @@ public class CommuVO {
   /** 메인 이미지 크기 */
   private long imagesize = 0;
   
+  
+  
 }

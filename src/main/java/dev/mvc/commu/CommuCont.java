@@ -146,21 +146,25 @@ public class CommuCont {
  /**
   * 전체 목록
   */
- @GetMapping(value="/list_all")
- public String list_all(HttpSession session, Model model) {
-   
-   ArrayList<ClubVOMenu>menu = this.clubProc.menu();
-   model.addAttribute("menu", menu);
-   
-   if(this.memberProc.isMember(session)) {
+ @GetMapping(value = "/list_all")
+ public String list_all(HttpSession session, Model model,
+                         @RequestParam(name = "clubno", defaultValue = "1") int clubno) {
+
+     // 메뉴 정보 가져오기
+     ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+     model.addAttribute("menu", menu);
+
+     // 전체 목록 가져오기
      ArrayList<CommuVO> list = this.commuProc.list_all();
-     
      model.addAttribute("list", list);
-     return"/commu/list_all";
-     
-   } else {
-     return "redirect:/member/login_cookie_need";
-   }
+
+     model.addAttribute("clubno", clubno);
+
+     // 클럽 정보 가져오기 (clubno에 해당하는 클럽 정보)
+     ClubVO clubVO = this.clubProc.read(clubno);
+     model.addAttribute("clubVO", clubVO);
+
+     return "/commu/list_all";
  }
 
  /**
@@ -168,9 +172,9 @@ public class CommuCont {
   * @return
   */
  @GetMapping(value = "/list_by_clubno")
- public String list_by_cateno_search_paging(HttpSession session, Model model, 
+ public String list_by_clubno_search_paging(HttpSession session, Model model, 
      @RequestParam(name = "clubno", defaultValue = "1") int clubno,
-     @RequestParam(name = "word", defaultValue = "") String word,
+     @RequestParam(name = "hashtag", defaultValue = "") String hashtag,
      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
 
@@ -180,20 +184,20 @@ public class CommuCont {
    ClubVO clubVO = this.clubProc.read(clubno);
    model.addAttribute("clubVO", clubVO);
 
-   word = Tool.checkNull(word).trim();
+   hashtag = Tool.checkNull(hashtag).trim();
 
    HashMap<String, Object> map = new HashMap<>();
    map.put("clubno", clubno);
-   map.put("word", word);
+   map.put("hashtag", hashtag);
    map.put("now_page", now_page);
 
    ArrayList<CommuVO> list = this.commuProc.list_by_clubno_search_paging(map);
    model.addAttribute("list", list);
 
-   model.addAttribute("word", word);
+   model.addAttribute("hashtag", hashtag);
 
    int search_count = this.commuProc.list_by_clubno_search_count(map);
-   String paging = this.commuProc.pagingBox(clubno, now_page, word, "/commu/list_by_clubno", search_count,
+   String paging = this.commuProc.pagingBox(clubno, now_page, hashtag, "/commu/list_by_clubno", search_count,
        Commu.RECORD_PER_PAGE, Commu.PAGE_PER_BLOCK);
    model.addAttribute("paging", paging);
    model.addAttribute("now_page", now_page);
@@ -214,7 +218,7 @@ public class CommuCont {
  @GetMapping(value = "/list_by_clubno_grid")
  public String list_by_clubno_search_paging_grid(HttpSession session, Model model, 
      @RequestParam(name = "clubno", defaultValue = "0") int clubno,
-     @RequestParam(name = "word", defaultValue = "") String word,
+     @RequestParam(name = "hashtag", defaultValue = "") String hashtag,
      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
@@ -223,20 +227,20 @@ public class CommuCont {
    ClubVO clubVO = this.clubProc.read(clubno);
    model.addAttribute("clubVO", clubVO);
 
-   word = Tool.checkNull(word).trim();
+   hashtag = Tool.checkNull(hashtag).trim();
 
    HashMap<String, Object> map = new HashMap<>();
    map.put("clubno", clubno);
-   map.put("word", word);
+   map.put("hashtag", hashtag);
    map.put("now_page", now_page);
 
    ArrayList<CommuVO> list = this.commuProc.list_by_clubno_search_paging(map);
    model.addAttribute("list", list);
 
-   model.addAttribute("word", word);
+   model.addAttribute("hashtag", hashtag);
 
    int search_count = this.commuProc.list_by_clubno_search_count(map);
-   String paging = this.commuProc.pagingBox(clubno, now_page, word, "/commu/list_by_clubno_grid", search_count,
+   String paging = this.commuProc.pagingBox(clubno, now_page, hashtag, "/commu/list_by_clubno_grid", search_count,
        Commu.RECORD_PER_PAGE, Commu.PAGE_PER_BLOCK);
    model.addAttribute("paging", paging);
    model.addAttribute("now_page", now_page);
@@ -256,11 +260,18 @@ public class CommuCont {
  @GetMapping(value = "/read")
  public String read(Model model, 
      @RequestParam(name="communo", defaultValue = "0") int communo, 
-     @RequestParam(name="word", defaultValue = "") String word, 
-     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+     @RequestParam(name="hashtag", defaultValue = "") String hashtag, 
+     @RequestParam(name="now_page", defaultValue = "1") int now_page,
+     @RequestParam(name="action", defaultValue = "") String action) {
    
    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
    model.addAttribute("menu", menu);
+   
+   if ("increase".equals(action)) {
+     this.commuProc.increaseRecom(communo);  // 추천수 증가 처리
+ } else if ("decrease".equals(action)) {
+     this.commuProc.decreaseRecom(communo);  // 추천수 감소 처리
+ }
 
    CommuVO commuVO = this.commuProc.read(communo);
 
@@ -273,7 +284,7 @@ public class CommuCont {
    ClubVO clubVO = this.clubProc.read(commuVO.getClubno());
    model.addAttribute("clubVO", clubVO);
 
-   model.addAttribute("word", word);
+   model.addAttribute("hashtag", hashtag);
    model.addAttribute("now_page", now_page);
 
    return "/commu/read";
@@ -285,7 +296,7 @@ public class CommuCont {
  @GetMapping(value = "/youtube")
  public String youtube(Model model, 
      @RequestParam(name="communo", defaultValue="0") int communo,
-     @RequestParam(name="word", defaultValue="")  String word, 
+     @RequestParam(name="hashtag", defaultValue="")  String hashtag, 
      @RequestParam(name="now_page", defaultValue="0") int now_page) {
    
    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
@@ -297,7 +308,7 @@ public class CommuCont {
    ClubVO clubVO = this.clubProc.read(commuVO.getClubno()); 
    model.addAttribute("clubVO", clubVO);
 
-   model.addAttribute("word", word);
+   model.addAttribute("hashtag", hashtag);
    model.addAttribute("now_page", now_page);
    
    return "/commu/youtube";  
@@ -311,7 +322,7 @@ public class CommuCont {
                                            RedirectAttributes ra,
                                            @RequestParam(name="communo", defaultValue = "0") int communo, 
                                            @RequestParam(name="youtube", defaultValue = "") String youtube, 
-                                           @RequestParam(name="word", defaultValue = "") String word, 
+                                           @RequestParam(name="hashtag", defaultValue = "") String hashtag, 
                                            @RequestParam(name="now_page", defaultValue = "0") int now_page) {
 
    if (youtube.trim().length() > 0) { 
@@ -325,7 +336,7 @@ public class CommuCont {
    this.commuProc.youtube(hashMap);
    
    ra.addAttribute("communo", communo);
-   ra.addAttribute("word", word);
+   ra.addAttribute("hashtag", hashtag);
    ra.addAttribute("now_page", now_page);
 
    return "redirect:/commu/read";
@@ -339,13 +350,13 @@ public class CommuCont {
  @GetMapping(value = "/update_text")
  public String update_text(HttpSession session, Model model, RedirectAttributes ra,
      @RequestParam(name="communo", defaultValue = "0") int communo,       
-     @RequestParam(name="word", defaultValue = "") String word,
+     @RequestParam(name="hashtag", defaultValue = "") String hashtag,
      @RequestParam(name="now_page", defaultValue = "0") int now_page) {
    
    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
    model.addAttribute("menu", menu);
 
-   model.addAttribute("word", word);
+   model.addAttribute("hashtag", hashtag);
    model.addAttribute("now_page", now_page);
 
    if (this.memberProc.isMember(session)) { 
@@ -373,17 +384,17 @@ public class CommuCont {
  @PostMapping(value = "/update_text")
  public String update_text(HttpSession session, Model model, RedirectAttributes ra,
      @ModelAttribute("commuVO") CommuVO commuVO,
-     @RequestParam(name = "search_word", defaultValue = "") String search_word,
+     @RequestParam(name = "search_hashtag", defaultValue = "") String search_hashtag,
      @RequestParam(name = "now_page", defaultValue = "0") int now_page) {
 
-   ra.addAttribute("word", search_word);
+   ra.addAttribute("hashtag", search_hashtag);
    ra.addAttribute("now_page", now_page);
 
    if (this.memberProc.isMember(session)) { // 관리자 로그인 확인
      this.commuProc.update_text(commuVO); // 글수정
 
      ra.addAttribute("communo", commuVO.getCommuno());
-     ra.addAttribute("cateno", commuVO.getClubno());
+     ra.addAttribute("clubno", commuVO.getClubno());
      return "redirect:/commu/read";
 
    } else { // 정상적인 로그인이 아닌 경우 로그인 유도
@@ -401,13 +412,13 @@ public class CommuCont {
  @GetMapping(value = "/update_file")
  public String update_file(HttpSession session, Model model, 
                                     @RequestParam(name="communo", defaultValue = "0") int communo,
-                                    @RequestParam(name="word", defaultValue = "") String word, 
+                                    @RequestParam(name="hashtag", defaultValue = "") String hashtag, 
                                     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
    
    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
    model.addAttribute("menu", menu);
    
-   model.addAttribute("word", word);
+   model.addAttribute("hashtag", hashtag);
    model.addAttribute("now_page", now_page);
    
    CommuVO commuVO = this.commuProc.read(communo);
@@ -427,7 +438,7 @@ public class CommuCont {
  @PostMapping(value = "/update_file")
  public String update_file(HttpSession session, Model model, RedirectAttributes ra,
                                     @ModelAttribute("commuVO") CommuVO commuVO,
-                                    @RequestParam(name="word", defaultValue = "") String word, 
+                                    @RequestParam(name="hashtag", defaultValue = "") String hashtag, 
                                     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
    if (this.memberProc.isMember(session)) {
 
@@ -487,8 +498,8 @@ public class CommuCont {
 
      this.commuProc.update_file(commuVO); // Oracle 처리
      ra.addAttribute ("communo", commuVO.getCommuno());
-     ra.addAttribute("cateno", commuVO.getClubno());
-     ra.addAttribute("word", word);
+     ra.addAttribute("clubno", commuVO.getClubno());
+     ra.addAttribute("hashtag", hashtag);
      ra.addAttribute("now_page", now_page);
      
      return "redirect:/commu/read";
@@ -507,12 +518,12 @@ public class CommuCont {
  public String delete(HttpSession session, Model model, RedirectAttributes ra,
      @RequestParam(name="clubno", defaultValue = "0") int clubno,
      @RequestParam(name="communo", defaultValue = "0") int communo,
-     @RequestParam(name="word", defaultValue = "") String word, 
+     @RequestParam(name="hashtag", defaultValue = "") String hashtag, 
      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
    
    if (this.memberProc.isMember(session)) { 
      model.addAttribute("clubno", clubno);
-     model.addAttribute("word", word);
+     model.addAttribute("hashtag", hashtag);
      model.addAttribute("now_page", now_page);
      
      ArrayList<ClubVOMenu> menu = this.clubProc.menu();
@@ -543,7 +554,7 @@ public class CommuCont {
  public String delete(RedirectAttributes ra,
      @RequestParam(name="clubno", defaultValue = "0") int clubno,
      @RequestParam(name="communo", defaultValue = "0") int communo,
-     @RequestParam(name="word", defaultValue = "") String word, 
+     @RequestParam(name="hashtag", defaultValue = "") String hashtag, 
      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
    
    // -------------------------------------------------------------------
@@ -573,7 +584,7 @@ public class CommuCont {
    
    HashMap<String, Object> map = new HashMap<String, Object>();
    map.put("clubno", clubno);
-   map.put("word", word);
+   map.put("hashtag", hashtag);
    
    if (this.commuProc.list_by_clubno_search_count(map) % Commu.RECORD_PER_PAGE == 0) {
      now_page = now_page - 1; // 삭제시 DBMS는 바로 적용되나 크롬은 새로고침등의 필요로 단계가 작동 해야함.
@@ -584,11 +595,28 @@ public class CommuCont {
    // -------------------------------------------------------------------------------------
 
    ra.addAttribute("clubno", clubno);
-   ra.addAttribute("word", word);
+   ra.addAttribute("hashtag", hashtag);
    ra.addAttribute("now_page", now_page);
    
    return "redirect:/commu/list_by_clubno";    
    
  }   
     
+// @GetMapping("/increaseRecom")
+// public String increaseRecom(@RequestParam(name="communo", defaultValue="0") int communo, 
+//                                       RedirectAttributes ra) {
+//     commuProc.increaseRecom(communo);  // 추천수 증가 처리
+//     ra.addAttribute("communo", communo);  // communo 값 전달
+//     return "redirect:/commu/read";  // 증가 후 읽기 페이지로 리다이렉트
+// }
+//
+// @GetMapping("/decreaseRecom")
+// public String decreaseRecom(@RequestParam(name="communo", defaultValue="0") int communo, 
+//                                       RedirectAttributes ra) {
+//     commuProc.decreaseRecom(communo);  // 추천수 감소 처리
+//     ra.addAttribute("communo", communo);  // communo 값 전달
+//     return "redirect:/commu/read";  // 감소 후 읽기 페이지로 리다이렉트
+// }
+
+ 
 }

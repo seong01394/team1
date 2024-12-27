@@ -18,7 +18,15 @@
       <div>
         <label>엠블럼</label>
         <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
-     </div> 
+     </div>
+     <!-- <div>
+      <label>PL</label>
+      <input type="text" name="pl" value="" autofocus="autofocus"
+             class="form-control" style="width: 50%;" th:field="*{pl}" placeholder="PL이라 적어주세요">
+      <div th:if="${#fields.hasErrors('pl')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err: ${#lists.sort(#fields.errors('pl'))}" th:text="${err}"></div>
+      </div>  
+    </div>  -->
       <div>
         <label>구단명</label>
         <input type="text" name="clubname" value="" autofocus="autofocus"

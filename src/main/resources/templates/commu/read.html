@@ -3,7 +3,7 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
   <div class='title_line'>
-    <span th:text="${clubVO.clubname }" class="title_line_text"></span >   
+    <span th:text="${clubVO.clubname}" class="title_line_text"></span >   
     > 글 조회
   </div>
   
@@ -12,7 +12,7 @@
     <span class='menu_divide'>│</span>    
     <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
     <span class='menu_divide'>│</span>
-    <a th:href="@{|./list_by_clubno_grid?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}" style="color: black;">갤러리형</a>
+    <a th:href="@{|./list_all|}" style="color: black;">전체보기</a>
     <span class='menu_divide'>│</span>
     <a th:href="@{|/commu/create?clubno=${clubVO.clubno}&now_page=${now_page}&word=${word}|}" style="color: black;">등록</a>
     <span class='menu_divide'>│</span>
@@ -41,37 +41,88 @@
       <li class="li_none">
         <div style="width: 100%; word-break: break-all;">
         
-          <div th:if="${commuVO.image.endsWith('jpg') or commuVO.image.endsWith('png')  or commuVO.image.endsWith('gif')}">
-            <img th:src="@{|/commu/storage/${commuVO.imagesaved}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+          <!-- 제목 -->
+          <div>
+            <span style="font-size: 1.5em; font-weight: bold;" th:text="${commuVO.headline}"></span>
           </div>
-
-          <span style="font-size: 1.5em; font-weight: bold;" th:text="${commuVO.headline}"></span>
-          <span style="font-size: 1em;" th:text="${commuVO.rdate }"></span><br><br>
-          <div style="white-space: pre-wrap;"><span th:text="${commuVO.contents}"></span></div>
+  
+          <!-- 작성 날짜 -->
+          <div style="font-size: 1em;">
+            <span th:text="${commuVO.rdate}"></span>
+          </div>
+  
+          <br><br>
+  
+          <!-- 이미지 (jpg, png, gif만 표시) -->
+          <div th:if="${commuVO.image.endsWith('jpg') or commuVO.image.endsWith('png') or commuVO.image.endsWith('gif')}">
+            <img th:src="@{|/commu/storage/${commuVO.imagesaved}|}" style="width: 20%; margin: 0 auto; display: block; margin-bottom: 1%;">
+          </div>
+  
+          <!-- Youtube (영상 링크 표시) -->
+          <div style="text-align: center; width: 640px; margin: 0 auto; padding: 10px 0;" th:if="${commuVO.youtube.length() > 0}" th:utext="${commuVO.youtube}">
+          </div>
+  
+          <!-- 추천수 및 추천/비추천 버튼 -->
+          <div class="td_bs" style="display: flex; flex-direction: column; align-items: center;">
+            <span id="recomCnt" 
+                  style="margin-bottom: 15px; 
+                         padding: 10px 20px; 
+                         border: 1px solid #ccc; 
+                         border-radius: 5px; 
+                         background-color: #f4f4f4; 
+                         text-align: center; 
+                         font-weight: bold; 
+                         font-size: 1.2em;" 
+                  th:text="${commuVO.recom}">
+            </span>
+          
+            <!-- 추천/비추천 버튼 -->
+            <div style="display: flex; gap: 10px;">
+              <!-- 추천 버튼 -->
+              <form id="increaseRecom" action="/commu/read" method="get">
+                <input type="hidden" name="communo" th:value="${commuVO.communo}">
+                <input type="hidden" name="action" value="increase">
+                <button type="submit" class="btn btn-success" style="padding: 8px 16px; font-size: 0.9em;">추천</button>
+              </form>
+              
+              <!-- 비추천 버튼 -->
+              <form id="decreaseRecom" action="/commu/read" method="get">
+                <input type="hidden" name="communo" th:value="${commuVO.communo}">
+                <input type="hidden" name="action" value="decrease">
+                <button type="submit" class="btn btn-danger" style="padding: 8px 16px; font-size: 0.9em;">비추</button>
+              </form>
+            </div>
+          </div>
+  
         </div>
       </li>
 
-      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;" 
-          th:if="${commuVO.youtube.length() > 0}">
-        <div style='text-align: center; width:640px; margin: 0px auto;'
-           th:utext = "${commuVO.youtube }">
+      <!-- 본문 내용 -->
+        <div style="white-space: pre-wrap; font-size: 1.2em;">
+          <span th:text="${commuVO.contents}"></span>
         </div>
-      </li>
-
-      <li class="li_none" th:text="|해시태그(키워드): ${commuVO.hashtag}|">
-      </li>
+  
+      <!-- 해시태그 표시 -->
+      <li class="li_none" th:text="|해시태그(키워드): ${commuVO.hashtag}|"></li>
       
-      <li class="li_none" th:if="${commuVO.imagesize > 0}" >
+      <!-- 첨부 파일 표시 -->
+      <li class="li_none" th:if="${commuVO.imagesize > 0}">
         <div style="color: black;">
-          첨부 파일: <a th:href='@{|/download?dir=commu/storage&filename=${commuVO.imagesaved}&downname=${commuVO.image}|}'
-                             th:text='|${commuVO.image}|'></a> <span th:text="|(${commuVO.size1_label})|" style="color: black;"></span>  
-                         <a th:href='@{|/download?dir=commu/storage&filename=${commuVO.imagesaved}&downname=${commuVO.image}|}' style="color: black;"><img src="/commu/images/download.png"></a>
+          첨부 파일: 
+          <a th:href="@{|/download?dir=commu/storage&filename=${commuVO.imagesaved}&downname=${commuVO.image}|}" style="color: black;">
+            <span th:text="${commuVO.image}"></span>
+          </a> 
+          <span th:text="|(${commuVO.size1_label})|"></span>
+          
+          <a th:href="@{|/download?dir=commu/storage&filename=${commuVO.imagesaved}&downname=${commuVO.image}|}" style="color: black;">
+            <img src="/commu/images/download.png" alt="Download">
+          </a>
         </div>
       </li>   
+  
     </ul>
   </fieldset>
-
-</div>
+  
 
 </html>
 
