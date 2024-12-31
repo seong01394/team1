@@ -39,17 +39,17 @@
                     <img src="/survey/images/none1.png" style="width: 120px; height: 90px;">
                 </div>
           <div >
-          첨부 파일:  <a th:href='@{|/download?dir=store/storage&filename=${surveyVO.postersaved}&downname=${surveyVO.poster}|}'><img src="/survey/download.png"></a>
+          첨부 파일:  <a th:href='@{|/download?dir=survey/store/storage&filename=${surveyVO.postersaved}&downname=${surveyVO.poster}|}'><img src="/survey/download.png"></a>
           </div>
         </td>
         <td class="td_bs">
-          <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}"  style="display:block; color:black;"  th:text="${surveyVO.survey_title}"></a>
+          <a th:href="@{|/survey_topic/read?surveyno=${surveyVO.surveyno}|}"  style="display:block; color:black;"  th:text="${surveyVO.survey_title}"></a>
         </td>
         <td class="td_bs">
-          <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.start_date}"></a>
+          <a th:href="@{|/survey_topic/read/${surveyVO.surveyno}|}" style="display:block; color:black;" th:text="${surveyVO.start_date}"></a>
         </td>
         <td class="td_bs">
-        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.fin_date}"></a>
+        <a th:href="@{|/survey_topic/read/${surveyVO.surveyno}|}" style="display:block; color:black;" th:text="${surveyVO.fin_date}"></a>
         </td>
         <!-- 진행 여부 -->
         <td class="td_bs" style="text-align: center;">

@@ -22,7 +22,7 @@
                 
                 <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="설문조사">                                                            
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="설문조사" style="color:white;">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey/list_search|}">설문조사 목록</a></li>
@@ -32,9 +32,9 @@
                     </ul>
                 </li>
 
-                <li class="nav-item dropdown down-text" >
+                <li class="nav-item dropdown down-text" style="color:white;">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                       role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="커뮤니티">                                                            
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="커뮤니티" >                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li class="nav-item dropdown" th:each="clubVOMenu:${menu}">

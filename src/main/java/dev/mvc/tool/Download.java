@@ -35,7 +35,7 @@ public class Download {
     // C:/kd/deploy/resort/member/storage
     // C:/kd/deploy/resort/product/storage
     File file = new File(Tool.getUploadDir() + dir, filename);
-    File file1 = new File(Tool1.getUploadDir() + dir, filename);
+
     
     if(!file.exists()) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
