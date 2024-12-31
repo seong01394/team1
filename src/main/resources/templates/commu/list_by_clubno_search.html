@@ -9,7 +9,7 @@
 
   <aside class="aside_right">
     <span th:if="${session.grade == 'member'}">
-      <a th:href="@{|/commu/create?clubno=${clubVO.clubno}&now_page=${now_page}&word=${word}|}" style="color: black;">등록</a>
+      <a th:href="@{|/commu/create?clubno=${clubVO.clubno}&now_page=${now_page}&hashtage=${hashtage}|}" style="color: black;">등록</a>
       <span class="menu_devide">│</span>    
     </span>
     
@@ -32,7 +32,7 @@
     </tr>
    
     <tr th:each="commuVO, status:${list}" 
-         th:attr="onclick=|location.href='/commu/read?communo=${commuVO.communo}&word=${word}'|"
+         th:attr="onclick=|location.href='/commu/read?communo=${commuVO.communo}&hashtag=${hashtag}'|"
          style="cursor: pointer; height: 90px;">
          <td class='td_basic' style="vertical-align: middle; text-align: center;">
           <div th:if="${commuVO.image.endsWith('jpg') or commuVO.image.endsWith('png')  or commuVO.image.endsWith('gif')}">

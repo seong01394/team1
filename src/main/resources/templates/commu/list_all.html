@@ -44,9 +44,12 @@
       </td>
 
       <td class="td_left" style="vertical-align: middle; text-align: left;">
+
         <span th:text="${commuVO.headline}" style="font-weight: bold;"></span><br>
+
         <span th:if="${commuVO.contents.length() > 160 }" 
               th:text="|${commuVO.contents.substring(0, 160) }...|"></span>
+              
         <span th:if="${commuVO.contents.length() <= 160 }" 
               th:text="|${commuVO.contents}|"></span>
       </td>

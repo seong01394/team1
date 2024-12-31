@@ -63,6 +63,15 @@
                         </li>  
                     </ul>
                 </li>
+
+                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_all|}">경기 일정</a></li>
+                    </ul>
+                </li>
               
                 <li class="nav-item down-text" >
                     <a th:if="${session.memberno == null}" class="nav-link" href="/member/login" th:text="@{|회원 로그인|}"></a>

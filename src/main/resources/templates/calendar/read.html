@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">일정 조회</div>
+  <aside class="aside_right">
+    <a th:href="@{|/calendar/list_all?word=${word}&now_page=${now_page}|}" style="color: black;">목록</a>
+    <span class="menu_divide">|</span>
+    <a th:href="@{|/calendar/update/${calendarVO.calendarno}?word=${word}&now_page=${now_page}|}" style="color: black;">수정</a>
+    <span class="menu_divide">|</span>
+    <a th:href="@{|/calendar/delete/${calendarVO.calendarno}?word=${word}&now_page=${now_page}|}" style="color: black;">삭제</a>
+    <span class="menu_divide">|</span>
+    <a th:href="@{|/calendar/create|}" style="color: black;">등록</a>
+    <span class="menu_divide">|</span>
+    <a href="javascript: location.reload();" style="color: black;">새로 고침</a>
+  </aside>
+
+  <div class="menu_line"></div>
+  
+  <div class="container mt-3" style="width: 60%; margin: 5px auto;"> <!--/* mt-3: margin top 16px */-->
+    <ul class="list-group list-group-flush">  
+      <li class="list-group-item">출력할 날짜: <span th:text="${calendarVO.labeldate}"></span></li>     
+      <li class="list-group-item">출력될 레이블: <span th:text="${calendarVO.label}"></span></li>
+      <li class="list-group-item">제목: <span th:text="${calendarVO.title}"></span></li>
+      <li class="list-group-item">글 내용: <span th:text="${calendarVO.content}"></span></li>
+      <li class="list-group-item">조회수: <span th:text="${calendarVO.cnt}"></span></li>
+      <li class="list-group-item">출력 순서: <span th:text="${calendarVO.seqno}"></span></li>
+      <li class="list-group-item">등록 날짜: <span th:text="${calendarVO.regdate}"></span></li>
+    </ul>  
+  </div>
+    
+</div>
+</html>
