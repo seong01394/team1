@@ -21,7 +21,7 @@ import lombok.ToString;
 //    IMAGE         VARCHAR(300)   NULL,
 //    IMAGESAVED    VARCHAR(300)   NULL,
 //    IMAGESIZE     VARCHAR(300)   DEFAULT 0    NULL, 
-//    YOUTUBE       VARCHAR(100)   NOT NULL,
+//    YOUTUBE       VARCHAR(100)    NULL,
 //    PRIMARY KEY (COMMUNO),
 //    FOREIGN KEY (CLUBNO) REFERENCES club (CLUBNO),
 //    FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)
@@ -80,5 +80,7 @@ public class CommuVO {
   
   /** 메인 이미지 크기 */
   private long imagesize = 0;
+  
+  
   
 }

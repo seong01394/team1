@@ -24,6 +24,7 @@ import lombok.ToString;
 //    EMBLEMSAVED   VARCHAR(300)      NULL,  
 //    RANK          NUMBER(5)         DEFAULT 1   NOT NULL,
 //    visible       CHAR(1)           DEFAULT 'Y' NOT NULL,
+//    PL            VARCHAR(100)  NOT NULL,
 //    FOREIGN KEY (ADMINNO) REFERENCES admin (ADMINNO)
 //  );
 
@@ -47,12 +48,12 @@ public class ClubVO {
   
   /** 구단 감독 */
   @NotEmpty(message="감독 이름 입력은 필수 항목입니다.")
-  @Size(min=2, max=12, message="감독 이름은 최소 2자에서 최대 12자입니다.")
+  @Size(min=2, max=20, message="감독 이름은 최소 2자에서 최대 12자입니다.")
   private String headcoach;
   
   /** 구단 레전드 */
   @NotEmpty(message="레전드 이름 입력은 필수 항목입니다.")
-  @Size(min=2, max=12, message="레전드 이름은 최소 2자에서 최대 12자입니다.")
+  @Size(min=2, max=20, message="레전드 이름은 최소 2자에서 최대 12자입니다.")
   private String legend;
   
   /** 구단 역사  */
@@ -71,6 +72,9 @@ public class ClubVO {
   @NotEmpty(message="출력 모드는 필수 항목입니다.")
   @Pattern(regexp="^[YN]$", message="Y 또는 N만 입력 가능합니다.")
   private String visible;
+  
+  /** 프리미엄 리그(대분류)*/
+  private String pl;
   
   /** 이미지 파일*/
   private MultipartFile file1MF = null;

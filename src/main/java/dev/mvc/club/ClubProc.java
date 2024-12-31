@@ -71,15 +71,15 @@ public class ClubProc implements ClubProcInter {
     // 대분류+중분류의 결합 목록
     ArrayList<ClubVOMenu> menu = new ArrayList<ClubVOMenu>();
     
-    ArrayList<ClubVO> clubnames = this.clubDAO.list_all_clubgrp_y(); // 대분류 목록 추출
-    for (ClubVO clubVO:clubnames) {
+    ArrayList<ClubVO> pls = this.clubDAO.list_all_clubgrp_y(); // 대분류 목록 추출
+    for (ClubVO clubVO:pls) {
       ClubVOMenu clubVOMenu = new ClubVOMenu(); // 대분류+중분류의 결합 객체
       
     
-      clubVOMenu.setClubname(clubVO.getClubname()); // 대분류명 저장
+      clubVOMenu.setPl(clubVO.getPl()); // 대분류명 저장
       
       
-      ArrayList<ClubVO> list_name = this.clubDAO.list_all_club_y(clubVO.getClubname());
+      ArrayList<ClubVO> list_name = this.clubDAO.list_all_club_y(clubVO.getPl());
       clubVOMenu.setList_name(list_name);
       
       menu.add(clubVOMenu);
@@ -89,8 +89,8 @@ public class ClubProc implements ClubProcInter {
   }
 
   @Override
-  public ArrayList<String> clubnameset() {
-    ArrayList<String> list = this.clubDAO.clubnameset();
+  public ArrayList<String> plset() {
+    ArrayList<String> list = this.clubDAO.plset();
     
     return list;
   }
@@ -103,8 +103,8 @@ public class ClubProc implements ClubProcInter {
   }
 
   @Override
-  public ArrayList<ClubVO> list_all_club_y(String clubname) {
-    ArrayList<ClubVO> list = this.clubDAO.list_all_club_y(clubname);
+  public ArrayList<ClubVO> list_all_club_y(String pl) {
+    ArrayList<ClubVO> list = this.clubDAO.list_all_club_y(pl);
     
     return list;
   }

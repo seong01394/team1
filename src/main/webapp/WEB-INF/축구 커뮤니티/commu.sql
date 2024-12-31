@@ -18,7 +18,7 @@ CREATE TABLE commu(
     IMAGE         VARCHAR(300)   NULL,
     IMAGESAVED    VARCHAR(300)   NULL,
     IMAGESIZE     VARCHAR(300)   DEFAULT 0    NULL, 
-    YOUTUBE       VARCHAR(100)   NOT NULL,
+    YOUTUBE       VARCHAR(500)    NULL,
     PRIMARY KEY (COMMUNO),
     FOREIGN KEY (CLUBNO) REFERENCES club (CLUBNO),
     FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)
@@ -67,6 +67,7 @@ DELETE FROM match WHERE matchno=1;
 SELECT matchno, clubno, preview, review FROM match ORDER BY matchno ASC;   
   
   
+
   
   
   

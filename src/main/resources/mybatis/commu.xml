@@ -6,7 +6,7 @@
   
   <insert id="create" parameterType="dev.mvc.commu.CommuVO">
     INSERT INTO commu(communo, clubno, memberno, headline, contents, hashtag, 
-                                 rdate, commuthumb, image, imagesaved, imagesize )
+                                  commuthumb, image, imagesaved, imagesize, rdate )
     VALUES(commu_seq.nextval, #{clubno}, #{memberno}, #{headline}, #{contents}, #{hashtag},
               #{commuthumb}, #{image}, #{imagesaved}, #{imagesize}, sysdate)
   </insert>
@@ -42,19 +42,20 @@
     UPDATE commu SET youtube=#{youtube} WHERE communo = #{communo}
   </update>
   
+  
     <!-- 클럽별 검색 목록 -->
   <select id="list_by_clubno_search" resultType="dev.mvc.commu.CommuVO" parameterType="hashMap">
     SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, hashtag, rdate, commuthumb, 
               image, imagesaved, imagesize, youtube
     FROM commu
     <choose>
-      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+      <when test="hashtag == null or hashtag == ''"> <!-- 검색하지 않는 경우 -->
         WHERE clubno=#{clubno}
       </when>
       <otherwise> <!-- 검색하는 경우 -->
-        WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{word}) || '%' 
-                                                  OR UPPER(contents) LIKE '%' || UPPER(#{word}) || '%' 
-                                                  OR UPPER(hashtag) LIKE '%' || UPPER(#{word}) || '%')
+        WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{hashtag}) || '%' 
+                                                  OR UPPER(contents) LIKE '%' || UPPER(#{hashtag}) || '%' 
+                                                  OR UPPER(hashtag) LIKE '%' || UPPER(#{hashtag}) || '%')
       </otherwise>
     </choose>
     ORDER BY communo DESC   
@@ -65,13 +66,13 @@
     SELECT COUNT(*) as cnt
     FROM commu
     <choose>
-      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+      <when test="hashtag == null or hashtag == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
         WHERE clubno=#{clubno}
       </when>
       <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
-        WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{word}) || '%' 
-                                                  OR UPPER(contents) LIKE '%' || UPPER(#{word}) || '%' 
-                                                  OR UPPER(hashtag) LIKE '%' || UPPER(#{word}) || '%')
+        WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{hashtag}) || '%' 
+                                                  OR UPPER(contents) LIKE '%' || UPPER(#{hashtag}) || '%' 
+                                                  OR UPPER(hashtag) LIKE '%' || UPPER(#{hashtag}) || '%')
       </otherwise>
     </choose>
   </select>   
@@ -83,19 +84,19 @@
               image, imagesaved, imagesize, youtube, r
    FROM (
                SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, hashtag, rdate, commuthumb, 
-              image, imagesaved, imagesize, youtube, rownum as r
+                         image, imagesaved, imagesize, youtube, rownum as r
               FROM (
                          SELECT communo, clubno, memberno, headline, contents, recom, reply, viewcnt, hashtag, rdate, commuthumb, 
-              image, imagesaved, imagesize, youtube
+                         image, imagesaved, imagesize, youtube
                         FROM commu
                         <choose>
-                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                          <when test="hashtag == null or hashtag == ''"> <!-- 검색하지 않는 경우 -->
                             WHERE clubno=#{clubno}
                           </when>
                           <otherwise>
-                            WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{word}) || '%' 
-                                                              OR UPPER(contents) LIKE '%' || UPPER(#{word}) || '%' 
-                                                              OR UPPER(hashtag) LIKE '%' || UPPER(#{word}) || '%')
+                            WHERE clubno=#{clubno} AND (UPPER(headline) LIKE '%' || UPPER(#{hashtag}) || '%' 
+                                                              OR UPPER(contents) LIKE '%' || UPPER(#{hashtag}) || '%' 
+                                                              OR UPPER(hashtag) LIKE '%' || UPPER(#{hashtag}) || '%')
                           </otherwise>
                         </choose>
                         ORDER BY communo DESC
@@ -163,6 +164,20 @@
    <update id="decreaseReplycnt" parameterType="int">
      UPDATE commu
      SET reply = reply - 1
+     WHERE communo = #{communo}
+   </update>
+   
+      <!-- 추천 수 증가 -->
+   <update id="increaseRecom" parameterType="int">
+     UPDATE commu
+     SET recom = recom + 1
+     WHERE communo = #{communo}
+   </update>
+
+   <!-- 추천 수 감소 -->
+   <update id="decreaseRecom" parameterType="int">
+     UPDATE commu
+     SET recom = recom - 1
      WHERE communo = #{communo}
    </update>
    

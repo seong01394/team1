@@ -389,7 +389,7 @@ public class Tool {
       String path = "";
       if (File.separator.equals("\\")) {
           // Windows 개발시 사용 폴더
-          path = "C:/kd/deploy/resort_v5sbm3c";
+          path = "C:/kd/team1/no1";
 
       } else {
           // Linux 배포

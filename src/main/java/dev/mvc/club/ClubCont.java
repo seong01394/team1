@@ -116,8 +116,8 @@ public class ClubCont {
     return "/club/create"; 
     } 
 
+    clubVO.setPl(clubVO.getPl().trim());
     clubVO.setClubname(clubVO.getClubname().trim());
-    clubVO.setInfo(clubVO.getInfo().trim());
     int cnt = this.clubProc.create(clubVO);
     
     if (cnt == 1) {
@@ -146,8 +146,8 @@ public class ClubCont {
                                                  
     ClubVO clubVO = new ClubVO();
     
-    ArrayList<String> list_clubname = this.clubProc.clubnameset();
-    clubVO.setClubname(String.join("/", list_clubname));
+    ArrayList<String> list_pl = this.clubProc.plset();
+    clubVO.setPl(String.join("/", list_pl));
 
     model.addAttribute("clubVO", clubVO);
 
@@ -217,8 +217,8 @@ public class ClubCont {
       ArrayList<ClubVOMenu> menu = this.clubProc.menu();
       model.addAttribute("menu", menu);
       
-      ArrayList<String> list_clubname = this.clubProc.clubnameset();
-      model.addAttribute("list_clubname", String.join("/", list_clubname));
+      ArrayList<String> list_pl = this.clubProc.plset();
+      model.addAttribute("list_pl", String.join("/", list_pl));
 
       model.addAttribute("word", word);
       
@@ -417,8 +417,8 @@ public class ClubCont {
     if (this.adminProc.isAdmin(session)) {
       ClubVO clubVO = new ClubVO();
 
-      ArrayList<String> list_clubname = this.clubProc.clubnameset();
-      clubVO.setClubname(String.join("/", list_clubname));
+      ArrayList<String> list_pl = this.clubProc.plset();
+      clubVO.setPl(String.join("/", list_pl));
       
       model.addAttribute("clubVO", clubVO);
       

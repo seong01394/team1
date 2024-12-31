@@ -8,11 +8,11 @@
   </div>
  
   <aside class="aside_right">
-    <A href="javascript:location.reload();">새로고침</A>
+    <a href="javascript:location.reload();" style="color: black;">새로고침</a>
     <span class='menu_divide' >│</span>    
-    <a th:href="@{|./list_by_clubno?clubno=${clubno}&word=${word}&now_page=${now_page}|}">기본 목록형</a>    
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./list_by_clubno_grid?clubno=${clubno}&word=${word}&now_page=${now_page}|}">갤러리형</a>
+    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./list_by_clubno_grid?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}" style="color: black;">갤러리형</a>
   </aside>
   
   <div class='menu_line'></div>

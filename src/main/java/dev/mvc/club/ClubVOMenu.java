@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter @Getter
 public class ClubVOMenu {
   
-  private String clubname;
+  private String pl;  // 대분류
   
-  private ArrayList<ClubVO> list_name;
+  private ArrayList<ClubVO> list_name;  // 중분류
 }
