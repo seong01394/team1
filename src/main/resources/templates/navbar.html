@@ -6,61 +6,56 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-          
+         
         <!-- 메뉴 시작 -->
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
+
                 <li class="nav-item dropdown down-text" >
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="PL구단">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item"><a class="nav-link" th:href="@{|/club/list_search?word=${word}|}">클럽팀 목록</a></li>       
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/club/list_search?word=${word}|}">클럽팀 목록</a></li>      
                     </ul>
                 </li>
 
+
                 <li class="nav-item dropdown down-text"th:each="clubVOMenu:${menu}"> <!--/* 대분류 */-->
-                
+               
                     <!--/* 대분류명 출력 */-->
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="설문조사" style="color:white;">                                                            
-
-
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                         role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${clubVOMenu.pl}">                                                            
                     </a>
-                    
+                   
                     <!--/* 중분류명 */-->
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li th:each="clubVO:${clubVOMenu.list_name}">
                             <a class="dropdown-item" th:href="@{|/commu/list_by_clubno?clubno=${clubVO.clubno}|}" th:text="${clubVO.clubname}"></a>
                         </li>
                     </ul>
-                    
+                   
                 </li>
 
 
-                <li class="nav-item dropdown down-text" style="color:white;">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                       role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="커뮤니티" >                                                            
-
-                
+               
                 <li class="nav-item dropdown down-text" th:if="${session.grade=='admin' or session.grade=='member'}">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="설문조사">                                                            
->>>>>>> 25d6af2a1fd56cf2b180a8e5ada66dcb9afd9578
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey/list_search|}">설문조사 목록</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey/create|}">설문조사 등록</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey_topic/create|}">설문문제 등록</a></li>
 
+
                     </ul>
                 </li>
-                
-                
+               
+               
                 <li class="nav-item dropdown down-text" >
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                        role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -72,7 +67,17 @@
                         </li>  
                     </ul>
                 </li>
-              
+
+
+                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_all|}">경기 일정</a></li>
+                    </ul>
+                </li>
+             
                 <li class="nav-item down-text" >
                     <a th:if="${session.memberno == null}" class="nav-link" href="/member/login" th:text="@{|회원 로그인|}"></a>
                     <a th:if="${session.grade == 'member'}" class="nav-link" href="/member/logout" th:text="@{|${session.id} 로그아웃|}"></a>
@@ -80,14 +85,12 @@
                 <li class="nav-item down-text" >
                     <a th:if="${session.memberno == null}" class="nav-link" href="/admin/login" th:text="@{|관리자 로그인|}"></a>
                     <a th:if="${session.grade == 'admin'}" class="nav-link" href="/admin/logout" th:text="@{|${session.id} 로그아웃|}"></a>
-                </li>               
-                  
+                </li>              
+                 
             </ul>
         </div>
         <!-- 메뉴 종료 -->
-          
+         
     </div>  
   </nav>
 </div>
-
-
