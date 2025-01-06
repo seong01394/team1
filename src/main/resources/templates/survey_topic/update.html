@@ -13,8 +13,8 @@
 
   <div style="width: 50%; margin: 0px auto;">  
     <form name="frm" method="post" action="/survey_topic/update" th:object="${surveytopicVO}">
-      <input type="hidden" name="surveytopicno" th:value="${surveytopicVO.surveytopicno}">
-
+      <input type="hidden" name="surveytopicno" th:value="${surveytopicVO.surveytopicno}"> <!-- /* 값 유지 */-->
+      <input type="hidden" name="surveyno" th:value="${surveytopicVO.surveyno}"> <!-- /* 값 유지 */-->
       <div>
         <label>제목</label>
         <input type="text" class="form-control" style="width: 50%;" th:field="*{topic}" autofocus="autofocus">

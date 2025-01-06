@@ -20,7 +20,9 @@
     
   <div style="width: 50%; margin: 0px auto;">  
     <form name="frm" method="post" action="./create" th:object="${surveytopicVO}" enctype="multipart/form-data">
-       <input type="hidden" th:field="*{surveyno}"/> <!-- 설문 조사 번호를 숨겨진 필드로 추가 -->
+        <input type="hidden" name="surveyno" th:field="*{surveyno}"/>
+        <input type="hidden" th:field="*{surveytopicno}"/> <!-- 설문 개별문제 번호 -->
+
       <div>
         <label>제목</label>
         <input type="text" name="topic" value="" autofocus="autofocus"

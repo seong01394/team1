@@ -16,7 +16,7 @@ public class Surveytopic {
     String path = "";
 
     if (osName.contains("win")) { // Windows
-      path = "C:\\kd\\team1\\surveytopic\\store\\storage\\";
+      path = "C:\\kd\\team1\\no1\\surveytopic\\store\\storage\\";
       // System.out.println("Windows: " + path);
     } else if (osName.contains("mac")) { // MacOS
       path = "/Users/yourusername/deploy/resort/contents/storage/";

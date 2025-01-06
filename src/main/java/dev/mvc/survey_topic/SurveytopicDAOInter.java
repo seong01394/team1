@@ -21,6 +21,8 @@ public interface SurveytopicDAOInter {
   // 삭제
   public int delete(int surveytopicno);
   
+
+  
   /**
    * 설문조사별 설문조사 개별 문제 목록
    * @param surveyno

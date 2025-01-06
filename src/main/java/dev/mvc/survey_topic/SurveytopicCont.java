@@ -1,6 +1,8 @@
 package dev.mvc.survey_topic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.survey.SurveyProcInter;
+import dev.mvc.survey.SurveyVO;
+import dev.mvc.survey_item.SurveyitemProcInter;
+import dev.mvc.survey_item.SurveyitemVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,30 +40,33 @@ public class SurveytopicCont {
   @Autowired
   @Qualifier("dev.mvc.survey_topic.SurveytopicProc")
   private SurveytopicProcInter surveytopicProc;
+
+  @Autowired
+  @Qualifier("dev.mvc.survey_item.SurveyitemProc")
+  private SurveyitemProcInter surveyitemProc;
   
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
   
+  @Autowired
+  @Qualifier("dev.mvc.survey.SurveyProc")
+  private SurveyProcInter surveyproc;
   
   
   @GetMapping(value = "/create")
   public String create(HttpSession session, Model model,
-      @RequestParam(name="word", defaultValue = "") String word,
       @RequestParam(name = "surveyno", defaultValue = "0") int surveyno,
-      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+      @ModelAttribute("surveytopicVO") SurveytopicVO surveytopicVO) {
 
-      if (this.memberProc.isMemberAdmin(session)) {
-          SurveytopicVO surveytopicVO = new SurveytopicVO();
-          surveytopicVO.setSurveyno(surveyno);
-          model.addAttribute("surveytopicVO", surveytopicVO);
-          model.addAttribute("now_page", now_page);
+
+          SurveyVO surveyVO = this.surveyproc.read(surveyno);
+          model.addAttribute("surveyVO", surveyVO);
+
           
           return "/survey_topic/create"; // survey/create.html로 리턴
-      } else {
-          return "redirect:/member/login_cookie_need"; // 로그인 안되어 있으면 리다이렉트
-      }
-  }
+      } 
+  
 
     
   @PostMapping(value = "/create")
@@ -67,14 +75,16 @@ public class SurveytopicCont {
       HttpSession session,
       Model model,
       @Valid @ModelAttribute("surveytopicVO") SurveytopicVO surveytopicVO,
+      @RequestParam(name = "surveyno", defaultValue = "") int surveyno,
       BindingResult bindingResult,
       RedirectAttributes ra) {
-
+    if (this.memberProc.isMemberAdmin(session)) {
     // 유효성 검사 실패 시 다시 입력 폼으로 이동
     if (bindingResult.hasErrors()) {
       return "/survey_topic/create"; // templates/survey/create.html
     }
-
+    System.out.println("Received surveyno: " + surveytopicVO.getSurveyno());
+    
     // 파일 업로드 처리
     String filesaved = "";   // 저장된 파일명
     String filethumb = "";       // 축소판 파일명
@@ -97,7 +107,7 @@ public class SurveytopicCont {
         surveytopicVO.setFilethumb(filethumb);    // 축소판 파일명 저장
         surveytopicVO.setFilesize(filesize);       // 파일 크기 저장
       } else {
-        ra.addFlashAttribute("code", "create_fail"); // 업로드 실패 메시지
+        ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 실패 메시지
         return "redirect:/survey_topic/msg"; // 업로드 실패 메시지 페이지로 리다이렉트
       }
     }
@@ -106,15 +116,17 @@ public class SurveytopicCont {
     surveytopicVO.setTopic(surveytopicVO.getTopic().trim()); // 제목 공백 제거
     int cnt = this.surveytopicProc.create(surveytopicVO);   // 개별문제 등록
     if (cnt == 1) {
-      return "redirect:/survey/read/" + surveytopicVO.getSurveyno(); //8 설문 목록으로 이동
+      return "redirect:/survey_topic/read?" + "surveyno=" +surveytopicVO.getSurveyno(); //8 설문 목록으로 이동
     } else {
       model.addAttribute("code", "create_fail"); // 등록 실패 메시지
     }
 
     model.addAttribute("cnt", cnt); // 결과 추가
     return "/survey_topic/msg"; // 메시지 페이지로 이동
+  } else {
+    return "redirect:/member/login_cookie_need"; // redirect
   }
-
+ }
 
     
 
@@ -123,25 +135,50 @@ public class SurveytopicCont {
     /**
      * 조회 http://localhost:9093/surveytopic/read/1
      */
-    @GetMapping(value = "/read/{surveytopicno}")
-    public String read(Model model, @PathVariable("surveytopicno") Integer surveytopicno) {
-      SurveytopicVO surveytopicVO = this.surveytopicProc.read(surveytopicno);
-      model.addAttribute("surveytopicVO", surveytopicVO);
+    @GetMapping(value = "/read")
+    public String read(Model model,
+        @RequestParam(name="surveyno", defaultValue = "") Integer surveyno) {
       
-      int surveyno = surveytopicVO.getSurveyno();
       
+      
+      SurveyVO surveyVO = this.surveyproc.read(surveyno);
+      model.addAttribute("surveyVO", surveyVO);
+                  
       ArrayList<SurveytopicVO> surveytopicList = this.surveytopicProc.listBySurveyno(surveyno);
       model.addAttribute("surveytopicList", surveytopicList);
-      return "/survey/read";    
+      
+       // 각 주제에 대한 항목을 저장할 맵
+       Map<Integer, ArrayList<SurveyitemVO>> itemsByTopic = new HashMap<>();
+
+          // 각 설문 주제를 반복하면서 해당 설문 주제 번호로 항목 조회
+          for (SurveytopicVO topic : surveytopicList) {
+              ArrayList<SurveyitemVO> surveyitemList = this.surveyitemProc.listBySurveytopicno(topic.getSurveytopicno());
+              itemsByTopic.put(topic.getSurveytopicno(), surveyitemList); // 주제 번호를 키로 하고 항목 리스트를 값으로 저장
+              System.out.println("Items for topic " + topic.getSurveytopicno() + ": " + surveyitemList.size());
+          }
+          
+          model.addAttribute("itemsByTopic", itemsByTopic);
+          
+      System.out.println("-> surveytopicList:" + surveytopicList );
+      
+      return "/survey_topic/read";    
     }    
     
     /**
+     * 
      * 수정폼 http://localhost:9093/survey/update/1
      */
-    @GetMapping(value = "/update/{surveytopicno}")
+    @GetMapping(value = "/update")
     public String update(HttpSession session, Model model, 
-                                  @PathVariable("surveytopicno") Integer surveytopicno) {
+                                  @RequestParam(name="surveytopicno", defaultValue = "0") int surveytopicno,
+                                  @RequestParam(name = "surveyno", defaultValue = "0") int surveyno) {
       if (this.memberProc.isMemberAdmin(session)) {
+        model.addAttribute("surveytopicno", surveytopicno);
+        model.addAttribute("surveyno", surveyno); 
+        
+        SurveyVO surveyVO = this.surveyproc.read(surveyno);
+        model.addAttribute("surveyVO", surveyVO);
+        
         SurveytopicVO surveytopicVO = this.surveytopicProc.read(surveytopicno);
         model.addAttribute("surveytopicVO", surveytopicVO);
         
@@ -160,18 +197,21 @@ public class SurveytopicCont {
      */
     @PostMapping(value = "/update")
     public String update(HttpSession session, Model model, RedirectAttributes ra,
-        @ModelAttribute("surveytopicVO") SurveytopicVO surveytopicVO) {
+        @ModelAttribute("surveytopicVO") SurveytopicVO surveytopicVO,
+        @RequestParam(name = "surveytopicno", defaultValue = "0") int surveytopicno,
+        @RequestParam(name = "surveyno", defaultValue = "0") int surveyno) {
 
         // 관리자 권한 체크
         if (this.memberProc.isMemberAdmin(session)) {
 
+          
             // Survey 업데이트
             int cnt = this.surveytopicProc.update(surveytopicVO);
             System.out.println("-> cnt: " + cnt);
 
 
 
-            return "/survey_topic/msg"; // 업데이트 실패 시 메시지 페이지
+            return "redirect:/survey_topic/read?" + "surveyno=" + surveytopicVO.getSurveyno(); // 업데이트 실패 시 메시지 페이지
         } else {
             return "redirect:/member/login_cookie_need"; // 권한이 없을 경우 로그인 페이지로 리다이렉트
         }
@@ -183,17 +223,26 @@ public class SurveytopicCont {
     /**
      * 삭제폼 http://localhost:9091/cate/delete/1
      */
-    @GetMapping(value = "/delete/{surveyno}")
-    public String delete(HttpSession session, Model model, @PathVariable("surveytopicno") Integer surveytopicno) {
+    @GetMapping(value = "/delete")
+    public String delete(HttpSession session, Model model, 
+                                @RequestParam(name = "surveytopicno", defaultValue = "0") int surveytopicno,
+                                @RequestParam(name = "surveyno", defaultValue = "0") int surveyno,
+                                RedirectAttributes ra) {
       if (this.memberProc.isMemberAdmin(session)) {
+        model.addAttribute("surveytopicno", surveytopicno);
+        model.addAttribute("surveyno", surveyno); 
+        
+        SurveyVO surveyVO = this.surveyproc.read(surveyno);
+        model.addAttribute("surveyVO", surveyVO);
+        
         SurveytopicVO surveytopicVO = this.surveytopicProc.read(surveytopicno);
         model.addAttribute("surveytopicVO", surveytopicVO);
-            
 
         return "/survey_topic/delete"; // templaes/cate/delete.html
-
+        
       } else {
-        return "redirect:/member/login_cookie_need";  // redirect
+        model.addAttribute("code", "delete_fail");
+        return "redirect:/survey_topic/msg";  // redirect
       }
       
     }
@@ -208,7 +257,9 @@ public class SurveytopicCont {
      * @return
      */
     @PostMapping(value = "/delete")
-    public String delete_process(HttpSession session, Model model, @RequestParam(name = "surveytopicno", defaultValue = "0") Integer surveytopicno) {
+    public String delete_process(HttpSession session, Model model, 
+                                           @RequestParam(name = "surveytopicno", defaultValue = "0") Integer surveytopicno,
+                                            @RequestParam(name = "surveyno", defaultValue = "0") Integer surveyno) {
       if (this.memberProc.isMemberAdmin(session)) {
         System.out.println("-> delete_process");
 
@@ -219,11 +270,11 @@ public class SurveytopicCont {
         int cnt = this.surveytopicProc.delete(surveytopicno);
         System.out.println("-> cnt: " + cnt);
        
-        return "redirect:/survey/list_search";
+        return "redirect:/survey_topic/read?" + "surveyno=" + surveytopicVO.getSurveyno();
         
       } else {
         model.addAttribute("code", "delete_fail");
-        return "redirect:/member/login_cookie_need";
+        return "redirect:/survey_topic/msg";
       }
    
     }

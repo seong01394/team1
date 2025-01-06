@@ -27,7 +27,7 @@ public class CalendarVO{
   private int calendarno;
   
   /** 관리자 번호 */
-  private int memberno=1;
+  private int adminno;
   
   /** 경기 일정 */
   private String labeldate = "";

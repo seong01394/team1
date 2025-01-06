@@ -6,65 +6,56 @@ import java.util.Map;
 public interface CalendarDAOInter {
   
   /**
-   * 등록
+   * 등록, 추상 메소드
    * @param calendarVO
    * @return
    */
   public int create(CalendarVO calendarVO);
   
   /**
-   * 목록
+   * 전체 목록
    * @return
    */
   public ArrayList<CalendarVO> list_all();
-  
-  /**
-   * 특정 월의 일정 목록
-   * @return
-   */
-  public ArrayList<CalendarVO> findByMonth();
-  
+
   /**
    * 조회
    * @param calendarno
    * @return
    */
-  public CalendarVO read(Integer calendarno);
-  
+  public CalendarVO read(int calendarno);
+
+  /**
+   * 조회수 증가
+   * @param contentsVO
+   * @return 처리된 레코드 갯수
+   */
+  public int increaseCnt(int calendarno);
   
   /**
-   * 수정
-   * @param calendarVO
-   * @return
+   * 글 수정
+   * @param contentsVO
+   * @return 처리된 레코드 갯수
    */
   public int update(CalendarVO calendarVO);
   
   /**
-   *  삭제
-   * @param calenderno
-   * @return
+   * 삭제
+   * @param calendarno
+   * @return 삭제된 레코드 갯수
    */
-  public int delete(int calenderno);
+  public int delete(int calendarno);
   
   /**
-   * 검색 목록 
+   * 특정 달의 조회
    * @return
    */
-  public ArrayList<CalendarVO> list_search(String word);
-  
+  public ArrayList<CalendarVO> list_calendar(String date);
+
   /**
-   * 검색 갯수
-   * @param word
+   * 특정 날짜의 조회
    * @return
    */
-  public Integer list_search_count(String word);
-  
-  /**
-   * 검색 + 페이징 목록
-   * @param map
-   * @return
-   */
-  public ArrayList<CalendarVO> list_search_paging(Map<String, Object> map);  
-  
+  public ArrayList<CalendarVO> list_calendar_day(String date);
 
 }

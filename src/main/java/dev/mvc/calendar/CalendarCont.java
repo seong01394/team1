@@ -1,7 +1,10 @@
 package dev.mvc.calendar;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -13,9 +16,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.admin.AdminProcInter;
+import dev.mvc.club.ClubProcInter;
+import dev.mvc.club.ClubVOMenu;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -27,18 +33,29 @@ public class CalendarCont {
   @Qualifier("dev.mvc.calendar.CalendarProc")
   private CalendarProcInter calendarProc;
   
-  /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
-  public int record_per_page = 10;
-
-  /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
-  public int page_per_block = 10;
-  
-  /** 페이징 목록 주소 */
-  private String list_file_name = "/calendar/list_search";
-  
+  @Autowired
+  @Qualifier("dev.mvc.club.ClubProc")
+  private ClubProcInter clubProc;
+    
   @Autowired
   @Qualifier("dev.mvc.admin.AdminProc")
   private AdminProcInter adminProc;
+  
+  /**
+   * POST 요청시 새로고침 방지, POST 요청 처리 완료 → redirect → url → GET → forward -> html 데이터
+   * 전송
+   * 
+   * @return
+   */
+  @GetMapping(value = "/post2get")
+  public String post2get(Model model, 
+      @RequestParam(name="url", defaultValue = "") String url) {
+    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+    model.addAttribute("menu", menu);
+
+    return url; // forward, /templates/...
+  }
+  
   
   /**
    * 등록폼
@@ -49,8 +66,8 @@ public class CalendarCont {
    */
   @GetMapping(value="/create")
   public String create(Model model) {
-    CalendarVO calendarVO = new CalendarVO();
-    model.addAttribute("calendarVO", calendarVO);
+    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+    model.addAttribute("menu", menu);
     
     return "/calendar/create";    
   }
@@ -62,29 +79,27 @@ public class CalendarCont {
    * @param bindingResult
    * @return
    */
-  @PostMapping(value="create")
-  public String create(Model model, @Valid 
-                            @ModelAttribute("calendarVO")CalendarVO calendarVO,
-                            BindingResult bindingResult) {
+  @PostMapping(value = "/create")
+  public String create(HttpSession session, Model model, 
+           @ModelAttribute("calendarVO") CalendarVO calendarVO) {
     
-    if (bindingResult.hasErrors() == true) {
-      
-      return "/calendar/create";
-    }
+    int adminno = 1; // 테스트용
+    calendarVO.setAdminno(adminno);
     
     int cnt = this.calendarProc.create(calendarVO);
-    System.out.println("-> cnt:" + cnt);
-    
+
     if (cnt == 1) {
-      
-      return "redirect:/calendar/list_all";
+      // model.addAttribute("code", "create_success");
+      // model.addAttribute("name", cateVO.getName());
+
+      return "redirect:/calendar/list_all"; // @GetMapping(value="/list_all")
     } else {
       model.addAttribute("code", "create_fail");
     }
-    
+
     model.addAttribute("cnt", cnt);
-    
-    return "/calendar/msg";
+
+    return "/calendar/msg"; 
   }
   
   
@@ -93,269 +108,200 @@ public class CalendarCont {
    * @param model
    * @return
    */
-  @GetMapping(value="/list_all")
-  public String list_all(HttpSession session, Model model,
-                            @RequestParam(name="calendarno", defaultValue="") String calendarno
-//                            @RequestParam(name="word", defaultValue="") String word,               
-//                            @RequestParam(name="now_page", defaultValue = "1") int now_page
-                            ) {
- 
-    CalendarVO calendarVO = new CalendarVO();
-    
-    model.addAttribute("calendarVO", calendarVO);
-    
+  @GetMapping(value = "/list_all")
+  public String list_all(Model model) {
     ArrayList<CalendarVO> list = this.calendarProc.list_all();
-    model.addAttribute("list",list);
-    
-//    int search_count = this.calendarProc.list_search_count(word);
-//    String paging = this.calendarProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
-//        this.page_per_block);
-//    model.addAttribute("paging", paging);
-//    model.addAttribute("now_page", now_page);
-//
-//
-//    int no = search_count - ((now_page - 1) * this.record_per_page);
-//    model.addAttribute("no", no);
-    
-    return "/calendar/list_all";
+    model.addAttribute("list", list);
+
+    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+    model.addAttribute("menu", menu);
+
+    return "/calendar/list_all"; // /templates/calendar/list_all.html
   }
   
   /**
    * 조회
+   * 
+   * @return
    */
-  @GetMapping(value="/read")
-  public String read(Model model, 
-                          @RequestParam(name = "word", defaultValue = "") String word,
-                          @RequestParam(name = "now_page", defaultValue = "") int now_page) {
-  
-   ArrayList<CalendarVO> list = this.calendarProc.list_search_paging(word, now_page, this.record_per_page);
-   model.addAttribute("list", list);
-   
-   model.addAttribute("word", word);
-   
-   // --------------------------------------------------------------------------------------
-   // 페이지 번호 목록 생성
-   // --------------------------------------------------------------------------------------
-   int search_count = this.calendarProc.list_search_count(word);
-   String paging = this.calendarProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
-       this.page_per_block);
-   model.addAttribute("paging", paging);
-   model.addAttribute("now_page", now_page);
-
-   // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-   int no = search_count - ((now_page - 1) * this.record_per_page);
-   model.addAttribute("no", no);
-   // --------------------------------------------------------------------------------------
-
-   return "/calendar/read";
-  }
-  
-  /**
-   * 수정폼
-   */
-  @GetMapping(value="/update")
-  public String update(HttpSession session, Model model,
-                             @RequestParam(name = "word", defaultValue = "") String word,
-                             @RequestParam(name = "now_page", defaultValue = "0") int now_page) {
+  @GetMapping(path = "/read/{calendarno}")
+  public String read(Model model, @PathVariable("calendarno") int calendarno) {
     
-    if(this.adminProc.isAdmin(session)) {
-      ArrayList<CalendarVO> list = this.calendarProc.list_search_paging(word, now_page, this.record_per_page);
-      
-      model.addAttribute("word", word);
-      
-      int search_count = this.calendarProc.list_search_count(word);
-      String paging = this.calendarProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
-          this.page_per_block);
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
+    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+    model.addAttribute("menu", menu);
 
-      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-      int no = search_count - ((now_page - 1) * this.record_per_page);
-      model.addAttribute("no", no);
-      // --------------------------------------------------------------------------------------
+    this.calendarProc.increaseCnt(calendarno); // 조회수 증가
+    
+    CalendarVO calendarVO = this.calendarProc.read(calendarno);
 
-      return "/calendar/update"; 
+    model.addAttribute("calendarVO", calendarVO);
+
+    return "/calendar/read";
+  }
+    
+  /**
+   * 수정 폼
+   *
+   */
+  @GetMapping(value = "/update")
+  public String update_text(HttpSession session, 
+      Model model, 
+      @RequestParam(name="calendarno", defaultValue = "0") int calendarno, 
+      RedirectAttributes ra) {    
+    
+    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+    model.addAttribute("menu", menu);
+
+    if (this.adminProc.isAdmin(session)) { // 관리자로 로그인한경우
+      CalendarVO calendarVO = this.calendarProc.read(calendarno);
+      model.addAttribute("calendarVO", calendarVO);
+
+      return "/calendar/update"; // /templates/calendar/update.html
     } else {
-      return "redirect:/admin/login_cookie_need"; // redirect
+      // ra.addAttribute("url", "/member/login_cookie_need"); // /templates/member/login_cookie_need.html
+      // return "redirect:/contents/msg"; // @GetMapping(value = "/msg")
+      return "/admin/login_cookie_need"; 
     }
-  }  
+
+  }
     
   /**
    * 수정 처리
    */
-  @PostMapping(value="/update")
-  public String update(HttpSession session, Model model, @Valid CalendarVO calendarVO, BindingResult bindingResult,
-                              @RequestParam(name = "word", defaultValue = "") String word,
-                              @RequestParam(name = "now_page", defaultValue = "0") int now_page,
-                              RedirectAttributes ra) {
+  @PostMapping(value = "/update")
+  public String update(HttpSession session, 
+      Model model, 
+      @ModelAttribute("calendarVO") CalendarVO calendarVO, 
+      RedirectAttributes ra) {
     
-    if (this.adminProc.isAdmin(session)) {
+    if (this.adminProc.isAdmin(session)) { // 관리자 로그인 확인
+      this.calendarProc.update(calendarVO); // 글수정
 
-      if (bindingResult.hasErrors()) { 
-        return "/calendar/update";
-      }
+      return "redirect:/calendar/read/" + calendarVO.getCalendarno(); // @GetMapping(value = "/read")
 
-      int cnt = this.calendarProc.update(calendarVO);
-      System.out.println("-> cnt: " + cnt);
-
-      if (cnt == 1) {
-        ra.addAttribute("word", word); 
-        ra.addAttribute("now_page", now_page); 
-        return "redirect:/calendar/update/";
-      } else {
-        model.addAttribute("code", "update_fail");
-      }
-
-      model.addAttribute("cnt", cnt);
-
-      // --------------------------------------------------------------------------------------
-      // 페이지 번호 목록 생성
-      // --------------------------------------------------------------------------------------
-      int search_count = this.calendarProc.list_search_count(word);
-      String paging = this.calendarProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
-          this.page_per_block);
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
-
-      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-      int no = search_count - ((now_page - 1) * this.record_per_page);
-      model.addAttribute("no", no);
-      // --------------------------------------------------------------------------------------
-
-      return "/calendar/msg"; 
-    } else {
-      return "redirect:/admin/login_cookie_need"; 
+    } else { // 정상적인 로그인이 아닌 경우 로그인 유도
+      ra.addAttribute("url", "/admin/login_cookie_need"); // /templates/member/login_cookie_need.html
+      return "redirect:/calendar/post2get"; // @GetMapping(value = "/msg")
     }
+
   }
   
   
   /**
    * 삭제폼
    */
-  @GetMapping(value = "/delete")
-  public String delete(HttpSession session, Model model,@PathVariable("calendarno") Integer calendarno,
-                            @RequestParam(name = "word", defaultValue = "") String word,
-                            @RequestParam(name = "now_page", defaultValue = "") int now_page) {
+  @GetMapping(path = "/delete/{calendarno}")
+  public String delete(HttpSession session, 
+      Model model, 
+      @PathVariable("calendarno") int calendarno, 
+      RedirectAttributes ra) {    
+    
+    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+    model.addAttribute("menu", menu);
+
     if (this.adminProc.isAdmin(session)) {
       CalendarVO calendarVO = this.calendarProc.read(calendarno);
       model.addAttribute("calendarVO", calendarVO);
 
-      ArrayList<CalendarVO> list = this.calendarProc.list_search_paging(word, now_page, this.record_per_page);
-      model.addAttribute("list", list);
-
-      model.addAttribute("word", word);
-      model.addAttribute("now_page", now_page);
-
-      // --------------------------------------------------------------------------------------
-      // 페이지 번호 목록 생성
-      // --------------------------------------------------------------------------------------
-      int search_count = this.calendarProc.list_search_count(word);
-      String paging = this.calendarProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
-          this.page_per_block);
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
-
-      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-      int no = search_count - ((now_page - 1) * this.record_per_page);
-      model.addAttribute("no", no);
-      // --------------------------------------------------------------------------------------
-
-      return "/calendar/delete"; 
-
+      return "/calendar/delete"; // /templates/calendar/delete.html
     } else {
-      return "redirect:/admin/login_cookie_need"; 
+      // ra.addAttribute("url", "/member/login_cookie_need"); // /templates/member/login_cookie_need.html
+      // return "redirect:/contents/msg"; // @GetMapping(value = "/msg")
+      return "/admin/login_cookie_need"; 
     }
-    
   }
 
   /**
    * 삭제 처리
    */
   @PostMapping(value = "/delete")
-  public String delete_process(HttpSession session, Model model, 
-                                       @RequestParam(name = "calendarno", defaultValue = "0") Integer calendarno,
-                                       @RequestParam(name = "word", defaultValue = "") String word,
-                                       @RequestParam(name = "now_page", defaultValue = "") int now_page, RedirectAttributes ra) {
-    if (this.adminProc.isAdmin(session)) {
-      
-      CalendarVO calendarVO = this.calendarProc.read(calendarno);
-      model.addAttribute("calendarVO", calendarVO);
-      
-      int cnt = this.calendarProc.delete(calendarno);
-      System.out.println("-> cnt: " + cnt);
+  public String delete_proc(HttpSession session, 
+      Model model, 
+      @RequestParam(name="calendarno", defaultValue = "0") int calendarno, 
+      RedirectAttributes ra) {    
+    
+    if (this.adminProc.isAdmin(session)) { // 관리자 로그인 확인
+      this.calendarProc.delete(calendarno);
 
-      if (cnt == 1) {
+      return "redirect:/calendar/list_all";
 
-        ra.addAttribute("word", word); // redirect로 데이터 전송
-
-        // ----------------------------------------------------------------------------------------------------------
-        // 마지막 페이지에서 모든 레코드가 삭제되면 페이지수를 1 감소 시켜야함.
-        int search_cnt = this.calendarProc.list_search_count(word);
-        if (search_cnt % this.record_per_page == 0) {
-          now_page = now_page - 1;
-          if (now_page < 1) {
-            now_page = 1; // 최소 시작 페이지
-          }
-        }
-        // ----------------------------------------------------------------------------------------------------------
-
-        ra.addAttribute("now_page", now_page);
-
-        return "redirect:/calendar/list_search";
-      } else {
-        model.addAttribute("code", "delete_fail");
-      }
-
-      model.addAttribute("cnt", cnt);
-
-      return "/calendar/msg"; 
-    } else {
-      return "redirect:/admin/login_cookie_need";  // redirect
+    } else { // 정상적인 로그인이 아닌 경우 로그인 유도
+      ra.addAttribute("url", "/admin/login_cookie_need"); // /templates/member/login_cookie_need.html
+      return "redirect:/calendar/post2get"; // @GetMapping(value = "/msg")
     }
+
   }
   
   /**
-   * 등록 폼 및 검색 목록 + 페이징 
+   * 특정 날짜의 목록
+   * 현재 월: http://localhost:9091/calendar/list_calendar
+   * 이전 월: http://localhost:9091/calendar/list_calendar?year=2024&month=12 
+   * 다음 월: http://localhost:9091/calendar/list_calendar?year=2024&month=1
+   * @param model
+   * @return
    */
-  @GetMapping(value = "/list_search")
-  public String list_search_paging(HttpSession session, Model model,
-      @RequestParam(name = "word", defaultValue = "") String word,
-      @RequestParam(name = "calendarno", defaultValue = "0") int calendarno,
-      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
-    if (this.adminProc.isAdmin(session)) {
-      CalendarVO calendarVO = new CalendarVO();
-      
-      model.addAttribute("calendarVO", calendarVO);
-      
-      word = Tool.checkNull(word);
+  @GetMapping(value = "/list_calendar")
+  public String list_calendar(Model model,
+      @RequestParam(name="year", defaultValue = "0") int year,
+      @RequestParam(name="month", defaultValue = "0") int month) {
+    
+    if (year == 0) {
+        // 현재 날짜를 가져옴
+        LocalDate today = LocalDate.now();
 
-      ArrayList<CalendarVO> list = this.calendarProc.list_search_paging(word, now_page, this.record_per_page);
-      model.addAttribute("list", list);
+        // 년도와 월 추출
+        year = today.getYear();
+        month = today.getMonthValue();
+    } 
+    
+    String month_str = String.format("%02d", month); // 두 자리 형식으로
+    System.out.println("-> month: " + month_str);
+  
+    String date = year + "-" + month;
+    System.out.println("-> date: " + date);
+    
+//    ArrayList<CalendarVO> list = this.calendarProc.list_calendar(date);
+//    model.addAttribute("list", list);
 
-      int search_cnt = this.calendarProc.list_search_count(word);
-      model.addAttribute("search_cnt", search_cnt);
+    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
+    model.addAttribute("menu", menu);
 
-      model.addAttribute("word", word); // 검색어
+    
+    model.addAttribute("year", year);
+    model.addAttribute("month", month-1);  // javascript는 1월이 0임. 
+    
+    return "/calendar/list_calendar"; // /templates/calendar/list_calendar.html
+  }
+  
+  /**
+   * 특정 날짜의 목록
+   * 
+   * @param model
+   * @return
+   */
+  // http://localhost:9091/calendar/list_calendar_day?labeldate=2025-01-03
+  @GetMapping(value = "/list_calendar_day")
+  @ResponseBody
+  public String list_calendar_day(Model model, @RequestParam(name="labeldate", defaultValue = "") String labeldate) {
+  System.out.println("-> labeldate: " + labeldate);
+  
+    ArrayList<CalendarVO> list = this.calendarProc.list_calendar_day(labeldate);
+    model.addAttribute("list", list);
 
-
-      // --------------------------------------------------------------------------------------
-      // 페이지 번호 목록 생성
-      // --------------------------------------------------------------------------------------
-      int search_count = this.calendarProc.list_search_count(word);
-      String paging = this.calendarProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
-          this.page_per_block);
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
-
-      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-      int no = search_count - ((now_page - 1) * this.record_per_page);
-      model.addAttribute("no", no);
-      // --------------------------------------------------------------------------------------
-
-      return "/calendar/list_search"; 
-    } else {
-      return "redirect:/admin/login_cookie_need"; 
+    JSONArray schedule_list = new JSONArray();
+    
+    for (CalendarVO calendarVO: list) {
+        JSONObject schedual = new JSONObject();
+        schedual.put("calendarno", calendarVO.getCalendarno());
+        schedual.put("labeldate", calendarVO.getLabeldate());
+        schedual.put("label", calendarVO.getLabel());
+        schedual.put("seqno", calendarVO.getSeqno());
+        
+        schedule_list.put(schedual);
     }
+
+    return schedule_list.toString();
+    
   }
   
 }

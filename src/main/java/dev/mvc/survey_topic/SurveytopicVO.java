@@ -22,10 +22,10 @@ public class SurveytopicVO {
   
   /** 제목 */
   @NotEmpty(message="제목은 필수")
-  @Size(min=2, max=15, message="제목은 최소 2자에서 최대 15자입니다.")
+  @Size(min=2, max=200, message="제목은 최소 2자에서 최대 15자입니다.")
   private String topic;
   /** 출력 순서 */
-  @NotEmpty(message="출력순서 필수")
+  @NotNull(message="출력순서 필수")
   @Size(min=1, max=10, message="출력순서 필수")
   private String seqno;
   /**  메인 이미지 */

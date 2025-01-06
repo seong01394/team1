@@ -33,8 +33,8 @@ public class SurveytopicProc implements SurveytopicProcInter{
   }
 
   @Override
-  public int delete(int surveytopicVO) {
-    int cnt = this.surveytopicDAO.delete(surveytopicVO);
+  public int delete(int surveytopicno) {
+    int cnt = this.surveytopicDAO.delete(surveytopicno);
     return cnt;
   }
 

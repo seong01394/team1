@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.survey_item.SurveyitemProcInter;
+import dev.mvc.survey_item.SurveyitemVO;
 import dev.mvc.survey_topic.SurveytopicProcInter;
 import dev.mvc.survey_topic.SurveytopicVO;
 import dev.mvc.club.ClubVO;
@@ -52,6 +54,9 @@ public class SurveyCont {
   @Qualifier("dev.mvc.survey_topic.SurveytopicProc")
   private SurveytopicProcInter surveytopicProc; // 개별 문제를 관리하는 인터페이스 주입
   
+  @Autowired
+  @Qualifier("dev.mvc.survey_item.SurveyitemProc")
+  private SurveyitemProcInter surveyitemProc;
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
@@ -185,16 +190,17 @@ public class SurveyCont {
      * 조회 http://localhost:9093/survey/read/1
      */
     @GetMapping(value = "/read/{surveyno}")
-    public String read(Model model, @PathVariable("surveyno") Integer surveyno) {
+    public String read(Model model,
+                                    @PathVariable("surveyno") Integer surveyno,
+                                    @RequestParam(name = "surveytopicno", defaultValue = "0") Integer surveytopicno) {
       SurveyVO surveyVO = this.surveyProc.read(surveyno);
       model.addAttribute("surveyVO", surveyVO);
-      
-      ArrayList<SurveytopicVO> surveytopicList = this.surveytopicProc.listBySurveyno(surveyno);
-      model.addAttribute("surveytopicList", surveytopicList); // 개별 문제 목록 추가
+                            
       
       this.surveyProc.increaseCnt(surveyno);
-
-      return "/survey/read";    
+//      this.surveyitemProc.increaseitemCnt(surveyitemno);
+      
+      return "/survey_topic/read" + surveyVO.getSurveyno();    
     }    
     
     /**
@@ -376,7 +382,8 @@ public class SurveyCont {
     public String list_search_paging(HttpSession session, Model model,
         @RequestParam(name = "word", defaultValue = "") String word,
         @RequestParam(name = "surveyno", defaultValue = "0") int surveyno,
-        @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+        @RequestParam(name = "now_page", defaultValue = "1") int now_page,
+        @ModelAttribute("surveytopicVO") SurveytopicVO surveytopicVO) {
      
       if (this.memberProc.isMemberAdmin(session)) {
         SurveyVO surveyVO = new SurveyVO();
@@ -403,7 +410,10 @@ public class SurveyCont {
 
         int no = search_count - ((now_page - 1) * this.record_per_page);
         model.addAttribute("no", no);
-
+        
+        ArrayList<SurveytopicVO> surveytopicList = surveytopicProc.listBySurveyno(surveyno); // 또는 적절한 메서드 호출
+        model.addAttribute("surveytopicList", surveytopicList);
+        
         return "/survey/list_search"; 
       } else {
         return "redirect:/admin/login";

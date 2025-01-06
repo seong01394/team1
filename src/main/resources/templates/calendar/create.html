@@ -2,48 +2,45 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+
   <div class='title_line'>
-    <span th:text="${calendarVO.title}" class="title_line_text"></span >  
-    * 글 등록
+    일정 등록
   </div>
   
   <aside class="aside_right">
-    <a href="javascript:location.reload();" style="color: black;"></a>새로고침</a>
+    <a th:href="@{|./create|}" style="color: black;">등록</a>
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./list_all|}" style="color: black;">일정 목록</a>    
+    <a href="javascript:location.reload();" style="color: black;">새로고침</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_all|}" style="color: black;">기본 목록형</a>    
   </aside>
   
   <div class='menu_line'></div>
   
-  <form name='frm' method='post' th:object="${calendarVO}" action='./create' enctype="multipart/form-data">
-    <input type="hidden" name="calendarno" th:value="${param.calendarno}">
-    
+  <form name='frm' method='post' action='./create'>   
     <div>
-      <label>경기 일정</label>
+      <label>출력할 날짜</label>
       <input type='date' name='labeldate' value='' required="required" 
             autofocus="autofocus" class="form-control" style='width: 100%;'>
     </div>
     <div>
-      <label>경기 라벨</label>
-      <input type='text' name='label' value='' required="required" 
+      <label>달력에 출력될 레이블</label>
+      <input type='text' name='label' value='1월 1일 휴강' required="required" 
               autofocus="autofocus" class="form-control" style='width: 100%;'>
     </div>
     <div>
        <label>제목</label>
-       <input type='text' name='title' value='' required="required" 
+       <input type='text' name='title' value='새해복 많이 받으세요.' required="required" 
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
     </div>
     <div>
        <label>글 내용</label>
-       <textarea name='content' required="required" class="form-control" rows="12" style='width: 100%;'></textarea>
+       <textarea name='content' required="required" class="form-control" rows="12" style='width: 100%;'>학원 휴강합니다.</textarea>
     </div>
     <div>                
       <label>출력 순서</label>
-      <input type="number" name="seqno" value="1" min="1" max="1000000" step="1"
-             class="form-control" style="width: 50%;" th:field="*{seqno}"> 
-      <div th:if="${#fields.hasErrors('seqno')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-        <div th:each="err: ${#lists.sort(#fields.errors('seqno'))}" th:text="${err}"></div>
-      </div>  
+      <input type="number" name="seqno" value="1" min="1" step="1"
+             class="form-control" style="width: 50%;">   
     </div>
 
     <div class="content_body_bottom">
@@ -54,3 +51,4 @@
   </form>
 
 </div>
+

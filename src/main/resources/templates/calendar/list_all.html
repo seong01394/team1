@@ -2,45 +2,15 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
-
-  <div class='title_line'>경기 일정 목록</div>
-
+  <div class="title_line">일정</div>
   <aside class="aside_right">
-    <a th:href="@{|/calendar/create|}" style="color: black;">등록</a>
-    <span class='menu_divide' >│</span>
-    <a href="javascript:location.reload();" style="color: black;"></a>새로고침</a>
-  </aside> 
-   
-  <div class='menu_line'></div>
-       
-  <table class="table table-striped" style='width: 100%;'>
-    <colgroup>
-      <col style='width: 20%;'/>
-      <col style='width: 60%;'/>
-      <col style='width: 20%;'/>
-    </colgroup>
-    <tr>
-      <th class='th_bs'>제목</TH>
-      <th class='th_bs'>내용</th>
-      <th class='th_bs'>등록일</th>
-    </tr>
-
-    <tr th:each="calendarVO, status:${list}" >
-      <td class="td_bs">
-          <a th:href="@{|/calendar/read/${calendarVO.calendarno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${calendarVO.title}"></a>
-      </td>
-      <td class="td_bs">
-          <a th:href="@{|/calendar/read/${calendarVO.calendarno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${calendarVO.content}"></a>
-      </td>
-      <td class="td_bs">
-          <a th:href="@{|/calendar/read/${calendarVO.calendarno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${calendarVO.regdate}"></a>
-      </td>
-    </tr>
-   </table>
-   
-  <div class='bottom_menu'>
-    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
-  </div>
-
+    <a href="javascript: location.reload();" style="color: black;">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+  
+  <!--/* '/calendar/list_all_com.html' 파일의 list_all_fragment를 가져다 사용 */--> 
+  <div th:replace="~{calendar/list_all_com::list_all_fragment}"></div> 
+  
 </div>
 </html>
+

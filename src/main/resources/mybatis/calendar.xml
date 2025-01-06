@@ -4,7 +4,7 @@
    <!-- 등록 --> 
   <insert id="create" parameterType="dev.mvc.calendar.CalendarVO">
     INSERT INTO calendar(calendarno, labeldate, label, title, content, cnt, seqno, regdate, adminno)
-    VALUES(calendar_seq.nextval, #{labeldate}, #{label}, #{title}, #{content}, #{cnt}, #{seqno}, sysdate, #{adminno})
+    VALUES(calendar_seq.nextval, #{labeldate}, #{label}, #{title}, #{content}, 0, 1, sysdate, #{adminno})
   </insert>
   
   <!-- 전체 목록 -->   
@@ -14,14 +14,6 @@
     ORDER BY calendarno DESC
   </select>
  
-  <!-- 특정 날짜의 목록 -->   
-  <select id="findByMonth" resultType="dev.mvc.calendar.CalendarVO">
-    SELECT calendarno, labeldate, label, seqno
-    FROM calendar
-    WHERE TO_CHAR(TO_DATE(labeldate, 'YYYY-MM-DD'), 'YYYY-MM') = #{month}
-    ORDER BY labeldate ASC, seqno ASC
-  </select>
-  
   <!-- 조회 -->  
   <select id="read" resultType="dev.mvc.calendar.CalendarVO" parameterType="int">
     SELECT calendarno, labeldate, label, title, content, cnt, regdate, seqno
@@ -41,39 +33,27 @@
     DELETE FROM calendar WHERE calendarno = #{calendarno}
   </delete>
   
-    <select id="list_search" resultType="dev.mvc.calendar.CalendarVO" parameterType="String">
-    SELECT calendarno, labeldate, label, title, content, cnt, seqno, regdate, adminno
+  <!-- 특정 달의 조회 -->
+  <select id="list_calendar" resultType="dev.mvc.calendar.CalendarVO" parameterType="String">
+    SELECT calendarno, labeldate, label, seqno
     FROM calendar
-    <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
-      WHERE (UPPER(title) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(content) LIKE '%' || UPPER(#{word}) || '%')
-    </if> 
+    WHERE SUBSTR(labeldate, 1, 7) = #{labeldate}
+    ORDER BY labeldate ASC, seqno ASC
+  </select>
+
+  <!-- 특정 날짜 조회 -->
+  <select id="list_calendar_day" resultType="dev.mvc.calendar.CalendarVO" parameterType="String">
+    SELECT calendarno, labeldate, label, seqno
+    FROM calendar
+    WHERE labeldate = #{labeldate}
     ORDER BY seqno ASC
-  </select>
+  </select> 
   
-    <!-- 검색 갯수 -->
-  <select id="list_search_count" resultType="Integer" parameterType="String">
-    SELECT COUNT(*) as cnt
-    FROM cate
-    <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
-      WHERE (UPPER(title) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(content) LIKE '%' || UPPER(#{word}) || '%')
-    </if> 
-    ORDER BY seqno ASC
-  </select>
-  
-    <!-- 검색 + 페이징 -->
-  <select id="list_search_paging" resultType="dev.mvc.calendar.CalendarVO" parameterType="Map">
-    SELECT calendarno, labeldate, label, title, content, cnt, seqno, regdate, adminno, r
-    FROM (
-              SELECT calendarno, labeldate, label, title, content, cnt, seqno, regdate, adminno, rownum as r
-        FROM (
-                  SELECT calendarno, labeldate, label, title, content, cnt, seqno, regdate, adminno
-                  FROM calendar
-            WHERE (UPPER(title) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(content) LIKE '%' || UPPER(#{word}) || '%')
-            ORDER BY rank ASC
-        )
-    )
-    WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}  <!-- WHERE r >= 1 AND r <= 3 -->
-  </select>
-  
+    <!-- 조회수 증가 -->
+  <update id="increaseCnt" parameterType="int">
+    UPDATE calendar
+    SET cnt = cnt + 1
+    WHERE calendarno = #{calendarno}
+  </update>
    
 </mapper>

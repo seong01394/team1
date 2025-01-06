@@ -6,8 +6,6 @@
   <aside class="aside_right">
     <a th:href="@{|/survey_topic/update/${surveytopicVO.surveytopicno}|}" style ="color: black">수정</a>
     <span class="menu_divide">|</span>
-    <a th:href="@{|/survey_topic/delete/${surveytopicVO.surveytopicno}}|}" style ="color: black">삭제</a>
-    <span class="menu_divide">|</span>
     <a th:href="@{|/survey_topic/create|}" style ="color: black">등록</a>
     <span class="menu_divide" style ="color: black">|</span>
     <a href="javascript: location.reload();" style ="color: black">새로 고침</a>
@@ -18,8 +16,9 @@
   <div class="menu_line"></div>
   
   <div class="container mt-3" style="width: 60%; margin: 5px auto;"> <!--/* mt-3: margin top 16px */-->
-  <form name="frm" method="post" value="" action="/surveytopic/delete" th:object="${surveytopicVO}">
+  <form name="frm" method="post" value="" action="/survey_topic/delete" th:object="${surveytopicVO}">
     <input type="hidden" name="surveytopicno" th:value="${surveytopicVO.surveytopicno}"> <!-- /* 값 유지 */-->
+    <input type="hidden" name="surveyno" th:value="${surveytopicVO.surveyno}"> <!-- /* 값 유지 */-->
     <div class="msg_warning" >
       카테고리를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다.<br>      
     </div>
