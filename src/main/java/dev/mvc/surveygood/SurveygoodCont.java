@@ -35,7 +35,8 @@ public class SurveygoodCont {
           
       System.out.println("-> 수신 데이터: " + surveygoodVO.toString());
       
-      int memberno = (int)session.getAttribute("memberno");
+//      int memberno = (int)session.getAttribute("memberno");
+      int memberno = 5;
       surveygoodVO.setMemberno(memberno);
       
       int cnt = this.surveygoodProc.create(surveygoodVO);

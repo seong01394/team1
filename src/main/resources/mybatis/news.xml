@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="dev.mvc.club.ClubDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+<mapper namespace="dev.mvc.news.NewsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
   <insert id="create" parameterType="dev.mvc.news.NewsVO">
     INSERT INTO news(newsno, newsadd, newsinfo) 

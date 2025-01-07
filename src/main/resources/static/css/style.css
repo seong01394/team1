@@ -26,11 +26,13 @@
 
 .title_line{
    font-family: Mungyeong-Gamhong-Apple; 
-   font-size: 16px; 
+   font-size: 50px; 
    margin: 0px;  /* top right bottom left */
    padding: 0px;
    color: #555555;
 }  
+
+
 
   .bar_img {
     margin-top: 0;
@@ -284,7 +286,7 @@
   text-align: left;
   width: 100%;
   margin: 10px 0;
-  height: 50px; /* 선의 두께 설정 */
+  height: 100px; /* 선의 두께 설정 */
   background-image: url(/survey/menu_image.jpg);
   font-size: 20px;  
   color: #FAFAFA;  
