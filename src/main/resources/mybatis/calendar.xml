@@ -55,5 +55,17 @@
     SET cnt = cnt + 1
     WHERE calendarno = #{calendarno}
   </update>
+  
+  <!-- 우선 순위 높임, 10 등 -> 1 등 -->
+  <update id="update_seqno_forward" parameterType="Integer">
+    UPDATE calendar SET seqno=seqno-1  
+    WHERE calendarno = #{calendarno}
+  </update>
+  
+  <!-- 우선 순위 낮춤, 1 등 -> 10 등 -->
+  <update id="update_seqno_backward" parameterType="Integer">
+    UPDATE calendar SET seqno=seqno+1  
+    WHERE calendarno = #{calendarno}
+  </update>
    
 </mapper>

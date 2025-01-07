@@ -279,7 +279,6 @@ public class CalendarCont {
    * @param model
    * @return
    */
-  // http://localhost:9091/calendar/list_calendar_day?labeldate=2025-01-03
   @GetMapping(value = "/list_calendar_day")
   @ResponseBody
   public String list_calendar_day(Model model, @RequestParam(name="labeldate", defaultValue = "") String labeldate) {
@@ -302,6 +301,26 @@ public class CalendarCont {
 
     return schedule_list.toString();
     
+  }
+  
+  /**
+   * 우선 순위 높임, 10 등 -> 1 등,
+   */
+  @GetMapping(value = "/update_seqno_forward/{calendarno}")
+  public String update_seqno_forward(Model model, @PathVariable("calendarno") Integer calendarno, RedirectAttributes ra) {
+    this.calendarProc.update_seqno_forward(calendarno);
+
+    return "redirect:/calendar/list_all"; 
+  }
+
+  /**
+   * 우선 순위 낮춤, 1 등 -> 10 등
+   */
+  @GetMapping(value = "/update_seqno_backward/{calendarno}")
+  public String update_seqno_backward(Model model, @PathVariable("calendarno") Integer calendarno, RedirectAttributes ra) {
+    this.calendarProc.update_seqno_backward(calendarno);
+
+    return "redirect:/calendar/list_all";
   }
   
 }

@@ -59,4 +59,17 @@ public interface CalendarProcInter {
    */
   public ArrayList<CalendarVO> list_calendar_day(String date);
   
+  /**
+   * 우선 순위 높임, 10 등 -> 1 등
+   * @param calendarno
+   * @return
+   */
+  public int update_seqno_forward(int calendarno);
+  
+  /**
+   * 우선 순위 낮춤, 1 등 -> 10 등
+   * @param cateno
+   * @return
+   */
+  public int update_seqno_backward(int calendarno);
 }

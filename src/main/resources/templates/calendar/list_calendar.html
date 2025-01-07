@@ -38,6 +38,9 @@
         .saturday {
             color: blue;
         }
+        .month {
+            color: gray !important;
+        }
     </style>
 
     <script>
@@ -232,7 +235,7 @@
 
     </script>
 
-    <h4 id='month_title' data-current_year='' data-current_month=''><a href="#" onclick="changeMonth(-1)">[이전달]</a> <span id='panel_year_month'></span> <a href="#" onclick="changeMonth(1)">[다음달]</a></h4>
+    <h4 id='month_title' data-current_year='' data-current_month=''><a href="#" onclick="changeMonth(-1)" class="month">[이전달]</a> <span id='panel_year_month'></span> <a href="#" onclick="changeMonth(1)" class="month">[다음달]</a></h4>
     <table>
         <thead>
             <tr>

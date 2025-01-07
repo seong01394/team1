@@ -266,12 +266,6 @@ public class CommuCont {
    
    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
    model.addAttribute("menu", menu);
-   
-   if ("increase".equals(action)) {
-     this.commuProc.increaseRecom(communo);  // 추천수 증가 처리
- } else if ("decrease".equals(action)) {
-     this.commuProc.decreaseRecom(communo);  // 추천수 감소 처리
- }
 
    CommuVO commuVO = this.commuProc.read(communo);
 
@@ -602,21 +596,6 @@ public class CommuCont {
    
  }   
     
-// @GetMapping("/increaseRecom")
-// public String increaseRecom(@RequestParam(name="communo", defaultValue="0") int communo, 
-//                                       RedirectAttributes ra) {
-//     commuProc.increaseRecom(communo);  // 추천수 증가 처리
-//     ra.addAttribute("communo", communo);  // communo 값 전달
-//     return "redirect:/commu/read";  // 증가 후 읽기 페이지로 리다이렉트
-// }
-//
-// @GetMapping("/decreaseRecom")
-// public String decreaseRecom(@RequestParam(name="communo", defaultValue="0") int communo, 
-//                                       RedirectAttributes ra) {
-//     commuProc.decreaseRecom(communo);  // 추천수 감소 처리
-//     ra.addAttribute("communo", communo);  // communo 값 전달
-//     return "redirect:/commu/read";  // 감소 후 읽기 페이지로 리다이렉트
-// }
 
  
 }

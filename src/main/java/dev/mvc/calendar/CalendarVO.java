@@ -29,13 +29,13 @@ public class CalendarVO{
   /** 관리자 번호 */
   private int adminno;
   
-  /** 경기 일정 */
+  /** 경기 날짜 */
   private String labeldate = "";
   
   /** 출력할 레이블 */
   private String label = "";
   
-  /** 제목 */
+  /** 경기 타이틀 */
   private String title = "";
   
   /** 글 내용 */

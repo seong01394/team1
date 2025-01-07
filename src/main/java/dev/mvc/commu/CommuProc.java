@@ -263,17 +263,4 @@ public class CommuProc implements CommuProcInter {
     
     return count;
   }
-  
-  @Override 
-  public int increaseRecom(int communo) {
-    int count = commuDAO.increaseRecom(communo);
-    return count;
-  }
-  
-  @Override 
-  public int decreaseRecom(int communo) {
-    int count = commuDAO.decreaseRecom(communo);
-    return count;
-  }
-  
 }

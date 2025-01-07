@@ -71,4 +71,16 @@ public class CalendarProc implements CalendarProcInter {
     int cnt = this.calendarDAO.increaseCnt(calendarno);
     return cnt;
   }
+  
+  @Override
+  public int update_seqno_forward(int calendarno) {
+    int cnt = this.calendarDAO.update_seqno_forward(calendarno);
+    return cnt;
+  }
+
+  @Override
+  public int update_seqno_backward(int calendarno) {
+    int cnt = this.calendarDAO.update_seqno_backward(calendarno);
+    return cnt;
+  }
 }
