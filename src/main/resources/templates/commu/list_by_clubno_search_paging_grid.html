@@ -10,15 +10,15 @@
 
   <aside class="aside_right">
     <span th:if="${session.grade == 'member'}">
-      <a th:href="@{|/commu/create?clubno=${clubVO.clubno}&now_page=${now_page}&word=${word}|}" style="color: black;">등록</a>
+      <a th:href="@{|/commu/create?clubno=${clubVO.clubno}&now_page=${now_page}&hashtag=${hashtag}|}" style="color: black;">등록</a>
       <span class="menu_devide">│</span>    
     </span>
     
     <a href="javascript:location.reload();" style="color: black;">새로고침</a>
     <span class='menu_divide' >│</span>    
-    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
+    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&hashtag=${hashtag}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
     <span class='menu_divide'>│</span>
-    <a th:href="@{|./list_by_clubno_grid?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}" style="color: black;">갤러리형</a> 
+    <a th:href="@{|./list_by_clubno_grid?clubno=${clubVO.clubno}&hashtag=${hashtag}&now_page=${now_page}|}" style="color: black;">갤러리형</a> 
     <span class='menu_divide'>│</span>
     <a th:href="@{|./list_all|}" style="color: black;">전체보기</a>
   </aside> 
@@ -30,7 +30,7 @@
        
   <div style='width: 100%;'> <!-- 갤러리 Layout  시작 -->
     <div th:if="${list.size() > 0}"  th:each="commuVO, status:${list}" 
-         th:attr="onclick=|location.href='/commu/read?communo=${commuVO.communo}&word=${word}&now_page=${now_page}'|"
+         th:attr="onclick=|location.href='/commu/read?communo=${commuVO.communo}&hashtag=${hashtag}&now_page=${now_page}'|"
          style='width: 19.0%; height: 200px; float: left; margin: 0.5%; padding: 0.5%; background-color: #EEEFFF; text-align: left; cursor: pointer;'>
 
       <div th:if="${commuVO.image.endsWith('jpg') or commuVO.image.endsWith('png')  or commuVO.image.endsWith('gif')}"

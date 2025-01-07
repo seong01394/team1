@@ -10,29 +10,34 @@
   <aside class="aside_right" th:if="${session.grade == 'member'}">
     <a href="javascript:location.reload();" style="color: black;">새로고침</a>
     <span class='menu_divide'>│</span>    
-    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
+    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&hashtage=${hashtage}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
     <span class='menu_divide'>│</span>
     <a th:href="@{|./list_all|}" style="color: black;">전체보기</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/commu/create?clubno=${clubVO.clubno}&now_page=${now_page}&word=${word}|}" style="color: black;">등록</a>
+    <a th:href="@{|/commu/create?clubno=${clubVO.clubno}&now_page=${now_page}&hashtage=${hashtage}|}" style="color: black;">등록</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/commu/update_text?communo=${commuVO.communo}&now_page=${now_page}&word=${word}|}" style="color: black;">글 수정</a>
+    <a th:href="@{|/commu/update_text?communo=${commuVO.communo}&now_page=${now_page}&hashtage=${hashtage}|}" style="color: black;">글 수정</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|./update_file?communo=${commuVO.communo}&word=${word}&now_page=${now_page}|}" style="color: black;">파일 수정</a>  
+    <a th:href="@{|./update_file?communo=${commuVO.communo}&hashtage=${hashtage}&now_page=${now_page}|}" style="color: black;">파일 수정</a>  
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/commu/youtube?clubno=${commuVO.clubno}&communo=${commuVO.communo}&word=${word}&now_page=${now_page}|}" style="color: black;">Youtube</a>
+    <a th:href="@{|/commu/youtube?clubno=${commuVO.clubno}&communo=${commuVO.communo}&hashtage=${hashtage}&now_page=${now_page}|}" style="color: black;">Youtube</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|./delete?communo=${commuVO.communo}&word=${word}&now_page=${now_page}&cateno=${commuVO.clubno}|}" style="color: black;">삭제</a>
+    <a th:href="@{|./delete?communo=${commuVO.communo}&hashtage=${hashtage}&now_page=${now_page}&cateno=${commuVO.clubno}|}" style="color: black;">삭제</a>
   </aside>
-  
 
-  <aside class="aside_right" th:if="${session.grade != 'member'}">
-     <a href="javascript:location.reload();" style="color: black;">새로고침</a>
-    <span class='menu_divide' >│</span>    
-    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&word=${word}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./list_by_clubno_grid?clubno=${clubVO.clubno}&word=${word }&now_page=${now_page}|}" style="color: black;">갤러리형</a>
-  </aside> 
+  <aside class="aside_right" th:if="${session.grade == 'admin'}">
+    <a href="javascript:location.reload();" style="color: black;">새로고침</a>
+    <span class='menu_divide'>│</span>    
+    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&hashtage=${hashtage}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./list_all|}" style="color: black;">전체보기</a>
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|/commu/update_text?communo=${commuVO.communo}&now_page=${now_page}&hashtage=${hashtage}|}" style="color: black;">글 수정</a>
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./update_file?communo=${commuVO.communo}&hashtage=${hashtage}&now_page=${now_page}|}" style="color: black;">파일 수정</a>  
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./delete?communo=${commuVO.communo}&hashtage=${hashtage}&now_page=${now_page}&cateno=${commuVO.clubno}|}" style="color: black;">삭제</a>
+  </aside>
  
   <div class='menu_line'></div>
 
@@ -62,37 +67,7 @@
           <div style="text-align: center; width: 640px; margin: 0 auto; padding: 10px 0;" th:if="${commuVO.youtube.length() > 0}" th:utext="${commuVO.youtube}">
           </div>
   
-          <!-- 추천수 및 추천/비추천 버튼 -->
-          <div class="td_bs" style="display: flex; flex-direction: column; align-items: center;">
-            <span id="recomCnt" 
-                  style="margin-bottom: 15px; 
-                         padding: 10px 20px; 
-                         border: 1px solid #ccc; 
-                         border-radius: 5px; 
-                         background-color: #f4f4f4; 
-                         text-align: center; 
-                         font-weight: bold; 
-                         font-size: 1.2em;" 
-                  th:text="${commuVO.recom}">
-            </span>
-          
-            <!-- 추천/비추천 버튼 -->
-            <div style="display: flex; gap: 10px;">
-              <!-- 추천 버튼 -->
-              <form id="increaseRecom" action="/commu/read" method="get">
-                <input type="hidden" name="communo" th:value="${commuVO.communo}">
-                <input type="hidden" name="action" value="increase">
-                <button type="submit" class="btn btn-success" style="padding: 8px 16px; font-size: 0.9em;">추천</button>
-              </form>
-              
-              <!-- 비추천 버튼 -->
-              <form id="decreaseRecom" action="/commu/read" method="get">
-                <input type="hidden" name="communo" th:value="${commuVO.communo}">
-                <input type="hidden" name="action" value="decrease">
-                <button type="submit" class="btn btn-danger" style="padding: 8px 16px; font-size: 0.9em;">비추</button>
-              </form>
-            </div>
-          </div>
+        
   
         </div>
       </li>

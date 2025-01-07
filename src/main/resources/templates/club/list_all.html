@@ -10,19 +10,19 @@
   
   <div class="flex_div_center " style="width: 90%; margin: 0px auto; ">  
     <form name="frm" method="post" action="/club/create" th:object="${clubVO}">
-      <div style="margin-right: 2px; width: 10%; float: left;">
+      <div style="margin-right: 2px; width: 5%; float: left;">
         <input type="text" name="emblem" value="" autofocus="autofocus"
                class="form-control" style="width: 100%;" th:field="*{emblem}" placeholder="구단 엠블럼">
       </div>    
-      <div style="margin-right: 2px; width: 10%; float: left;">
+      <!-- <div style="margin-right: 2px; width: 10%; float: left;">
         <input type="text" name="pl" value="" autofocus="autofocus"
                class="form-control" style="width: 100%;" th:field="*{pl}" placeholder="커뮤">
-      </div>  
+      </div>   -->
       <div style="margin-right: 2px; width: 10%; float: left;">
         <input type="text" name="clubname" value="" autofocus="autofocus"
                class="form-control" style="width: 100%;" th:field="*{clubname}" placeholder="구단명">
       </div>
-      <div style="margin-right: 2px; width: 10%; float: left;">
+      <div style="margin-right: 2px; width: 20%; float: left;">
         <input type="text" name="info" value="" autofocus="autofocus"
                class="form-control" style="width: 100%;" th:field="*{info}" placeholder="구단 정보">
       </div>
@@ -38,7 +38,7 @@
         <input type="text" name="legend" value="" autofocus="autofocus"
                class="form-control" style="width: 100%;" th:field="*{legend}" placeholder="구단 레전드">
       </div>  
-      <div style="margin-right: 2px; width: 10%; float: left;">
+      <div style="margin-right: 2px; width: 20%; float: left;">
         <input type="text" name="history" value="" autofocus="autofocus"
                class="form-control" style="width: 100%;" th:field="*{history}" placeholder="구단 역사">
       </div>                             

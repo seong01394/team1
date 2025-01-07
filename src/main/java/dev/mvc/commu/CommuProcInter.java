@@ -141,14 +141,4 @@ public interface CommuProcInter {
    */
   public int decreaseReplycnt(int communo);
   
-  /**
-   * 추천수 증가
-   */
-  public int increaseRecom(int communo);
-
-  /**
-   * 추천수 감소
-   */
-  public int decreaseRecom(int communo);
-  
 }

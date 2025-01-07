@@ -166,20 +166,5 @@
      SET reply = reply - 1
      WHERE communo = #{communo}
    </update>
-   
-      <!-- 추천 수 증가 -->
-   <update id="increaseRecom" parameterType="int">
-     UPDATE commu
-     SET recom = recom + 1
-     WHERE communo = #{communo}
-   </update>
-
-   <!-- 추천 수 감소 -->
-   <update id="decreaseRecom" parameterType="int">
-     UPDATE commu
-     SET recom = recom - 1
-     WHERE communo = #{communo}
-   </update>
-   
     
 </mapper>
