@@ -52,7 +52,8 @@ public class SurveyVO {
   private long postersize = 0;
   /** 썸네일 이미지 */
   private String posterthumb = "";
-  
+  /** 추천 수 */
+  private Integer recom;
 
 
 

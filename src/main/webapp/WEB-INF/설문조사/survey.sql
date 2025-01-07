@@ -10,7 +10,8 @@ CREATE TABLE survey (
     poster          VARCHAR(100)          NULL,  -- 원본 파일명 image
     postersaved      VARCHAR(100)          NULL,  -- 저장된 파일명, image
     posterthumb         VARCHAR(100)          NULL,   -- preview image
-    postersize          NUMBER(10)      DEFAULT 0 NULL  -- 파일 사이즈
+    postersize          NUMBER(10)      DEFAULT 0 NULL,-- 파일 사이즈
+    recom               NUMBER(5)       NOT NULL -- 추천 수
 --    adminno         NUMBER(10)      NOT NULL,  -- 관리자 번호
 --  FOREIGN KEY (adminno) REFERENCES admin(adminno)
 )
@@ -59,6 +60,8 @@ DELETE FROM survey WHERE surveyno=6;
 select surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize FROM survey ORDER BY surveyno ASC;
 
 
-
-
+-- 추천 수 증가
+UPDATE survey SET recom = recom + 1 WHERE surveyno=17;
+-- 추천 수 감소
+UPDATE survey SET recom = recom - 1 WHERE surveyno=17;
 

@@ -1,16 +1,62 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
   <div layout:fragment="content">
-  <div class="image-container">
-    <a th:href="@{|/club/list_search|}">
-      <img src="/images/구단정보.png" alt="Left Image" title="구단 정보">
+    
+     <style>
+        /* 전체 컨테이너 스타일 */
+        .icon-container {
+            display: flex;
+            justify-content: space-between; /* 아이콘을 왼쪽, 중앙, 오른쪽으로 배치 */
+            align-items: center; /* 세로 정렬 */
+            width: 100%; /* 전체 너비 사용 */
+            height: 70%;
+            padding: 20px; /* 패딩 추가 */
+            background-image: url(/survey/survey_image.jpg);
+            background-size: cover; /* 배경 이미지 크기를 조정 */
+            background-position: center; /* 배경 이미지 위치 조정 */
+        }
+
+        /* 아이콘 크기 조정 */
+        .icon {
+            width: 80px; /* 원하는 너비 */
+            height: auto; /* 비율 유지 */
+        }
+        
+        /* 이미지 위치를 왼쪽 중앙에 */
+        .image-position {
+            display: flex;
+            align-items: flex-start; /* 세로 정렬: 위쪽 */
+            justify-content: flex-start; /* 왼쪽 정렬 */
+            margin-top: 20px; /* 위쪽 여백 */
+        }
+
+        /* 이미지 스타일 */
+        .table-image {
+            max-width: 90%; /* 이미지 최대 너비 조정 */
+            height: auto; /* 비율 유지 */
+            margin-left: 20px; /* 왼쪽 여백 */
+        }
+        
+
+        
+    </style>
+    <div class='icon-container'> 
+    <a th:href="@{|/club/list_search|}" style="margin-left : 220px">
+      <img src="/images/구단정보.png" class='icon font-face' title="구단 정보">
+      구단정보
     </a>
-    <a th:href="@{|/survey/list_search|}">
-      <img src="/images/설문조사.png" alt="Center Image" title="설문조사">
+    <a th:href="@{|/survey/list_search|}" style="margin-left : 65px">
+      <img src="/images/설문조사.png" class='icon font-face' title="설문조사">
+      설문조사
     </a>
-    <a th:href="@{|/commu/list_all|}">
-      <img src="/images/커뮤니티.png" alt="Right Image" title="커뮤니티">
+    <a th:href="@{|/commu/list_all|}" style="margin-right : 290px">
+      <img src="/images/커뮤니티.png" class='icon font-face' title="커뮤니티">
+      커뮤니티
     </a>
-  </div>
+    </div>
+    
+    <div class="image-position">
+       <img src="/images/league_sort.png" alt="Premier League Table" class="table-image"/>
+    </div>
 </html>
 

@@ -32,10 +32,60 @@
        ORDER BY itemseq
    </select>
    
-   <!--선택 인원 수 증가-->
-   <update id ="increaseitemCnt" parameterType="int">
-     UPDATE survey_item
-     SET itemcnt = itemcnt + 1
-     WHERE surveyitemno = #{survey
-   </update>
+     <!-- 선택 인원 수 증가 -->
+      <update id="increaseItemCount" parameterType="String">
+       UPDATE survey_item
+       SET itemcnt = itemcnt + 1
+       WHERE item = #{item} 
+      </update>
+      
+    <!-- 검색 개수 -->
+  <select id="list_search_count" resultType="Integer" parameterType="String">
+    SELECT COUNT(*) as cnt
+    FROM survey_item
+    <if test="word != null and word != ''">
+      WHERE UPPER(item) LIKE '%' || UPPER(#{word}) || '%'
+    </if>
+  </select>
+  
+  <!-- 검색 목록 -->
+  <select id="list_search" resultType="dev.mvc.survey_item.SurveyitemVO" parameterType="String">
+    SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt
+    FROM survey_item
+    <if test="word != null and word != ''">
+      WHERE UPPER(item) LIKE '%' || UPPER(#{word}) || '%'
+    </if>
+    ORDER BY itemseq ASC
+  </select>
+  
+  <!-- 페이징 -->
+  <select id="list_paging" resultType="dev.mvc.survey_item.SurveyitemVO" parameterType="Map">
+    SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt, r
+    FROM (
+        SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt, rownum as r
+        FROM (
+            SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt
+            FROM survey_item
+            ORDER BY itemseq ASC
+        )
+        WHERE rownum &lt;= #{end_num}
+    )
+    WHERE r &gt;= #{start_num}
+  </select>
+  
+  <!-- 검색 + 페이징 -->
+  <select id="list_search_paging" resultType="dev.mvc.survey_item.SurveyitemVO" parameterType="Map">
+    SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt, r
+    FROM (
+        SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt, rownum as r
+        FROM (
+            SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt
+            FROM survey_item
+            WHERE (UPPER(item) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(surveyitemno) LIKE '%' || UPPER(#{word}) || '%')
+            ORDER BY itemseq ASC
+        )
+      
+    )
+    WHERE r &gt;= #{start_num}  AND r &lt;= #{end_num}  <!-- WHERE r >= 1 AND r <= 3 -->
+  </select>
 </mapper>

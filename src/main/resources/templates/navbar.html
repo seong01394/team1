@@ -1,7 +1,7 @@
 <div th:fragment="navbarFragment">
   <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom bar_img">          
     <div class="container-fluid">
-        <a class="navbar-brand down-text" href="/" >축구 가이드북</a>
+        <a class="navbar-brand down-text" href="/" >🦁축구 가이드북</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -48,8 +48,8 @@
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey/list_search|}">설문조사 목록</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey/create|}">설문조사 등록</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey_topic/create|}">설문문제 등록</a></li>
-
-
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/survey_topic/list_search|}">개별문제 목록</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/survey_item/list_search|}">항목 목록</a></li>
                     </ul>
                 </li>
                

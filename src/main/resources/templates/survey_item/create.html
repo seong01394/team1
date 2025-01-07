@@ -17,7 +17,7 @@
   <div class="menu_line"></div>
     
   <div style="width: 50%; margin: 0px auto;">  
-    <form name="frm" method="post" action="./create" th:object="${surveyitemVO}" >
+    <form name="frm" method="post" action="/survey_item/create" th:object="${surveyitemVO}" >
         <input type="hidden" name="surveytopicno" th:field="*{surveytopicno}"/>
         <input type="hidden" name="surveyitemno" th:field="*{surveyitemno}"/>
       <div>

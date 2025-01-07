@@ -46,10 +46,21 @@ INSERT INTO member(memberno, id, passwd, name, nickname, user_level, tel, zipcod
                    address1, address2, signup_date, signup_path, grade)
 VALUES (member_seq.nextval, 'admin', 'fS/kjO+fuEKk06Zl7VYMhg==', '회원1', '피린이', 'plant', '000-0000-0000', '12345',
              '서울시 종로구', '관철동', sysdate, '축구 중계보는데 팝업창을 보고 가입하러 왔습니다', 1);
- 
 
- 
-     
+INSERT INTO member(memberno, id, passwd, name, nickname, user_level, tel, zipcode,
+                   address1, address2, signup_date, signup_path, grade)
+VALUES (member_seq.nextval, 'user1', 'fS/kjO+fuEKk06Zl7VYMhg==', '회원2', '피린이', 'plant', '000-0000-0000', '12345',
+             '서울시 종로구', '관철동', sysdate, '축구 중계보는데 팝업창을 보고 가입하러 왔습니다', 10); 
+
+INSERT INTO member(memberno, id, passwd, name, nickname, user_level, tel, zipcode,
+                   address1, address2, signup_date, signup_path, grade)
+VALUES (member_seq.nextval, 'user2', 'fS/kjO+fuEKk06Zl7VYMhg==', '회원3', '피린이', 'plant', '000-0000-0000', '12345',
+             '서울시 종로구', '관철동', sysdate, '축구 중계보는데 팝업창을 보고 가입하러 왔습니다', 10); 
+
+INSERT INTO member(memberno, id, passwd, name, nickname, user_level, tel, zipcode,
+                   address1, address2, signup_date, signup_path, grade)
+VALUES (member_seq.nextval, 'user3', 'fS/kjO+fuEKk06Zl7VYMhg==', '회원4', '피린이', 'plant', '000-0000-0000', '12345',
+             '서울시 종로구', '관철동', sysdate, '축구 중계보는데 팝업창을 보고 가입하러 왔습니다', 10);      
      
 3. 조회
  

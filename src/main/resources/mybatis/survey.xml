@@ -4,12 +4,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.survey.SurveyDAOInter"> 
   <insert id="create" parameterType="dev.mvc.survey.SurveyVO">
-    INSERT INTO survey(surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize) 
-    VALUES(survey_seq.nextval, #{survey_title}, #{start_date}, #{fin_date}, #{y_n}, #{cnt}, #{poster}, #{postersaved}, #{posterthumb}, #{postersize})
+    INSERT INTO survey(surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom) 
+    VALUES(survey_seq.nextval, #{survey_title}, #{start_date}, #{fin_date}, #{y_n}, #{cnt}, #{poster}, #{postersaved}, #{posterthumb}, #{postersize}, #{recom})
   </insert>
   
   <select id="read" resultType="dev.mvc.survey.SurveyVO" parameterType="Integer">
-    SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize
+    SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom
     FROM survey
     WHERE surveyno=#{surveyno}
   </select>  
@@ -25,7 +25,7 @@
   </delete>
   
   <select id="list_all" resultType="dev.mvc.survey.SurveyVO">
-    SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize
+    SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom
     FROM survey 
     ORDER BY surveyno ASC
   </select>
@@ -41,7 +41,7 @@
   </select>
   
    <select id="list_search" resultType="dev.mvc.survey.SurveyVO" parameterType="String">
-    SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize
+    SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom
     FROM survey
     <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
       WHERE (UPPER(survey_title) LIKE '%' || UPPER(#{word}) || '%') 
@@ -51,11 +51,11 @@
   
     <!-- 페이징 -->
   <select id="list_paging" resultType="dev.mvc.survey.SurveyVO" parameterType="Map">
-    SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, r
+    SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom, r
     FROM (
-        SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, rownum as r
+        SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom, rownum as r
         FROM (
-           SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize
+           SELECT surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom
            FROM survey
            WHERE (UPPER(survey_title) LIKE '%' || UPPER(#{word}) || '%') 
            ORDER BY start_date ASC

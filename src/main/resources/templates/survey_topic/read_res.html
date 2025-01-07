@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
 <head>
-    <title>설문조사</title>
+    <title>설문조사 결과</title>
 </head>
 <body>
 
 <div layout:fragment="content">
-    <div class="title_line">설문조사</div>
+    <div class="title_line">설문조사 결과</div>
     <aside class="aside_right">
         <a href="javascript: location.reload();" style="color: black">새로 고침</a>
         <span class="menu_divide" style="color: black">|</span>
@@ -24,7 +24,7 @@
                 <!-- 썸네일 -->
                 <div style="display: flex; align-items: center;">
                     <div style="text-align: center; margin-right: 10px;">
-                        <div th:if="${surveytopicVO.file1.endsWith('jpg') or surveytopicVO.file1.endsWith('PNG') or surveytopicVO.file1.endsWith('gif') or surveytopicVO.file1.endsWith('png') or surveytopicVO.file1.endsWith('JPG')}">
+                        <div th:if="${surveytopicVO.file1.endsWith('jpg') or surveytopicVO.file1.endsWith('png') or surveytopicVO.file1.endsWith('gif')}">
                             <img th:src="@{|/store/storage/${surveytopicVO.filethumb}|}" alt="썸네일" style="width: 50px; height: 50px;">
                         </div>
                         <div th:if="${surveytopicVO.filesize == 0}">
@@ -88,82 +88,7 @@
         <div class="content_body_bottom">
             <button id="btn_handleSubmit"  type="submit" class="btn btn-secondary btn-sm">완료</button> <!-- 제출 버튼 -->
             <button type="button" onclick="location.href='/survey/list_search'" class="btn btn-secondary btn-sm">목록</button>
-        </div>
-
-    
-<script>
-    // 페이지 로드 시
-    window.onload = function() {
-        console.log("페이지가 로드되었습니다.");
-        // 여기서 surveyno 값을 JavaScript 변수로 초기화
-        const surveyno = [[${surveyVO.surveyno}]]; // 절대값을 문자열로 초기화
-
-        // 완료 버튼 클릭 이벤트 리스너
-        document.getElementById("btn_handleSubmit").addEventListener("click", function() {
-            handleSubmit(surveyno);
-        });
-    }
-
-    async function handleSubmit(surveyno) {
-        const surveyResponses = {};
-
-        // 각 설문 주제에 대해 선택된 항목을 수집합니다.
-        const surveyTopics = document.querySelectorAll('input[type="radio"]');
-
-        console.log("총 선택된 라디오 버튼 수: ", surveyTopics.length);
-
-        surveyTopics.forEach((radio) => {
-            if (radio.checked) {
-                const topicNo = radio.name.split('_')[1]; // 'selectedItem_'에 해당하는 주제 번호
-
-                // 해당 항목의 텍스트를 가져옵니다.
-                const itemLabel = radio.nextElementSibling; // <span> 요소
-                let itemText = '';
-
-                if (itemLabel) {
-                    itemText = itemLabel.textContent || itemLabel.innerText; 
-                } else {
-                    console.error('항목 label을 찾을 수 없습니다.');
-                }
-
-                if (!surveyResponses[topicNo]) {
-                    surveyResponses[topicNo] = [];
-                }
-                surveyResponses[topicNo].push(itemText); // 항목 텍스트 저장
-            }
-        });
-
-        // JSON 문자열로 변환
-        const responsesJson = JSON.stringify(surveyResponses);
-
-        // 서버에 데이터 전송
-        const url = '/survey_topic/submit-responses';
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: responsesJson 
-            });
-
-            if (!response.ok) {
-                throw new Error(`네트워크 응답에 문제가 있습니다: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('서버 응답:', result);
-            alert('응답이 성공적으로 제출되었습니다!');
-            // read_res 페이지로 리다이렉트
-            window.location.href = `/survey_topic/read_res?surveyno=${surveyno}`; // 동적으로 작성
-
-        } catch (error) {
-            console.error('데이터 전송 오류:', error);
-            alert('응답 제출에 실패했습니다.');
-        }
-    }
-</script>  
+        </div>   
 </div>
 
 </body>

@@ -66,6 +66,14 @@
         </div>  
       </div> 
       <div>
+        <label>추천 수</label>
+        <input type="number" name="recom" value="" autofocus="autofocus"
+               class="form-control" style="width: 100%;" th:field="*{recom}">
+        <div th:if="${#fields.hasErrors('recom')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err: ${#lists.sort(#fields.errors('recom'))}" th:text="${err}"></div>
+        </div>  
+      </div> 
+      <div>
         <label>포스터 파일</label>
         <input type="file" name="file1MF" id="file1MF" value='' placeholder="파일 선택" autofocus="autofocus">
       </div>      

@@ -2,20 +2,30 @@ package dev.mvc.survey_topic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -36,6 +46,14 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/survey_topic")
 public class SurveytopicCont {
+  /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
+  public int record_per_page = 5;
+
+  /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
+  public int page_per_block = 5;
+  
+  /** 페이징 목록 주소 */
+  private String list_file_name = "/survey_topic/list_search";
   
   @Autowired
   @Qualifier("dev.mvc.survey_topic.SurveytopicProc")
@@ -52,6 +70,8 @@ public class SurveytopicCont {
   @Autowired
   @Qualifier("dev.mvc.survey.SurveyProc")
   private SurveyProcInter surveyproc;
+  
+
   
   
   @GetMapping(value = "/create")
@@ -137,32 +157,73 @@ public class SurveytopicCont {
      */
     @GetMapping(value = "/read")
     public String read(Model model,
-        @RequestParam(name="surveyno", defaultValue = "") Integer surveyno) {
-      
-      
-      
+                              @RequestParam(name="surveyno", defaultValue = "") Integer surveyno) {
+     
       SurveyVO surveyVO = this.surveyproc.read(surveyno);
       model.addAttribute("surveyVO", surveyVO);
                   
-      ArrayList<SurveytopicVO> surveytopicList = this.surveytopicProc.listBySurveyno(surveyno);
+      ArrayList<SurveytopicVO> surveytopicList = this.surveytopicProc.listBySurveyno(surveyVO.getSurveyno());
       model.addAttribute("surveytopicList", surveytopicList);
       
        // 각 주제에 대한 항목을 저장할 맵
        Map<Integer, ArrayList<SurveyitemVO>> itemsByTopic = new HashMap<>();
 
-          // 각 설문 주제를 반복하면서 해당 설문 주제 번호로 항목 조회
-          for (SurveytopicVO topic : surveytopicList) {
-              ArrayList<SurveyitemVO> surveyitemList = this.surveyitemProc.listBySurveytopicno(topic.getSurveytopicno());
-              itemsByTopic.put(topic.getSurveytopicno(), surveyitemList); // 주제 번호를 키로 하고 항목 리스트를 값으로 저장
-              System.out.println("Items for topic " + topic.getSurveytopicno() + ": " + surveyitemList.size());
-          }
+       // 각 주제에 대한 항목을 저장할 맵
+       for (SurveytopicVO topic : surveytopicList) {
+           ArrayList<SurveyitemVO> surveyitemList = this.surveyitemProc.listBySurveytopicno(topic.getSurveytopicno());
+           itemsByTopic.put(topic.getSurveytopicno(), surveyitemList);
           
-          model.addAttribute("itemsByTopic", itemsByTopic);
+//           System.out.println("Items for topic " + topic.getSurveytopicno() + ": " + surveyitemList.size()); // 콘솔 로그 추가
+//           for (SurveyitemVO item : surveyitemList) {
+//              System.out.println("Item: " + item.getItem() + ", ItemNO: " + item.getSurveyitemno()); // 항목 정보 로그
+//           }
+       }
+
+       model.addAttribute("itemsByTopic", itemsByTopic);
+       
+
+//       for (SurveytopicVO topic : surveytopicList) {
+//           System.out.println("Topic: " + topic.getTopic()); // 주제 이름을 로그에 출력
+//       }
           
-      System.out.println("-> surveytopicList:" + surveytopicList );
+     
       
       return "/survey_topic/read";    
     }    
+    
+    
+    
+    @PostMapping("/submit-responses")
+    @ResponseBody
+    public ResponseEntity<?> handleSurveyResponses(@ModelAttribute("surveytopicVO") SurveytopicVO surveytopicVO, 
+                                                   @RequestBody Map<String, List<String>> surveyResponses) {
+      
+        // 수신된 설문 응답 로그
+        System.out.println("수신된 설문 응답: " + surveyResponses);
+        
+        for (Map.Entry<String, List<String>> entry : surveyResponses.entrySet()) {
+            List<String> items = entry.getValue(); // 선택된 항목 목록
+
+            for (String item : items) {
+                // item으로 항목 이름을 사용
+              System.out.println("-> item:" + item );
+                this.surveyitemProc.increaseItemCount(item); // 항목 수 증가
+            }
+        }
+
+        // 성공적인 응답을 JSON 형식으로 반환
+        Map<String, String> response = new HashMap<>();
+        response.put("receivedData", surveyResponses.toString()); // 수신된 데이터 로깅
+        
+        // 적절한 응답을 반환합니다.
+        return ResponseEntity.ok(response); // JSON으로 반환
+        
+        
+    }
+
+
+      
+
     
     /**
      * 
@@ -278,10 +339,107 @@ public class SurveytopicCont {
       }
    
     }
+    
+
+    
+    @GetMapping(value = "/list_all")
+    public String list_all(HttpSession session, Model model,
+          @RequestParam(name="word", defaultValue = "") String word,
+          @RequestParam(name = "surveyno", defaultValue = "0") int surveyno,
+          @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+  
+  
+      SurveytopicVO surveytopicVO = new SurveytopicVO();
+      model.addAttribute("surveytopicVO", surveytopicVO);
+      
+      ArrayList<SurveytopicVO> list = this.surveytopicProc.list_paging(word, now_page, now_page);
+      model.addAttribute("list", list);
+      
+      
+      model.addAttribute("word", word);
+      
+      // 페이지 번호 목록 생성
+      int search_count = this.surveytopicProc.list_search_count(word);
+      String paging = this.surveytopicProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+      this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      
+      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      // --------------------------------------------------------------------------------------      
+      
+      return "/survey_topic/list_all";
+      } 
+
+    /**
+     * 등록 폼 및 검색 목록 + 페이징
+     * @param model
+     * @return
+     */
+    @GetMapping(value = "/list_search")
+    public String list_search_paging(HttpSession session, Model model,
+        @RequestParam(name = "word", defaultValue = "") String word,
+        @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+     
+      if (this.memberProc.isMemberAdmin(session)) {
+               
+        word = Tool.checkNull(word);
+        
+        ArrayList<SurveytopicVO> list = this.surveytopicProc.list_search_paging(word, now_page, this.record_per_page);
+        model.addAttribute("list", list);
+
+
+        int search_cnt = this.surveytopicProc.list_search_count(word);
+        model.addAttribute("search_cnt", search_cnt);
+
+        model.addAttribute("word", word); // 검색어
+
+        int search_count = this.surveytopicProc.list_search_count(word);
+        String paging = this.surveytopicProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+            this.page_per_block);
+        model.addAttribute("paging", paging);
+        model.addAttribute("now_page", now_page);
+
+        int no = search_count - ((now_page - 1) * this.record_per_page);
+        model.addAttribute("no", no);
+
+        return "/survey_topic/list_search"; 
+      } else {
+        return "redirect:/member/login_cookie_need";
+
+      }
 
  }  
+    
+    @GetMapping("/read_res")
+    public String read_res(Model model, 
+                                                      @RequestParam(name = "surveyno", defaultValue = "0") int surveyno) {
+        
+      SurveyVO surveyVO = this.surveyproc.read(surveyno);
+      model.addAttribute("surveyVO", surveyVO);
+                  
+      ArrayList<SurveytopicVO> surveytopicList = this.surveytopicProc.listBySurveyno(surveyVO.getSurveyno());
+      model.addAttribute("surveytopicList", surveytopicList);
+      
+       // 각 주제에 대한 항목을 저장할 맵
+       Map<Integer, ArrayList<SurveyitemVO>> itemsByTopic = new HashMap<>();
 
+       // 각 주제에 대한 항목을 저장할 맵
+       for (SurveytopicVO topic : surveytopicList) {
+           ArrayList<SurveyitemVO> surveyitemList = this.surveyitemProc.listBySurveytopicno(topic.getSurveytopicno());
+           itemsByTopic.put(topic.getSurveytopicno(), surveyitemList);
+         
+       }
 
+       model.addAttribute("itemsByTopic", itemsByTopic);
+
+      
+        return "/survey_topic/read_res"; // 결과 페이지의 이름
+    }
+
+}
     
     
 

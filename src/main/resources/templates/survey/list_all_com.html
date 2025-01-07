@@ -6,8 +6,9 @@
       <col style='width: 10%;'/>      
       <col style='width: 10%;'/>    
       <col style='width: 10%;'/>
-      <col style='width: 10%;'/>
-      <col style='width: 10%;'/>
+      <col style='width: 5%;'/>
+      <col style='width: 5%;'/>
+      <col style='width: 5%;'/>
       <col style='width: 5%;'/>
     </colgroup>
     <thead>
@@ -18,6 +19,7 @@
         <th class="th_bs">시작 날</th>
         <th class="th_bs">종료 날</th>
         <th class="th_bs">진행여부</th>
+        <th class="th_bs">추천 수</th>
         <th class="th_bs">인원 수</th>
         <th class="th_bs">기타</th>
       </tr>
@@ -31,8 +33,8 @@
                     <img th:src="@{|/store/storage/${surveyVO.posterthumb}|}" style="width: 120px; height: 90px;">
                 </div>
     
-                <div th:if="${((surveyVO.poster.endsWith('jpg') or surveyVO.poster.endsWith('png')  or surveyVO.poster.endsWith('gif')) == false) and (surveyVO.poster > 0)}">
-                  <span th:text="${surveyVO.poster}"></span>
+                <div th:if="${surveyVO.poster != null && !surveyVO.poster.endsWith('jpg') && !surveyVO.poster.endsWith('png') && !surveyVO.poster.endsWith('gif') && surveyVO.poster.length() > 0}">
+                      <!-- poster가 jpg, png, gif가 아닐 경우에 실행할 내용 -->
                 </div>
     
                 <div th:if="${surveyVO.postersize == 0}">
@@ -64,6 +66,9 @@
             </a>
           </span>
         </td>
+        <td class="td_bs">
+        <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.recom}"></a>
+        </td> 
         <td class="td_bs">
         <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.cnt}"></a>
         </td> 
