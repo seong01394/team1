@@ -252,15 +252,36 @@ public class CommuProc implements CommuProcInter {
 
   @Override
   public int increaseReplycnt(int communo) {
-    int count = commuDAO.increaseReplycnt(communo);
+    int cnt = commuDAO.increaseReplycnt(communo);
     
-    return count;
+    return cnt;
   }
 
   @Override
   public int decreaseReplycnt(int communo) {
-    int count = commuDAO.decreaseReplycnt(communo);
+    int cnt = commuDAO.decreaseReplycnt(communo);
     
-    return count;
+    return cnt;
+  }
+
+  @Override
+  public int increaseRecom(int communo) {
+    int cnt = this.commuDAO.increaseRecom(communo);
+    
+    return cnt;
+  }
+
+  @Override
+  public int decreaseRecom(int communo) {
+    int cnt = this.commuDAO.decreaseRecom(communo);
+    
+    return cnt;
+  }
+  
+  @Override
+  public int good(int communo) {
+    int cnt = this.commuDAO.good(communo);
+    
+    return cnt;
   }
 }

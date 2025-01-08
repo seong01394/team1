@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="dev.mvc.commugood.CommugoodDAOInter">
+  
+  <!-- 등록 -->
+   <insert id="create" parameterType="dev.mvc.commugood.CommugoodVO">
+    INSERT INTO commugood(commugoodno, rdate, communo, memberno)
+    VALUES(commugood_seq.nextval, sysdate, #{communo}, #{memberno})
+  </insert>
+   
+   <!-- 전체 목록 -->
+  <select id="list_all" resultType="dev.mvc.commugood.CommugoodVO">
+    SELECT commugoodno, rdate, communo, memberno
+    FROM commugood
+    ORDER BY commugoodno DESC
+  </select>     
+
+  <!-- 삭제 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM commugood WHERE commugoodno = #{commugoodno}
+  </delete>
+  
+  <!-- 특정 컨텐츠의 특정 회원 추천 갯수 산출 -->
+  <select id="heartCnt" resultType="int" parameterType='HashMap'>
+    SELECT COUNT(*) as cnt
+    FROM commugood
+    WHERE communo=#{communo} AND memberno= #{memberno} 
+  </select>
+
+  <!-- PK 조회 -->
+  <select id="read" resultType="dev.mvc.commugood.CommugoodVO" parameterType="Integer">
+    SELECT commugoodno, rdate, communo, memberno
+    FROM commugood
+    WHERE commugoodno = #{commugoodno};
+  </select>    
+
+  <!-- FK 조회 -->
+  <select id="readByCommunoMemberno" 
+    resultType="dev.mvc.commugood.CommugoodVO" parameterType="Integer">
+    SELECT commugoodno, rdate, communo, memberno
+    FROM commugood
+    WHERE communo=#{communo} AND memberno= #{memberno} 
+  </select>    
+
+  <select id="list_all_join" resultType="dev.mvc.commugood.CommuCommugoodMemberVO">
+    SELECT r.commugoodno, r.rdate, r.communo, c.headline as c_headline, r.memberno, m.id, m.name
+    FROM commu c, commugood r, member m
+    WHERE c.communo = r.communo AND r.memberno = m.memberno
+    ORDER BY commugoodno DESC
+  </select>
+
+</mapper> 

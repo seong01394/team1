@@ -67,9 +67,15 @@ DELETE FROM match WHERE matchno=1;
 SELECT matchno, clubno, preview, review FROM match ORDER BY matchno ASC;   
   
   
-
-  
-  
+-- 추천
+UPDATE commu
+SET recom = recom + 1
+WHERE communo = 1;
+   
+-- 비추천
+UPDATE commu
+SET recom = recom - 1
+WHERE communo = 1;  
   
   
   
