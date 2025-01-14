@@ -16,10 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.survey.SurveyProcInter;
 import dev.mvc.survey.SurveyVO;
 import dev.mvc.survey_topic.Surveytopic;
 import dev.mvc.survey_topic.SurveytopicProcInter;
 import dev.mvc.survey_topic.SurveytopicVO;
+import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -27,7 +29,14 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/survey_item")
 public class SurveyitemCont {
+  /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
+  public int record_per_page = 5;
+
+  /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
+  public int page_per_block = 5;
   
+  /** 페이징 목록 주소 */
+  private String list_file_name = "/survey_item/list_search";  
   @Autowired
   @Qualifier("dev.mvc.survey_item.SurveyitemProc")
   private SurveyitemProcInter surveyitemProc;
@@ -35,6 +44,10 @@ public class SurveyitemCont {
   @Autowired
   @Qualifier("dev.mvc.survey_topic.SurveytopicProc")
   private SurveytopicProcInter surveytopicProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.survey.SurveyProc")
+  private SurveyProcInter surveyProc;
   
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc")
@@ -62,7 +75,6 @@ public class SurveyitemCont {
       Model model,
       @Valid 
       @ModelAttribute("surveyitemVO") SurveyitemVO surveyitemVO,
-      @RequestParam(name = "surveyno", defaultValue = "0") int surveyno,
       @RequestParam(name = "surveytopicno", defaultValue = "0") int surveytopicno,
       BindingResult bindingResult,
       RedirectAttributes ra) {
@@ -234,4 +246,54 @@ public class SurveyitemCont {
       }
    
     }
+    
+
+    
+    /**
+     * 등록 폼 및 검색 목록 + 페이징
+     * @param model
+     * @return
+     */    
+    @GetMapping(value = "/list_search")
+    public String list_search_paging(HttpSession session, Model model,
+        @RequestParam(name = "surveyitemno", defaultValue = "0") Integer  surveyitemno,
+        @RequestParam(name = "surveytopicno", defaultValue = "0") Integer  surveytopicno,
+        @RequestParam(name = "word", defaultValue = "") String word,
+        @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+     
+      if (this.memberProc.isMemberAdmin(session)) {
+               
+        word = Tool.checkNull(word);
+        SurveyitemVO surveyitemVO = new SurveyitemVO();        
+        model.addAttribute("surveyitemVO", surveyitemVO);    
+        
+        ArrayList<SurveyitemVO> surveyitemList = this.surveyitemProc.listBySurveytopicno(surveytopicno);
+        model.addAttribute("surveyitemList", surveyitemList);
+        
+
+        
+        ArrayList<SurveyitemVO> list = this.surveyitemProc.list_search_paging(word, now_page, this.record_per_page);
+        model.addAttribute("list", list);   
+        
+        int search_cnt = this.surveyitemProc.list_search_count(word);
+        model.addAttribute("search_cnt", search_cnt);
+
+        model.addAttribute("word", word); // 검색어
+
+        int search_count = this.surveyitemProc.list_search_count(word);
+        String paging = this.surveyitemProc.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page,
+            this.page_per_block);
+        model.addAttribute("paging", paging);
+        model.addAttribute("now_page", now_page);
+
+        int no = search_count - ((now_page - 1) * this.record_per_page);
+        model.addAttribute("no", no);
+
+        return "/survey_item/list_search"; 
+      } else {
+        return "redirect:/member/login_cookie_need";
+
+      }
+
+ }  
 }

@@ -25,19 +25,11 @@
       <div>
         <label>항목순서</label>
         <input type="number" name="itemseq" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{itemseq}">
+               class="form-control" style="width: 5%;" th:field="*{itemseq}">
         <div th:if="${#fields.hasErrors('itemseq')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err: ${#lists.sort(#fields.errors('itemseq'))}" th:text="${err}"></div>
         </div>  
       </div>
-      <div>
-        <label>선택인원 수</label>
-        <input type="number" name="itemcnt" value="" autofocus="autofocus"
-               class="form-control" style="width: 100%;" th:field="*{itemcnt}">
-        <div th:if="${#fields.hasErrors('itemcnt')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-          <div th:each="err: ${#lists.sort(#fields.errors('itemcnt'))}" th:text="${err}"></div>
-        </div>  
-      </div>   
       <div class="content_body_bottom">
         <button type="submit" class="btn btn-secondary btn-sm">저장</button>
         <button type="button" onclick="location.href='/survey/list_search'" class="btn btn-secondary btn-sm">취소</button>

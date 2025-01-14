@@ -33,3 +33,6 @@ VALUES(admin_seq.nextval, 'emp1', '1234', '직원1');
 
 INSERT INTO admin(adminno, id, passwd, adname)
 VALUES(admin_seq.nextval, 'emp2', '1234', '직원2');
+
+SELECT * FROM admin WHERE adminno = 1;
+

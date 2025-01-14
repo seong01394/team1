@@ -1,21 +1,37 @@
   /* ver 2.5 2024_0912 */
   
   /* 폰트 선언 */
-  @font-face {
-    font-family: 'TTHakgyoansimMonggeulmonggeulR';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMonggeulmonggeulR.woff2') format('woff2');
+@font-face {
+    font-family: 'STUNNING-Bd';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2410-2@1.0/STUNNING-Bd.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mungyeong-Gamhong-Apple';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2410-2@1.0/Mungyeong-Gamhong-Apple.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
 
 /* 모든 태그에 적용 */
 *{
-   font-family: TTHakgyoansimMonggeulmonggeulR; 
+   font-family: STUNNING-Bd; 
    font-size: 16px; 
    margin: 0px;  /* top right bottom left */
    padding: 0px;
    color: #555555;
 }  
+
+.title_line{
+   font-family: Mungyeong-Gamhong-Apple; 
+   font-size: 50px; 
+   margin: 0px;  /* top right bottom left */
+   padding: 0px;
+   color: #555555;
+}  
+
 
 
   .bar_img {
@@ -268,11 +284,14 @@
 
 .title_line {
   text-align: left;
-  border-bottom: solid 3px #555555;
   width: 100%;
-  margin: 20px auto;
-  font-size: 20px;    
+  margin: 10px 0;
+  height: 100px; /* 선의 두께 설정 */
+  background-image: url(/survey/menu_image.jpg);
+  font-size: 20px;  
+  color: #FAFAFA;  
 }
+
 
 .title_line_text {
   font-size: 20px;  
@@ -660,10 +679,13 @@ color: #FAFAFA;
 color: #FAFAFA;
 }
 
-.menu_line {
-   margin: 10px 0;
-   border-bottom: 1px solid #ddd; /* 또는 원하는 색상 */
-}
+   .menu_line {
+       margin: 10px 0;
+       height: 10px; /* 선의 두께 설정 */
+       background-image: url(/survey/menu_image.jpg);
+       background-repeat: no-repeat; /* 이미지 반복 방지 */
+       background-size: cover; /* 이미지 크기 조정 */
+   }
 
  .list-group-item {
    background-color: #f8f9fa; /* Bootstrap의 배경색에 맞춤 */

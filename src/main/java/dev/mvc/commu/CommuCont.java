@@ -164,7 +164,7 @@ public class CommuCont {
      model.addAttribute("menu", menu);
 
      // 전체 목록 가져오기
-     ArrayList<CommuVO> list = this.commuProc.list_all();
+     ArrayList<CommuMemberVO> list = this.commuProc.list_all_join();
      model.addAttribute("list", list);
 
      model.addAttribute("clubno", clubno);

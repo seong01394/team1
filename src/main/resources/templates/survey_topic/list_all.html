@@ -1,0 +1,55 @@
+<div th:fragment="list_all_fragment"> 
+  <table class="table table-hover" style="width: 100%;">
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>      
+      <col style='width: 5%;'/>
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="th_bs">순서</th>
+        <th class="th_bs">사진</th>
+        <th class="th_bs">제목</th>        
+        <th class="th_bs">출력 순서</th>
+        <th class="th_bs">기타</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr th:each="surveytopicVO, status:${list}">
+        <td class="td_bs" th:text="|${status.index+1}|"></td>
+    
+        <td class='td_basic' style="vertical-align: middle; text-align: center;">
+                <div th:if="${surveytopicVO.file1.endsWith('jpg') or surveytopicVO.file1.endsWith('png') or surveytopicVO.file1.endsWith('gif')}">
+                    <img th:src="@{|/store/storage/${surveytopicVO.filethumb}|}" style="width: 120px; height: 90px;">
+                </div>
+    
+                <div th:if="${((surveytopicVO.file1.endsWith('jpg') or surveytopicVO.file1.endsWith('png')  or surveytopicVO.file1.endsWith('gif')) == false) and (surveytopicVO.file1 > 0)}">
+                  <span th:text="${surveytopicVO.file1}"></span>
+                </div>
+    
+                <div th:if="${surveytopicVO.filesize == 0}">
+                    <img src="/survey/images/none1.png" style="width: 120px; height: 90px;">
+                </div>
+        </td>
+        <td class="td_bs">
+          <a th:href="@{|/survey_topic/read?surveyno=${surveytopicVO.surveyno}|}"  style="display:block; color:black;"  th:text="${surveytopicVO.topic}"></a>
+        </td>
+        <td class="td_bs">
+          <a th:href="@{|/survey_topic/read?surveyno/${surveytopicVO.surveyno}|}" style="display:block; color:black;" th:text="${surveytopicVO.seqno}"></a>
+        </td>
+
+
+        <td style="vertical-align: middle; text-align: center;">
+          <a th:href="@{|/survey_topic/update?surveytopicno=${surveytopicVO.surveytopicno}&surveyno=${surveytopicVO.surveyno}|}"><img src="/survey/update2.png" class="icon" title="수정"></a> <!-- /static 기준 -->
+          <a th:href="@{|/survey_topic/delete?surveytopicno=${surveytopicVO.surveytopicno}&surveyno=${surveytopicVO.surveyno}|}"><img src="/survey/delete2.png" class="icon" title="삭제"></a> <!--/* /static 기준 */-->
+          <a th:href="@{|/survey_item/create?surveytopicno=${surveytopicVO.surveytopicno}|}"><img src="/survey/create2.png" class="icon" title="추가"></a> <!--/* /static 기준 */-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+
+
+</div>
+

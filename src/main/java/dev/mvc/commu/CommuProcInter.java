@@ -160,4 +160,10 @@ public interface CommuProcInter {
    */
   public int good(int communo);
   
+  /**
+   * join 목록
+   * @return
+   */
+  public ArrayList<CommuMemberVO> list_all_join();
+  
 }

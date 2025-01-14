@@ -77,6 +77,12 @@ UPDATE commu
 SET recom = recom - 1
 WHERE communo = 1;  
   
-  
+
+-- 테이블2개 JOIN
+SELECT c.communo, c.clubno, c.memberno, c.headline, c.contents, c.recom, c.reply, c.viewcnt, c.hashtag, c.rdate, c.commuthumb, 
+       c.image, c.imagesaved, c.imagesize, m.nickname
+FROM commu c, member m
+WHERE c.memberno = m.memberno
+ORDER BY communo DESC;  
   
   

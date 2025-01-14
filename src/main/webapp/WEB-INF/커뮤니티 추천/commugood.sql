@@ -101,7 +101,7 @@ WHERE c.communo = r.communo
 ORDER BY commugoodno DESC;
 
 -- 테이블3개 JOIN,  as 사용시 컬렴명 가능: c.headline as c_headline
-SELECT r.commugoodno, r.rdate, r.communo, c.headline as c_healine, r.memberno, m.id, m.name
+SELECT r.commugoodno, r.rdate, r.communo, c.headline as c_headline, r.memberno, m.id, m.name
 FROM commu c, commugood r, member m
 WHERE c.communo = r.communo AND r.memberno = m.memberno
 ORDER BY commugoodno DESC;

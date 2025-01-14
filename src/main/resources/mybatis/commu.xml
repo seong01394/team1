@@ -181,5 +181,13 @@
      WHERE communo = #{communo}
    </update>
    
+   <select id="list_all_join" resultType="dev.mvc.commu.CommuMemberVO">
+      SELECT c.communo, c.clubno, c.memberno, c.headline, c.contents, c.recom, c.reply, c.viewcnt, c.hashtag, c.rdate, c.commuthumb, 
+             c.image, c.imagesaved, c.imagesize, m.nickname
+      FROM commu c, member m
+      WHERE c.memberno = m.memberno
+      ORDER BY communo DESC
+  </select>
+   
     
 </mapper>

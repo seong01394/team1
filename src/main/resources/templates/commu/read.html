@@ -59,7 +59,7 @@
   </script>
 
   <div class='title_line'>
-    <span th:text="${clubVO.clubname}" class="title_line_text"></span >   
+    <span th:text="${clubVO.clubname}" class="title_line_text" style="color: white;"></span >   
     > 글 조회
   </div>
   
@@ -95,7 +95,7 @@
     <a th:href="@{|./delete?communo=${commuVO.communo}&hashtage=${hashtage}&now_page=${now_page}&cateno=${commuVO.clubno}|}" style="color: black;">삭제</a>
   </aside>
  
-  <div class='menu_line'></div>
+
 
   <fieldset class="fieldset_basic">
     <ul>
@@ -132,7 +132,7 @@
 
     <!-- 본문 내용 -->
     <div style="border: 1px solid #ccc; padding: 0; border-radius: 5px; margin-bottom: 20px;">
-      <div style="white-space: pre-wrap; font-size: 1.5em; padding: 10px;">
+      <div style="white-space: pre-wrap; font-size: 1.5em; padding: 10px; margin: 0;">
           <span th:text="${commuVO.contents}"></span>
       </div>
     </div>

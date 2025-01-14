@@ -284,4 +284,15 @@ public class CommuProc implements CommuProcInter {
     
     return cnt;
   }
+  
+  /**
+   * 목록
+   */
+  @Override
+  public ArrayList<CommuMemberVO> list_all_join() {
+    ArrayList<CommuMemberVO> list = this.commuDAO.list_all_join();
+    
+    return list;
+  }
+  
 }

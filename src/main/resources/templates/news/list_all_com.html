@@ -1,0 +1,51 @@
+<div th:fragment="list_all_fragment"> 
+    <table class="table table-hover" style="width: 100%;">
+      <colgroup>
+        <col style='width: 10%;'/>
+        <col style='width: 20%;'/>
+        <col style='width: 25%;'/>    
+        <col style='width: 25%;'/>
+        <col style='width: 10%;'/>
+        <col style='width: 10%;'/>
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="th_bs">뉴스 번호</th>
+          <th class="th_bs">뉴스 제목</th>
+          <th class="th_bs">뉴스 주소</th>
+          <th class="th_bs">뉴스 내용</th>
+          <th class="th_bs">뉴스 등록일</th>
+          <th class="th_bs">기타</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="newsVO, status:${list}" >
+
+          <td class="td_bs">
+            <a th:href="@{|/news/read/${newsVO.newsno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${newsVO.newsno}"></a>
+          </td>
+  
+          <td class="td_bs">
+            <a th:href="@{|/news/read/${newsVO.newsno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${newsVO.newstitle}"></a>
+          </td>
+  
+          <td class="td_bs">
+            <a th:href="@{|/news/read/${newsVO.newsno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${newsVO.newsadd}"></a>
+          </td>
+  
+          <td class="td_bs">
+          <a th:href="@{|/news/read/${newsVO.newsno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${newsVO.newsinfo}"></a>
+          </td>
+
+          <td class="td_bs" th:text="${newsVO.rdate.substring(0, 10)}"></td>
+
+          <td class="td_bs">
+            <a th:href="@{|/news/update/${newsVO.newsno}?word=${word}&now_page=${now_page}|}"><img src="/news/images/update.png" class="icon" title="수정"></a> <!-- /static 기준 -->
+            <a th:href="@{|/news/delete/${newsVO.newsno}?word=${word}&now_page=${now_page}|}"><img src="/news/images/delete.png" class="icon" title="삭제"></a> <!--/* /static 기준 */-->
+            <a th:href="@{|/news/create?newsno=${newsVO.newsno}|}"><img src="/news/images/create.png" class="icon" title="글 등록"></a> <!--/* /static 기준 */-->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
