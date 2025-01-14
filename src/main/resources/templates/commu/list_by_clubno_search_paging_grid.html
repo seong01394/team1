@@ -4,7 +4,7 @@
 <div layout:fragment="content">
 
   <div class='title_line'>
-    <span th:text="${clubVO.clubname}" class="title_line_text"></span >
+    <span th:text="${clubVO.clubname}" class="title_line_text" style="color: white;"></span >
     <span th:if="${hashtag != ''}" th:text="|> ${hashtag} (${search_count} 건)|" class="title_line_text"></span>
   </div>
 
@@ -26,7 +26,7 @@
   <!-- /commu/list_search_com.html 파일의 list_search_fragment import -->
   <div th:replace="~{commu/list_search_com::list_search_fragment}"></div>
      
-  <div class='menu_line'></div>
+
        
   <div style='width: 100%;'> <!-- 갤러리 Layout  시작 -->
     <div th:if="${list.size() > 0}"  th:each="commuVO, status:${list}" 

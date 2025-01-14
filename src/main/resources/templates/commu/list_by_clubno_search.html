@@ -4,7 +4,7 @@
 <div layout:fragment="content">
 
   <div class='title_line'>
-    <span th:text="${clubVO.clubname}" class="title_line_text"></span >
+    <span th:text="${clubVO.clubname}" class="title_line_text" style="color: white;"></span >
   </div>
 
   <aside class="aside_right">
@@ -19,7 +19,7 @@
   <!-- /commu/list_search_com.html 파일의 list_search_fragment import -->
   <div th:replace="~{commu/list_search_com::list_search_fragment}"></div>
      
-  <div class='menu_line'></div>
+
        
   <table class="table table-striped" style='width: 100%;'>
     <colgroup>

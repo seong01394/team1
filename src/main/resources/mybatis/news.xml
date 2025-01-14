@@ -4,19 +4,19 @@
 <mapper namespace="dev.mvc.news.NewsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
   <insert id="create" parameterType="dev.mvc.news.NewsVO">
-    INSERT INTO news(newsno, newsadd, newsinfo) 
-    VALUES(news_seq.nextval, #{newsadd}, #{newsinfo})
+    INSERT INTO news(newsno, adminno, newstitle, newsadd, newsinfo, rdate) 
+    VALUES(news_seq.nextval, #{adminno}, #{newstitle}, #{newsadd}, #{newsinfo}, sysdate)
   </insert>
   
   <select id="read" resultType="dev.mvc.news.NewsVO" parameterType="Integer">
-    SELECT newsno, newsadd, newsinfo
+    SELECT newsno, adminno, newstitle, newsadd, newsinfo, rdate
     FROM news
     WHERE newsno=#{newsno}
   </select>  
-
+  
   <update id="update" parameterType="dev.mvc.news.NewsVO">
     UPDATE news 
-    SET newsadd= # {newsadd}, newsinfo= #{newsinfo}
+    SET newstitle = #{newstitle}, newsadd=#{newsadd}, newsinfo=#{newsinfo}
     WHERE newsno=#{newsno} 
   </update> 
 
@@ -25,10 +25,43 @@
   </delete>  
   
    <select id="list_all" resultType="dev.mvc.news.NewsVO">
-    SELECT newsno, newsadd, newsinfo
+    SELECT newsno, adminno, newstitle, newsadd, newsinfo, rdate
     FROM news
     ORDER BY newsno ASC
-  </select>   
+  </select> 
   
+    <select id="list_search" resultType="dev.mvc.news.NewsVO" parameterType="String">
+    SELECT newsno, adminno, newstitle, newsadd, newsinfo, rdate
+    FROM news
+    <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
+      WHERE (UPPER(newstitle) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(newsinfo) LIKE '%' || UPPER(#{word}) || '%')
+    </if> 
+    ORDER BY newsno ASC
+  </select>
+
+  <!-- 검색 갯수 -->
+  <select id="list_search_count" resultType="Integer" parameterType="String">
+    SELECT COUNT(*) as cnt
+    FROM news
+    <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
+      WHERE (UPPER(newstitle) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(newsinfo) LIKE '%' || UPPER(#{word}) || '%')
+    </if> 
+    ORDER BY newsno ASC
+  </select>
+
+  <!-- 검색 + 페이징 -->
+  <select id="list_search_paging" resultType="dev.mvc.news.NewsVO" parameterType="Map">
+    SELECT newsno, adminno, newstitle, newsadd, newsinfo, rdate, r
+    FROM (
+              SELECT newsno, adminno, newstitle, newsadd, newsinfo, rdate, rownum as r
+        FROM (
+                SELECT newsno, adminno, newstitle, newsadd, newsinfo, rdate
+            FROM news
+            WHERE (UPPER(newstitle) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(newsinfo) LIKE '%' || UPPER(#{word}) || '%')
+            ORDER BY newsno ASC
+        )
+    )
+    WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}  <!-- WHERE r >= 1 AND r <= 3 -->
+  </select>
   
-</mapper> 
+</mapper>   

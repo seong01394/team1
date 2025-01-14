@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import dev.mvc.club.Club;
 import dev.mvc.commu.Commu;
+import dev.mvc.news.News;
 import dev.mvc.survey.Surveys;
 import dev.mvc.survey_topic.Surveytopic;
 import dev.mvc.tool.Tool;
@@ -25,6 +26,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
         registry.addResourceHandler("/club/storage/**").addResourceLocations("file:///" +  Club.getUploadDir());
         registry.addResourceHandler("/store/storage/**").addResourceLocations("file:///" +  Surveytopic.getUploadDir());
         registry.addResourceHandler("/commu/storage/**").addResourceLocations("file:///" +  Commu.getUploadDir());
+        registry.addResourceHandler("/news/storage/**").addResourceLocations("file:///" +  News.getUploadDir());
         
         // C:/kd/deploy/resort/food/storage ->  /food/storage -> http://localhost:9091/food/storage;
         // registry.addResourceHandler("/food/storage/**").addResourceLocations("file:///" +  Food.getUploadDir());

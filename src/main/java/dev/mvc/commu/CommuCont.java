@@ -13,14 +13,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import org.json.JSONObject;
 import dev.mvc.club.ClubProcInter;
 import dev.mvc.club.ClubVO;
 import dev.mvc.club.ClubVOMenu;
+import dev.mvc.commugood.CommugoodProcInter;
+import dev.mvc.commugood.CommugoodVO;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
@@ -40,6 +45,10 @@ public class CommuCont {
   @Autowired
   @Qualifier("dev.mvc.commu.CommuProc")
   private CommuProcInter commuProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.commugood.CommugoodProc")
+  private CommugoodProcInter commugoodProc;
   
   public CommuCont() {
     System.out.println("-> CommuCont created");
@@ -155,7 +164,7 @@ public class CommuCont {
      model.addAttribute("menu", menu);
 
      // 전체 목록 가져오기
-     ArrayList<CommuVO> list = this.commuProc.list_all();
+     ArrayList<CommuMemberVO> list = this.commuProc.list_all_join();
      model.addAttribute("list", list);
 
      model.addAttribute("clubno", clubno);
@@ -258,11 +267,10 @@ public class CommuCont {
   * 조회 
   */
  @GetMapping(value = "/read")
- public String read(Model model, 
+ public String read(HttpSession session, Model model, 
      @RequestParam(name="communo", defaultValue = "0") int communo, 
      @RequestParam(name="hashtag", defaultValue = "") String hashtag, 
-     @RequestParam(name="now_page", defaultValue = "1") int now_page,
-     @RequestParam(name="action", defaultValue = "") String action) {
+     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
    
    ArrayList<ClubVOMenu> menu = this.clubProc.menu();
    model.addAttribute("menu", menu);
@@ -280,7 +288,24 @@ public class CommuCont {
 
    model.addAttribute("hashtag", hashtag);
    model.addAttribute("now_page", now_page);
-
+      
+   // ----------------------------------------------------------------------------
+   // 추천 관련
+  // ----------------------------------------------------------------------------
+   HashMap<String, Object> map = new HashMap<String, Object>();
+   map.put("communo", communo );
+   
+   int heartCnt = 0;
+   if (session.getAttribute("memberno") != null ) { // 회원인 경우만 카운트 처리
+     int memberno = (int)session.getAttribute("memberno");
+     map.put("memberno", memberno);
+     
+     heartCnt = this.commugoodProc.heartCnt(map);
+   } 
+      
+    model.addAttribute("heartCnt", heartCnt);
+   // ----------------------------------------------------------------------------
+   
    return "/commu/read";
  }
  
@@ -596,6 +621,72 @@ public class CommuCont {
    
  }   
     
+ /**
+  * 추천 
+  * http://localhost:9093/good
+  * @return
+  */
+ @PostMapping(value = "/good")
+ @ResponseBody
+ public String good(HttpSession session, Model model,@RequestBody String json_src) {
+
+   System.out.println("-> json_src: " + json_src); // json_src: {"communo":"3"}
+   
+   JSONObject src = new JSONObject(json_src); // String -> JSON
+   int communo = (int)src.get("communo"); // 값 가져오기
+   System.out.println("-> communo: " + communo);
+   
+   if (this.memberProc.isMember(session)) { // 회원 로그인 확인
+     // 추천을 한 상태인지 확인
+     int memberno = (int)session.getAttribute("memberno");
+     HashMap<String, Object> map = new HashMap<String, Object>();
+     map.put("communo", communo);
+     map.put("memberno", memberno);
+     
+     int good_cnt = this.commugoodProc.heartCnt(map);
+     System.out.println("-> good_cnt: " + good_cnt);
+     
+     
+     
+     if(good_cnt == 1) {
+       System.out.println("-> 추천해제: " + communo + ' ' + memberno);
+       CommugoodVO commugoodVO = this.commugoodProc. readByCommunoMemberno(map);
+       
+       this.commugoodProc.delete(commugoodVO.getCommugoodno());  // 추천 삭제
+       this.commuProc.decreaseRecom(communo);  // 카운트 감소
+       
+     } else {
+       System.out.println("-> 추천: " + communo + ' ' + memberno);
+       
+       CommugoodVO commugoodVO_new = new CommugoodVO();
+       commugoodVO_new.setCommuno(communo);
+       commugoodVO_new.setMemberno(memberno);
+       
+       this.commugoodProc.create(commugoodVO_new);      
+       this.commuProc.increaseRecom(communo);  // 카운트 증가
+     }
+     
+     // 추천 여부가 변경되어 다시 새로운 값을 읽어옴.
+     int heartCnt = this.commugoodProc.heartCnt(map);
+     int recom = this.commuProc.read(communo).getRecom();
+     
+     JSONObject result = new JSONObject();
+     result.put("isMember", 1);  // 로그인: 1 비회원: 0
+     result.put("heartCnt", heartCnt); // 추천여부, 추천:1 비추: 0
+     result.put("recom", recom); // 추천한 사람 수
+     
+     System.out.println("result.toString(): " + result.toString());
+     return result.toString();
+
+   } else { 
+     JSONObject result = new JSONObject();
+     result.put("isMember", 0);  // 로그인: 1 비회원: 0
+     
+     System.out.println("result.toString(): " + result.toString());
+     return result.toString();
+   }
+
+ }
 
  
 }

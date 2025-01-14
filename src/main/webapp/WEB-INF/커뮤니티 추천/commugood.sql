@@ -47,44 +47,64 @@ COMMUGOODNO RDATE                  COMMUNO   MEMBERNO
           2 2025-01-07 10:55:05          4          4
           1 2025-01-07 10:55:05          5          4
 
--- 특정 달의 목록
+-- PK 조회
 SELECT commugoodno,rdate, communo, memberno
-FROM calendar
-WHERE SUBSTR(labeldate, 1, 7) = '2025-01'
-ORDER BY labeldate ASC, seqno ASC;
+FROM commugood
+WHERE commugoodno = 1;
 
-CALENDARNO LABELDATE  LABEL                               SEQNO
----------- ---------- ------------------------------ ----------
-         1 2024-12-24 크리스마스 이브                         1
-         2 2024-12-25 휴강 안내                               1
-         3 2024-12-25 학원 출입 안내                          2
-
--- 특정 날짜의 목록
-SELECT calendarno, labeldate, label, seqno
-FROM calendar
-WHERE labeldate = '2025-01-01';
-
-CALENDARNO LABELDATE  LABEL                                                   SEQNO
----------- ---------- -------------------------------------------------- ----------
-         1 2024-12-24 크리스마스 이브                                             1
-
--- 조회수 증가
-UPDATE calendar
-SET cnt = cnt + 1
-WHERE calendarno = 1;
-
--- 조회
-SELECT calendarno, labeldate, label, title, content, cnt, regdate, seqno
-FROM calendar
-WHERE calendarno = 1;
-
--- 변경
-UPDATE calendar
-SET labeldate = '', label = '', title = '', content = '', seqno = 1
-WHERE calendarno = 1;
+COMMUGOODNO RDATE                  COMMUNO   MEMBERNO
+----------- ------------------- ---------- ----------
+          1 2025-01-07 10:55:05          5          4
+          
+          
+          
+-- commugoodno, memberno로 조회          
+SELECT commugoodno,rdate, communo, memberno
+FROM commugood
+WHERE commugoodno=3 AND memberno=6;          
 
 -- 삭제
-DELETE FROM calendar
-WHERE calendarno = 7;
+DELETE FROM commugood
+WHERE commugoodno = 4;
 
 commit;
+
+
+SELECT COUNT(*) as cnt
+FROM commugood
+WHERE commugoodno=3 AND memberno=6; 
+
+       CNT
+---------- 
+         1  < --  이미 추천을 함
+         
+         
+SELECT COUNT(*) as cnt
+FROM commugood
+WHERE commugoodno=1 AND memberno=5;
+
+       CNT
+----------
+         0  < -- 추천 안됨
+         
+
+
+-- JOIN, 어느 설문을 누가 추천 헀는가?         
+SELECT commugoodno,rdate, communo, memberno
+FROM commugood
+ORDER BY commugoodno DESC;
+
+-- 테이블2개 JOIN
+SELECT r.commugoodno, r.rdate, r.communo,c.headline, r.memberno
+FROM commu c, commugood r
+WHERE c.communo = r.communo
+ORDER BY commugoodno DESC;
+
+-- 테이블3개 JOIN,  as 사용시 컬렴명 가능: c.headline as c_headline
+SELECT r.commugoodno, r.rdate, r.communo, c.headline as c_headline, r.memberno, m.id, m.name
+FROM commu c, commugood r, member m
+WHERE c.communo = r.communo AND r.memberno = m.memberno
+ORDER BY commugoodno DESC;
+
+         
+                

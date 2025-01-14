@@ -141,4 +141,29 @@ public interface CommuProcInter {
    */
   public int decreaseReplycnt(int communo);
   
+  /**
+   * 추천 수 증가
+   * @param communo
+   * @return
+   */
+  public int increaseRecom(int communo);
+  
+  /**
+   * 추천 수 감소
+   */
+  public int decreaseRecom(int communo);
+  
+  /**
+   * 추천
+   * @param communo
+   * @return
+   */
+  public int good(int communo);
+  
+  /**
+   * join 목록
+   * @return
+   */
+  public ArrayList<CommuMemberVO> list_all_join();
+  
 }

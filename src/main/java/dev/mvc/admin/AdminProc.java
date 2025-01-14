@@ -46,7 +46,7 @@ public class AdminProc implements AdminProcInter {
   }
 
   /**
-   * 회원인지 검사
+   * 관리자인지 검사
    */
   @Override
   public boolean isAdmin(HttpSession session){

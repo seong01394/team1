@@ -89,6 +89,5 @@ WHERE memberno=12;
 
 COMMIT;
 
- 
 
 

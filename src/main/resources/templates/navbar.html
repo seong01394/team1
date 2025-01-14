@@ -17,7 +17,10 @@
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="PL구단" style="color:white;">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item"><a class="nav-link" th:href="@{|/club/list_search?word=${word}|}">클럽팀 목록</a></li>      
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/club/list_search?word=${word}|}">클럽팀 목록</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/news/list_all?word=${word}|}">주요 뉴스</a></li>            
+                        <li class="nav-item"><a class="nav-link" href="http://192.168.12.152:5000//">최신 뉴스 목록</a></li>   
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_calendar|}">일정 Calendar</a></li>         
                     </ul>
                 </li>
 
@@ -74,9 +77,12 @@
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+
                         <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/create|}" style="color:white;">일정 등록</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_all|}" style="color:white;">일정 목록</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_calendar|}" style="color:white;">일정 Calendar</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/commugood/list_all|}">커뮤니티 추천</a></li>
+
                     </ul>
                 </li>
 
