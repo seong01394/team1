@@ -23,7 +23,7 @@ public interface SurveyitemDAOInter {
   
 
 
-  // 하나의 설문조사에 대한 개별문제 리스트 출력 
+  // 하나의 개별문제에 대한 항목 리스트 출력 
   public ArrayList<SurveyitemVO>listBySurveytopicno(int surveytopicno);
   
   // 선택 인원 수 증가
@@ -33,13 +33,13 @@ public interface SurveyitemDAOInter {
   public Integer list_search_count(String word);
 
   // 검색 목록
-  public ArrayList<SurveyitemVO> list_search(String word);
+  public ArrayList<SurveytopicSurveyitemVO> list_search(String word);
 
   // 페이징 목록
-  public ArrayList<SurveyitemVO> list_paging(Map<String, Object> map);
+  public ArrayList<SurveytopicSurveyitemVO> list_paging(Map<String, Object> map);
 
   // 검색 + 페이징
-  public ArrayList<SurveyitemVO> list_search_paging(Map<String, Object> map);
+  public ArrayList<SurveytopicSurveyitemVO> list_search_paging(Map<String, Object> map);
 
   
 }

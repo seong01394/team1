@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import dev.mvc.survey.SurveyVO;
+import dev.mvc.surveygood.SurveySurveygoodMemberVO;
 
 
 
@@ -42,13 +43,15 @@ public interface SurveytopicDAOInter {
   public Integer list_search_count(String word);
 
   // 검색 목록
-  public ArrayList<SurveytopicVO> list_search(String word);
+  public ArrayList<SurveySurveytopicVO> list_search(String word);
 
   // 페이징 목록
-  public ArrayList<SurveytopicVO> list_paging(Map<String, Object> map);
+  public ArrayList<SurveySurveytopicVO> list_paging(Map<String, Object> map);
 
   // 검색 + 페이징
-  public ArrayList<SurveytopicVO> list_search_paging(Map<String, Object> map);
+  public ArrayList<SurveySurveytopicVO> list_search_paging(Map<String, Object> map);
+  
+
 
 
   

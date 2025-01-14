@@ -133,7 +133,7 @@ public class SurveytopicProc implements SurveytopicProcInter{
   }
 
   @Override
-  public ArrayList<SurveytopicVO> list_paging(String word, int now_page, int record_per_page) {
+  public ArrayList<SurveySurveytopicVO> list_paging(String word, int now_page, int record_per_page) {
     /*
     페이지당 10개의 레코드 출력
     1 page: WHERE r >= 1 AND r <= 10
@@ -158,7 +158,7 @@ public class SurveytopicProc implements SurveytopicProcInter{
    map.put("start_num", start_num);
    map.put("end_num", end_num);
    
-   ArrayList<SurveytopicVO> list = this.surveytopicDAO.list_paging(map);
+   ArrayList<SurveySurveytopicVO> list = this.surveytopicDAO.list_paging(map);
    // System.out.println("-> " + list.size());
    
    return list;
@@ -172,13 +172,13 @@ public class SurveytopicProc implements SurveytopicProcInter{
   }
 
   @Override
-  public ArrayList<SurveytopicVO> list_search(String word) {
-    ArrayList<SurveytopicVO> list = this.surveytopicDAO.list_search(word);
+  public ArrayList<SurveySurveytopicVO> list_search(String word) {
+    ArrayList<SurveySurveytopicVO> list = this.surveytopicDAO.list_search(word);
     return list;
   }
 
   @Override
-  public ArrayList<SurveytopicVO> list_search_paging(String word, int now_page, int record_per_page) {
+  public ArrayList<SurveySurveytopicVO> list_search_paging(String word, int now_page, int record_per_page) {
     /*
      페이지당 10개의 레코드 출력
      1 page: WHERE r >= 1 AND r <= 10
@@ -203,10 +203,15 @@ public class SurveytopicProc implements SurveytopicProcInter{
     map.put("start_num", start_num);
     map.put("end_num", end_num);
     
-    ArrayList<SurveytopicVO> list = this.surveytopicDAO.list_search_paging(map);
+    ArrayList<SurveySurveytopicVO> list = this.surveytopicDAO.list_search_paging(map);
  
     
     return list;
+  }
+
+
+  
+
   }
 
 
@@ -228,4 +233,3 @@ public class SurveytopicProc implements SurveytopicProcInter{
 
 
 
-}

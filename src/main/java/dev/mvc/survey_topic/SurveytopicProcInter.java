@@ -61,7 +61,7 @@ public interface SurveytopicProcInter {
    * 검색 목록 
    * @return
    */
-  public ArrayList<SurveytopicVO> list_search(String word);
+  public ArrayList<SurveySurveytopicVO> list_search(String word);
   
   /** 
    * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 
@@ -80,9 +80,11 @@ public interface SurveytopicProcInter {
    * @param map
    * @return
    */
-  public ArrayList<SurveytopicVO> list_paging(String word, int now_page, int record_per_page);
+  public ArrayList<SurveySurveytopicVO> list_paging(String word, int now_page, int record_per_page);
    
-  public ArrayList<SurveytopicVO> list_search_paging(String word, int now_page, int record_per_page);
+  public ArrayList<SurveySurveytopicVO> list_search_paging(String word, int now_page, int record_per_page);
+  
+
 }
 
   

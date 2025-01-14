@@ -83,4 +83,18 @@
     WHERE surveyno = #{surveyno}
   </update>
   
+   <!-- 댓글 수 증가 -->
+   <update id="increaseRecom" parameterType="int">
+     UPDATE survey
+     SET recom = recom + 1
+     WHERE surveyno = #{surveyno}
+   </update>
+
+   <!-- 댓글 수 감소 -->
+   <update id="decreaseRecom" parameterType="int">
+     UPDATE survey
+     SET recom = recom - 1
+     WHERE surveyno = #{surveyno}
+   </update>
+  
 </mapper>

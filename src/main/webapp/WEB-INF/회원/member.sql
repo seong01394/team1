@@ -22,7 +22,7 @@ COMMENT ON COLUMN MEMBER.MEMBERNO is '회원 번호';
 COMMENT ON COLUMN MEMBER.ID is '아이디';
 COMMENT ON COLUMN MEMBER.PASSWD is '패스워드';
 COMMENT ON COLUMN MEMBER.NAME is '성명';
-COMMENT ON COLUMN MEMBER.NICKNAME is '성명';
+COMMENT ON COLUMN MEMBER.NICKNAME is '별명';
 COMMENT ON COLUMN MEMBER.USER_LEVEL is '레벨';
 COMMENT ON COLUMN MEMBER.TEL is '전화번호';
 COMMENT ON COLUMN MEMBER.ZIPCODE is '우편번호';
@@ -50,35 +50,31 @@ VALUES (member_seq.nextval, 'admin', 'fS/kjO+fuEKk06Zl7VYMhg==', '회원1', '피
 INSERT INTO member(memberno, id, passwd, name, nickname, user_level, tel, zipcode,
                    address1, address2, signup_date, signup_path, grade)
 VALUES (member_seq.nextval, 'user1', 'fS/kjO+fuEKk06Zl7VYMhg==', '회원2', '피린이', 'plant', '000-0000-0000', '12345',
-             '서울시 종로구', '관철동', sysdate, '축구 중계보는데 팝업창을 보고 가입하러 왔습니다', 10); 
+             '서울시 종로구', '관철동', sysdate, '축구 중계보는데 팝업창을 보고 가입하러 왔습니다', 11); 
 
 INSERT INTO member(memberno, id, passwd, name, nickname, user_level, tel, zipcode,
                    address1, address2, signup_date, signup_path, grade)
 VALUES (member_seq.nextval, 'user2', 'fS/kjO+fuEKk06Zl7VYMhg==', '회원3', '피린이', 'plant', '000-0000-0000', '12345',
-             '서울시 종로구', '관철동', sysdate, '축구 중계보는데 팝업창을 보고 가입하러 왔습니다', 10); 
+             '서울시 종로구', '관철동', sysdate, '축구 중계보는데 팝업창을 보고 가입하러 왔습니다', 11); 
 
 INSERT INTO member(memberno, id, passwd, name, nickname, user_level, tel, zipcode,
                    address1, address2, signup_date, signup_path, grade)
 VALUES (member_seq.nextval, 'user3', 'fS/kjO+fuEKk06Zl7VYMhg==', '회원4', '피린이', 'plant', '000-0000-0000', '12345',
-             '서울시 종로구', '관철동', sysdate, '축구 중계보는데 팝업창을 보고 가입하러 왔습니다', 10);      
+             '서울시 종로구', '관철동', sysdate, '축구 중계보는데 팝업창을 보고 가입하러 왔습니다', 11);      
      
 3. 조회
  
-1) 사원 정보 조회
+1) 회원 정보 조회
 SELECT memberno, id, passwd, name, user_level, tel, zipcode,address1, address2, signup_date, signup_path
 FROM member
-WHERE memberno = 1;
+WHERE memberno = 2;
 
 SELECT memberno, id, passwd, name, user_level, tel, zipcode,address1, address2, signup_date, signup_path
 FROM member
 WHERE id = 'user1@gmail.com';
  
     
-4. 수정, PK: 변경 못함, UNIQUE: 변경을 권장하지 않음(id)
-UPDATE member 
-SET name='회원2', tel='111-1111-1111', zipcode='00000',
-    address1='강원도', address2='홍천군'
-WHERE memberno=1;
+
 
 COMMIT;
 

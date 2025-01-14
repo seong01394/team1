@@ -27,6 +27,7 @@ COMMENT ON COLUMN survey.poster is '원본 포스터파일';
 COMMENT ON COLUMN survey.postersaved is '저장한 포스터 파일';
 COMMENT ON COLUMN survey.posterthumb is '포스터썸네일';
 COMMENT ON COLUMN survey.postersize is '포스터 파일 크기';
+COMMENT ON COLUMN survey.recom is '추천 수';
 --COMMENT ON COLUMN survey.adminno is '관리자 번호';
 
 
@@ -41,23 +42,23 @@ NOCYCLE;             -- 다시 1부터 생성되는 것을 방지
 
 -- CRUD
 -- 등록
-INSERT INTO survey(surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize)
-VALUES(survey_seq.nextval, '상위 3개의 팀 추천 설문조사1-1', '2024-12-01', 'null', 'y', 1, 'image.png', 'image.png', 'image.png', 1309);
+INSERT INTO survey(surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom)
+VALUES(survey_seq.nextval, '상위 3개의 팀 추천 설문조사1-1', '2024-12-01', 'null', 'y', 1, 'image.png', 'image.png', 'image.png', 1309, 0);
 
 
 
 - 목록
-select surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize FROM survey ORDER BY surveyno ASC;
+select surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom FROM survey ORDER BY surveyno ASC;
 
 -- 조회
-select surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize FROM survey WHERE surveyno = 1; 
+select surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom FROM survey WHERE surveyno = 1; 
 
 --수정
 UPDATE survey SET qa_contents = '역습 vs 패스 플레이' , seqno = 3 WHERE surveyno=6;
 
 --삭제
 DELETE FROM survey WHERE surveyno=6;
-select surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize FROM survey ORDER BY surveyno ASC;
+select surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize, recom FROM survey ORDER BY surveyno ASC;
 
 
 -- 추천 수 증가
@@ -65,3 +66,4 @@ UPDATE survey SET recom = recom + 1 WHERE surveyno=17;
 -- 추천 수 감소
 UPDATE survey SET recom = recom - 1 WHERE surveyno=17;
 
+commit;

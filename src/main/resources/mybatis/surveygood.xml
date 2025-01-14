@@ -8,5 +8,42 @@
     VALUES(surveygood_seq.nextval, sysdate, #{surveyno}, #{memberno})
   </insert>
   
+  <select id="list_all" resultType="dev.mvc.surveygood.SurveygoodVO" >
+    SELECT surveygoodno, rdate, surveyno, memberno
+    FROM surveygood
+    ORDER BY surveygoodno DESC
+  </select>
+  
+  <!-- 일반적인 조회 --> 
+    <select id="read" resultType="dev.mvc.surveygood.SurveygoodVO" parameterType="Integer">
+    SELECT surveygoodno, rdate, surveyno, memberno
+    FROM surveygood
+    WHERE surveygood = #{surveygood}
+  </select>
+  
+  <!-- 회원 번호, 설문조사 좋아요번호 조회-->
+   <select id="readBySurveynoMemberno" resultType="dev.mvc.surveygood.SurveygoodVO" parameterType="Hashmap">
+    SELECT surveygoodno, rdate, surveyno, memberno
+    FROM surveygood
+    WHERE surveyno = #{surveyno} AND memberno = #{memberno}
+  </select>
+      
+  <delete id="delete" parameterType= "int">
+    DELETE FROM surveygood WHERE surveygoodno = #{surveygoodno}
+  </delete>
+  
+  <select id="hartCnt"  resultType= "int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM surveygood
+    WHERE surveyno = #{surveyno} AND memberno = #{memberno}
+  </select>
+  
+  <!-- 테이블 3개 조인-->
+  <select id="join_list_all" resultType="dev.mvc.surveygood.SurveySurveygoodMemberVO" >
+    Select g.surveygoodno, g.rdate, g.surveyno, g.memberno, s.survey_title as s_survey_title, m.id, m.name
+    FROM survey s, surveygood g, member m
+    WHERE s.surveyno = g.surveyno AND g.memberno = m.memberno
+    ORDER BY surveygoodno DESC
+  </select>
   
 </mapper>

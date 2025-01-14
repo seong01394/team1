@@ -1,27 +1,30 @@
 <div th:fragment="list_all_fragment"> 
   <table class="table table-hover" style="width: 100%;">
+
     <colgroup>
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>      
       <col style='width: 10%;'/>    
       <col style='width: 10%;'/>
-      <col style='width: 5%;'/>
-      <col style='width: 5%;'/>
-      <col style='width: 5%;'/>
-      <col style='width: 5%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
     </colgroup>
     <thead>
       <tr>
-        <th class="th_bs">순서</th>
-        <th class="th_bs">포스터</th>        
-        <th class="th_bs">제목</th>
-        <th class="th_bs">시작 날</th>
-        <th class="th_bs">종료 날</th>
-        <th class="th_bs">진행여부</th>
-        <th class="th_bs">추천 수</th>
-        <th class="th_bs">인원 수</th>
-        <th class="th_bs">기타</th>
+        <th class="color">순서</th>
+        <th class="color">포스터</th>        
+        <th class="color">제목</th>
+        <th class="color">설문조사결과</th>
+        <th class="color">시작날</th>
+        <th class="color">종료날</th>
+        <th class="color">진행여부</th>
+        <th class="color">추천수</th>
+        <th class="color">조회수</th>
+        <th class="color">기타</th>
       </tr>
     </thead>
     <tbody>
@@ -48,6 +51,9 @@
           <a th:href="@{|/survey_topic/read?surveyno=${surveyVO.surveyno}|}"  style="display:block; color:black;"  th:text="${surveyVO.survey_title}"></a>
         </td>
         <td class="td_bs">
+          <a th:href="@{|/survey_topic/read_res?surveyno=${surveyVO.surveyno}|}"  style="display:block;"  ><img src="/survey/설문조사 결과.png" class="icon" title="수정" style="width:40px; height:40px"></a>
+        </td>
+        <td class="td_bs">
           <a th:href="@{|/survey_topic/read/${surveyVO.surveyno}|}" style="display:block; color:black;" th:text="${surveyVO.start_date}"></a>
         </td>
         <td class="td_bs">
@@ -68,6 +74,7 @@
         </td>
         <td class="td_bs">
         <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.recom}"></a>
+          <span id="hart_panel"></span>
         </td> 
         <td class="td_bs">
         <a th:href="@{|/survey/read/${surveyVO.surveyno}?word=${word}&now_page=${now_page}|}" style="display:block; color:black;" th:text="${surveyVO.cnt}"></a>

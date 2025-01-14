@@ -10,11 +10,7 @@
     <span class="menu_divide" style ="color: black">|</span>
     <a href="javascript: location.reload();" style ="color: black">새로 고침</a>
   </aside>
-  
-
-  
-  <div class="menu_line"></div>
-  
+   
   <div class="container mt-3" style="width: 60%; margin: 5px auto;"> <!--/* mt-3: margin top 16px */-->
   <form name="frm" method="post" value="" action="/survey_topic/delete" th:object="${surveytopicVO}">
     <input type="hidden" name="surveytopicno" th:value="${surveytopicVO.surveytopicno}"> <!-- /* 값 유지 */-->

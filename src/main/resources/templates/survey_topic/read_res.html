@@ -13,7 +13,6 @@
         <a th:href="@{|/survey_topic/create?surveyno=${surveyVO.surveyno}|}" style="color: black">등록</a>
     </aside>
 
-    <div class="menu_line"></div>
 
 
         
@@ -56,7 +55,6 @@
                     </div>           
                 </div>
 
-                <!-- 항목을 위한 추가 루프 시작 -->
                 <div th:each="surveyitemVO : ${itemsByTopic[surveytopicVO.surveytopicno]}" 
                      style="display: flex; align-items: center; background-color: white; color: black; padding: 10px; margin-top: 10px; border-radius: 5px; justify-content: space-between;">
                     
@@ -66,19 +64,20 @@
                                    th:name="'selectedItem_' + ${surveytopicVO.surveytopicno}" 
                                    th:value="${surveyitemVO.surveyitemno}" 
                                    style="margin-left: 5px;" required />
-                            <span th:text="${surveyitemVO.item}"  style="margin-left: 5px;"> <!-- 라디오 버튼 옆에 텍스트 --> 
+                            <span th:text="${surveyitemVO.item}" style="margin-left: 5px;"></span>
                         </label> 
                     </div>
-
+                
                     <div style='display: flex; align-items: center;'>
                         <span style="color: black;">선택 인원 :</span>
                         <span th:text="${surveyitemVO.itemcnt}" style="color: black; margin-left: 5px"></span>
-                        <a th:href="@{|/survey_item/update?surveyitemno=${surveyitemVO.surveyitemno}&surveytopicno=${surveytopicVO.surveytopicno}|}">
-                            <img src="/survey/update.png" class="icon" title="수정">
-                        </a>
-                        <a th:href="@{|/survey_item/delete?surveyitemno=${surveyitemVO.surveyitemno}&surveytopicno=${surveytopicVO.surveytopicno}|}">
-                            <img src="/survey/delete.png" class="icon" title="삭제">
-                        </a>
+                        
+                        <!-- 선택 인원에 기반한 스타일 -->
+                        <div style="width: 100px; height: 20px; background-color: lightgray; margin-left: 10px; border-radius: 5px; position: relative;">
+                            <div th:style="'width:' + (${surveyitemVO.itemcnt} * 5) + 'px; height: 100%; background-color: green; border-radius: 5px; position: absolute;'" class="progress-bar"></div>
+                        </div>
+                
+
                     </div>
                 </div>
                 <!-- 항목 루프 종료 -->

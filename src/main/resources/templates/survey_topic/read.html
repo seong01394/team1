@@ -6,101 +6,64 @@
 <body>
 
 <div layout:fragment="content">
-    <div class="title_line">설문조사</div>
-    <aside class="aside_right">
-        <a href="javascript: location.reload();" style="color: black">새로 고침</a>
-        <span class="menu_divide" style="color: black">|</span>
-        <a th:href="@{|/survey_topic/create?surveyno=${surveyVO.surveyno}|}" style="color: black">등록</a>
-    </aside>
-
-    <div class="menu_line"></div>
-
-
-        
-        <div style="width: 50%; margin: 0px auto;">
-            <div th:each="surveytopicVO, status:${surveytopicList}" 
-                 th:style="'background-image: url(/survey/survey_image_2.jpg); background-size: cover; color: white; padding: 10px; margin-bottom: 100px; border-radius: 5px; justify-content: space-between;'">
-                 
-                <!-- 썸네일 -->
-                <div style="display: flex; align-items: center;">
-                    <div style="text-align: center; margin-right: 10px;">
-                        <div th:if="${surveytopicVO.file1.endsWith('jpg') or surveytopicVO.file1.endsWith('PNG') or surveytopicVO.file1.endsWith('gif') or surveytopicVO.file1.endsWith('png') or surveytopicVO.file1.endsWith('JPG')}">
-                            <img th:src="@{|/store/storage/${surveytopicVO.filethumb}|}" alt="썸네일" style="width: 50px; height: 50px;">
-                        </div>
-                        <div th:if="${surveytopicVO.filesize == 0}">
-                            <img src="/surveytopic/images/none1.png" alt="등록된 썸네일 없음" style="width: 50px; height: 50px;">
-                        </div>
-                    </div>
-
-                    <!-- 출력 순서 및 제목 -->
-                    <div style="flex-grow: 1; text-align: center; margin-right: 20px;">
-                        <span th:text="${surveytopicVO.seqno}" style="color: white;"></span>
-                        <span style="color: white;">.</span>
-                        <span th:text="${surveytopicVO.topic}" style="color: white;"></span>
-                    </div>
-
-                    <!-- 수정 및 삭제 아이콘 -->
-                    <div>
-                        <a th:href="@{|/survey_item/create?surveytopicno=${surveytopicVO.surveytopicno}|}">
-                            <img src="/survey/create2.png" class="icon" title="항목 추가">
-                        </a>
-                        <a th:href="@{|/survey_topic/update?surveytopicno=${surveytopicVO.surveytopicno}&surveyno=${surveytopicVO.surveyno}|}">
-                            <img src="/survey/update2.png" class="icon" title="수정">
-                        </a>
-                        <a th:href="@{|/survey_topic/delete?surveytopicno=${surveytopicVO.surveytopicno}&surveyno=${surveytopicVO.surveyno}|}">
-                            <img src="/survey/delete2.png" class="icon" title="삭제">
-                        </a>
-                        <a th:href="@{|/survey_topic/list_all|}">
-                            <img src="/survey/delete2.png" class="icon" title="목록">
-                        </a>
-                    </div>           
-                </div>
-
-                <!-- 항목을 위한 추가 루프 시작 -->
-                <div th:each="surveyitemVO : ${itemsByTopic[surveytopicVO.surveytopicno]}" 
-                     style="display: flex; align-items: center; background-color: white; color: black; padding: 10px; margin-top: 10px; border-radius: 5px; justify-content: space-between;">
-                    
-                    <div style="text-align: center; margin-right: 10px;"> 
-                        <label style="display: flex; align-items: center; color: black;"> 
-                            <input type="radio" th:id="'radio_' + ${surveyitemVO.surveyitemno}" 
-                                   th:name="'selectedItem_' + ${surveytopicVO.surveytopicno}" 
-                                   th:value="${surveyitemVO.surveyitemno}" 
-                                   style="margin-left: 5px;" required />
-                            <span th:text="${surveyitemVO.item}"  style="margin-left: 5px;"> <!-- 라디오 버튼 옆에 텍스트 --> 
-                        </label> 
-                    </div>
-
-                    <div style='display: flex; align-items: center;'>
-                        <span style="color: black;">선택 인원 :</span>
-                        <span th:text="${surveyitemVO.itemcnt}" style="color: black; margin-left: 5px"></span>
-                        <a th:href="@{|/survey_item/update?surveyitemno=${surveyitemVO.surveyitemno}&surveytopicno=${surveytopicVO.surveytopicno}|}">
-                            <img src="/survey/update.png" class="icon" title="수정">
-                        </a>
-                        <a th:href="@{|/survey_item/delete?surveyitemno=${surveyitemVO.surveyitemno}&surveytopicno=${surveytopicVO.surveytopicno}|}">
-                            <img src="/survey/delete.png" class="icon" title="삭제">
-                        </a>
-                    </div>
-                </div>
-                <!-- 항목 루프 종료 -->
-            </div>
-        </div>
-
-        <div class="content_body_bottom">
-            <button id="btn_handleSubmit"  type="submit" class="btn btn-secondary btn-sm">완료</button> <!-- 제출 버튼 -->
-            <button type="button" onclick="location.href='/survey/list_search'" class="btn btn-secondary btn-sm">목록</button>
-        </div>
-
-    
 <script>
     // 페이지 로드 시
     window.onload = function() {
         console.log("페이지가 로드되었습니다.");
+        
+        let hartCnt = '[[${hartCnt}]]'; //  javascript -> Thymeleaf -> session
+        let tag='';
+        
+        if (hartCnt == 1) {
+           tag = "<a href=\"javascript:good([[${surveyVO.surveyno}]])\"><img src=\"/survey/pinkheart.png\" style=\"width: 22px\" title=\"추천\"></a>";
+          document.querySelector('#hart_panel').innerHTML = tag; 
+        } else {
+           tag = "<a href=\"javascript:good([[${surveyVO.surveyno}]])\"><img src=\"/survey/darkheart.png\" style=\"width: 22px\" title=\"비추천\"></a>";
+          document.querySelector('#hart_panel').innerHTML = tag; 
+        } 
+        
+        document.querySelector('#recom_panel').innerHTML = '([[${surveyVO.recom}]])';
+        
         // 여기서 surveyno 값을 JavaScript 변수로 초기화
         const surveyno = [[${surveyVO.surveyno}]]; // 절대값을 문자열로 초기화
-
         // 완료 버튼 클릭 이벤트 리스너
         document.getElementById("btn_handleSubmit").addEventListener("click", function() {
             handleSubmit(surveyno);
+            
+        
+        });     
+    }
+    
+    function good(surveyno) {
+      console.log('->surveyno:' + surveyno);
+      
+       fetch("/survey/good", { //192.168.12.165:9093
+          "method": "post",
+          "headers": {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({surveyno}) // {"sentence":sentence, "language":language}, JSON 형식으로 전송
+        })
+        .then((response) => response.json()) // 응답 문자열 추출
+        .then((data) => {
+            console.log('-> data.isMember: ' +data.isMember)
+            if (data.isMember == 1) {
+                let hartCnt = data.hartCnt; //  javascript -> Thymeleaf -> session
+                let tag='';
+                
+                if (hartCnt == 1) {
+                   tag = "<a href=\"javascript:good([[${surveyVO.surveyno}]])\"><img src=\"/survey/pinkheart.png\" style=\"width: 22px\" title=\"추천\"></a>";
+                  document.querySelector('#hart_panel').innerHTML = tag; 
+                } else {
+                   tag = "<a href=\"javascript:good([[${surveyVO.surveyno}]])\"><img src=\"/survey/darkheart.png\" style=\"width: 22px\" title=\"비추천\"></a>";
+                  document.querySelector('#hart_panel').innerHTML = tag; 
+                } 
+                
+                document.querySelector('#recom_panel').innerHTML = '(' + data.recom + ')';              
+            } else {
+              alert("로그인해야 추천할 수 있습니다.");
+              location.href='/member/login'
+            }
         });
     }
 
@@ -163,7 +126,102 @@
             alert('응답 제출에 실패했습니다.');
         }
     }
-</script>  
+
+
+</script>
+  
+    <div class="title_line">설문조사</div>
+    <aside class="aside_right">
+        <a href="javascript: location.reload();" style="color: black">새로 고침</a>
+        <span class="menu_divide" style="color: black">|</span>
+        <a th:href="@{|/survey_topic/create?surveyno=${surveyVO.surveyno}|}" style="color: black">등록</a>
+    </aside>
+
+
+
+
+        
+        <div style="width: 50%; margin: 0px auto;">
+            <div th:each="surveytopicVO, status:${surveytopicList}" 
+                 th:style="'background-image: url(/survey/survey_image_2.jpg); background-size: cover; color: white; padding: 10px; margin-bottom: 100px; border-radius: 5px; justify-content: space-between; margin-top: 30px'">
+                 
+                <!-- 썸네일 -->
+                <div style="display: flex; align-items: center;">
+                    <div style="text-align: center; margin-right: 10px;">
+                        <div th:if="${surveytopicVO.file1.endsWith('jpg') or surveytopicVO.file1.endsWith('PNG') or surveytopicVO.file1.endsWith('gif') or surveytopicVO.file1.endsWith('png') or surveytopicVO.file1.endsWith('JPG')}">
+                            <img th:src="@{|/store/storage/${surveytopicVO.filethumb}|}" alt="썸네일" style="width: 50px; height: 50px;">
+                        </div>
+                        <div th:if="${surveytopicVO.filesize == 0}">
+                            <img src="/surveytopic/images/none1.png" alt="등록된 썸네일 없음" style="width: 50px; height: 50px;">
+                        </div>
+                    </div>
+
+                    <!-- 출력 순서 및 제목 -->
+                    <div style="flex-grow: 1; text-align: center; margin-right: 20px;">
+                        <span th:text="${surveytopicVO.seqno}" style="color: white;"></span>
+                        <span style="color: white;">.</span>
+                        <span th:text="${surveytopicVO.topic}" style="color: white;"></span>
+                    </div>
+
+                    <!-- 수정 및 삭제 아이콘 -->
+                    <div>
+                        <a th:href="@{|/survey_item/create?surveytopicno=${surveytopicVO.surveytopicno}|}">
+                            <img src="/survey/create2.png" class="icon" title="항목 추가">
+                        </a>
+                        <a th:href="@{|/survey_topic/update?surveytopicno=${surveytopicVO.surveytopicno}&surveyno=${surveytopicVO.surveyno}|}">
+                            <img src="/survey/update2.png" class="icon" title="수정">
+                        </a>
+                        <a th:href="@{|/survey_topic/delete?surveytopicno=${surveytopicVO.surveytopicno}&surveyno=${surveytopicVO.surveyno}|}">
+                            <img src="/survey/delete2.png" class="icon" title="삭제">
+                        </a>
+                        <a th:href="@{|/survey_topic/list_all|}">
+                            <img src="/survey/delete2.png" class="icon" title="목록">
+                        </a>
+                    </div>           
+                </div>
+
+                <!-- 항목을 위한 추가 루프 시작 -->
+                <div th:each="surveyitemVO : ${itemsByTopic[surveytopicVO.surveytopicno]}" 
+                     style="display: flex; align-items: center; background-color: white; color: black; padding: 10px; margin-top: 10px; border-radius: 5px; justify-content: space-between;">
+                    
+                    <div style="text-align: center; margin-right: 10px;"> 
+                        <label style="display: flex; align-items: center; color: black;"> 
+                            <input type="radio" th:id="'radio_' + ${surveyitemVO.surveyitemno}" 
+                                   th:name="'selectedItem_' + ${surveytopicVO.surveytopicno}" 
+                                   th:value="${surveyitemVO.surveyitemno}" 
+                                   style="margin-left: 5px;" required />
+                            <span th:text="${surveyitemVO.item}"  style="margin-left: 5px;"> <!-- 라디오 버튼 옆에 텍스트 --> 
+                        </label> 
+                    </div>
+
+                    <div style='display: flex; align-items: center;'>
+                        <span style="color: black;">선택 인원 :</span>
+                        <span th:text="${surveyitemVO.itemcnt}" style="color: black; margin-left: 5px"></span>
+                        <a th:href="@{|/survey_item/update?surveyitemno=${surveyitemVO.surveyitemno}&surveytopicno=${surveytopicVO.surveytopicno}|}">
+                            <img src="/survey/update.png" class="icon" title="수정">
+                        </a>
+                        <a th:href="@{|/survey_item/delete?surveyitemno=${surveyitemVO.surveyitemno}&surveytopicno=${surveytopicVO.surveytopicno}|}">
+                            <img src="/survey/delete.png" class="icon" title="삭제">
+                        </a>
+                    </div>
+                    
+                </div>
+                  
+                <!-- 항목 루프 종료 -->
+            </div>
+             <span id="hart_panel"></span><span id="recom_panel"></span>    
+        </div>
+        
+        
+
+        <div class="content_body_bottom">
+                
+            <button id="btn_handleSubmit"  type="submit" class="btn btn-secondary btn-sm">완료</button> <!-- 제출 버튼 -->
+            <button type="button" onclick="location.href='/survey/list_search'" class="btn btn-secondary btn-sm">목록</button>
+        </div>
+
+    
+  
 </div>
 
 </body>

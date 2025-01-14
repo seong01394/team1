@@ -51,6 +51,12 @@ public interface MemberProcInter {
   public boolean isMember(HttpSession session);
 
   /**
+   * 로그인된 회원 식물1 계정인지 검사합니다.
+   * @param session
+   * @return true: 사용자
+   */
+  public boolean isMemberPlant1(HttpSession session);
+  /**
    * 로그인된 회원 식물2 계정인지 검사합니다.
    * @param session
    * @return true: 사용자

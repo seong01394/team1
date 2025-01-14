@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 
 import dev.mvc.member.MemberProcInter;
@@ -37,6 +37,8 @@ import dev.mvc.survey.SurveyProcInter;
 import dev.mvc.survey.SurveyVO;
 import dev.mvc.survey_item.SurveyitemProcInter;
 import dev.mvc.survey_item.SurveyitemVO;
+import dev.mvc.survey_item.SurveytopicSurveyitemVO;
+import dev.mvc.surveygood.SurveygoodProcInter;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,6 +73,9 @@ public class SurveytopicCont {
   @Qualifier("dev.mvc.survey.SurveyProc")
   private SurveyProcInter surveyproc;
   
+  @Autowired
+  @Qualifier("dev.mvc.surveygood.SurveygoodProc")
+  private SurveygoodProcInter surveygoodProc;
 
   
   
@@ -156,11 +161,33 @@ public class SurveytopicCont {
      * 조회 http://localhost:9093/surveytopic/read/1
      */
     @GetMapping(value = "/read")
-    public String read(Model model,
+    public String read(HttpSession session, Model model,
                               @RequestParam(name="surveyno", defaultValue = "") Integer surveyno) {
      
+      if (this.memberProc.isMember(session)) {
       SurveyVO surveyVO = this.surveyproc.read(surveyno);
       model.addAttribute("surveyVO", surveyVO);
+      
+      // -------------------------------------------------------------------------------------------
+      // 추천 관련
+      // -------------------------------------------------------------------------------------------
+      HashMap<String, Object> map = new HashMap<String, Object>();
+      map.put("surveyno", surveyno);
+      
+      int hartCnt = 1;
+      if (session.getAttribute("memberno") != null ) { // 회원인 경우만 카운트 처리
+        int memberno = (int)session.getAttribute("memberno");
+        map.put("memberno", memberno);
+        System.out.println("member:" + memberno);
+        
+        hartCnt = this.surveygoodProc.hartCnt(map);
+        System.out.println("hartCnt:" + hartCnt);
+        System.out.println("surveyno:" + surveyno);
+        System.out.println("--------------------------------");
+      } 
+      
+      
+      model.addAttribute("hartCnt", hartCnt);
                   
       ArrayList<SurveytopicVO> surveytopicList = this.surveytopicProc.listBySurveyno(surveyVO.getSurveyno());
       model.addAttribute("surveytopicList", surveytopicList);
@@ -182,6 +209,8 @@ public class SurveytopicCont {
        model.addAttribute("itemsByTopic", itemsByTopic);
        
 
+       
+
 //       for (SurveytopicVO topic : surveytopicList) {
 //           System.out.println("Topic: " + topic.getTopic()); // 주제 이름을 로그에 출력
 //       }
@@ -189,8 +218,10 @@ public class SurveytopicCont {
      
       
       return "/survey_topic/read";    
-    }    
-    
+    }  else {
+      return "redirect:/member/login_cookie_need"; // redirect
+    }   
+   }    
     
     
     @PostMapping("/submit-responses")
@@ -352,7 +383,7 @@ public class SurveytopicCont {
       SurveytopicVO surveytopicVO = new SurveytopicVO();
       model.addAttribute("surveytopicVO", surveytopicVO);
       
-      ArrayList<SurveytopicVO> list = this.surveytopicProc.list_paging(word, now_page, now_page);
+      ArrayList<SurveySurveytopicVO> list = this.surveytopicProc.list_paging(word, now_page, now_page);
       model.addAttribute("list", list);
       
       
@@ -381,14 +412,16 @@ public class SurveytopicCont {
     @GetMapping(value = "/list_search")
     public String list_search_paging(HttpSession session, Model model,
         @RequestParam(name = "word", defaultValue = "") String word,
-        @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+        @RequestParam(name = "now_page", defaultValue = "1") int now_page,
+        @RequestParam(name = "surveyno", defaultValue = "0") int surveyno) {
      
       if (this.memberProc.isMemberAdmin(session)) {
                
         word = Tool.checkNull(word);
         
-        ArrayList<SurveytopicVO> list = this.surveytopicProc.list_search_paging(word, now_page, this.record_per_page);
-        model.addAttribute("list", list);
+        ArrayList<SurveySurveytopicVO> list = this.surveytopicProc.list_search_paging(word, now_page, this.record_per_page);
+        model.addAttribute("list", list);   
+        System.out.println("list:" + list);
 
 
         int search_cnt = this.surveytopicProc.list_search_count(word);

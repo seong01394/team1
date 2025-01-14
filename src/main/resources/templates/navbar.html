@@ -8,23 +8,23 @@
         </button>
          
         <!-- 메뉴 시작 -->
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown" style="color:white;">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
 
-                <li class="nav-item dropdown down-text" >
+                <li class="nav-item dropdown down-text" style="color:white;">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="PL구단">                                                            
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="PL구단" style="color:white;">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li class="nav-item"><a class="nav-link" th:href="@{|/club/list_search?word=${word}|}">클럽팀 목록</a></li>      
                     </ul>
                 </li>
 
-                <li class="nav-item dropdown down-text"th:each="clubVOMenu:${menu}"> <!--/* 대분류 */-->
+                <li class="nav-item dropdown down-text"th:each="clubVOMenu:${menu}" style="color:white;"> <!--/* 대분류 */-->
                
                     <!--/* 대분류명 출력 */-->
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" style="color:white;"
                          role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${clubVOMenu.pl}">                                                            
                     </a>
                    
@@ -36,8 +36,8 @@
                     </ul>                   
                 </li>
 
-                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin' or session.grade=='member'}">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin' or session.grade=='member'}" style="color:white;">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" style="color:white;"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="설문조사">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -46,44 +46,65 @@
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey_topic/create|}">설문문제 등록</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey_topic/list_search|}">개별문제 목록</a></li>
                         <li class="nav-item"><a class="nav-link" th:href="@{|/survey_item/list_search|}">항목 목록</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/surveymember/list_all|}">설문조사 참여 회원 목록</a></li>
                     </ul>
                 </li>
                
                
-                <li class="nav-item dropdown down-text" >
+                <li class="nav-item dropdown down-text" style="color:white;">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                       role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원" style="color:white;">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{|/member/create|}">회원 가입</a>
+                            <a class="nav-link" th:href="@{|/member/create|}" style="color:white;">회원 가입</a>
                         </li>
-                        <li class="nav-item" th:if="${session.memberno != null}">
+                        <li class="nav-item" th:if="${session.memberno != null}" style="color:white;">
                             <a class="nav-link" th:href="@{|/member/passwd_update|}">비밀 번호 변경</a>
-                        </li>  
+                        </li> 
+                        <li class="nav-item" th:if="${session.grade=='admin'}" style="color:white;">
+                            <a class="nav-link" th:href="@{|/member/list|}">회원 목록</a>
+                        </li>   
                     </ul>
                 </li>
 
 
-                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                <li class="nav-item dropdown down-text" th:if="${session.grade=='admin'}" style="color:white;">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"  style="color:white;"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/create|}">일정 등록</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_all|}">일정 목록</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_calendar|}">일정 Calendar</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/create|}" style="color:white;">일정 등록</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_all|}" style="color:white;">일정 목록</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_calendar|}" style="color:white;">일정 Calendar</a></li>
                     </ul>
                 </li>
 
-                <li class="nav-item down-text" >
-                    <a th:if="${session.memberno == null}" class="nav-link" href="/member/login" th:text="@{|회원 로그인|}"></a>
-                    <a th:if="${session.grade == 'member'}" class="nav-link" href="/member/logout" th:text="@{|${session.id} 로그아웃|}"></a>
+                <li class="nav-item down-text" style="color:white;">
+                    <a th:if="${session.memberno == null}" class="nav-link" href="/member/login" th:text="@{|회원 로그인|}" style="color:white;"></a>
+                    <a class="nav-link" 
+                       th:href="@{|/member/logout|}" 
+                       style="color:white; font-family: 'TTTogether';"
+                       th:if="${session.grade == 'member'}">
+                        닉네임: <span style="font-family: 'Mungyeong-Gamhong-Apple'; color:white;" th:text="${session.memberVO.nickname}"></span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span th:if="${session.memberVO.user_level == 'plant1'}" style="font-family: 'TTTogether'; color:white;">
+                            레벨:&nbsp;<img src="/images/1.png" alt="Plant 1" style="width:20px; height:20px;">&nbsp;Plant1
+                        </span>
+                        <span th:if="${session.memberVO.user_level == 'plant2'}" style="font-family: 'Mungyeong-Gamhong-Apple'; color:white;">
+                            레벨:&nbsp;<img src="/images/2.png" alt="Plant 2" style="width:20px; height:20px;">&nbsp;Plant2
+                        </span>
+                        <span th:if="${session.memberVO.user_level == 'plant3'}" style="font-family: 'Mungyeong-Gamhong-Apple'; color:white;">
+                            레벨:&nbsp;<img src="/images/image3.png" alt="Plant 3" style="width:20px; height:20px;">&nbsp;Plant3
+                        </span>
+                        &nbsp;&nbsp;&nbsp;로그아웃
+                    </a>
                 </li>
-                <li class="nav-item down-text" >
-                    <a th:if="${session.memberno == null}" class="nav-link" href="/admin/login" th:text="@{|관리자 로그인|}"></a>
-                    <a th:if="${session.grade == 'admin'}" class="nav-link" href="/admin/logout" th:text="@{|${session.id} 로그아웃|}"></a>
+                <li class="nav-item down-text" style="color:white;">
+                    <a th:if="${session.memberno == null}" class="nav-link" href="/admin/login" th:text="@{|관리자 로그인|}" style="color:white;"></a>
+                    <a th:if="${session.grade == 'admin'}" class="nav-link" href="/admin/logout" th:text="@{|${session.id} 로그아웃|}" style="color:white;"></a>
                 </li>              
+                 
                  
             </ul>
         </div>

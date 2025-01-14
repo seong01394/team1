@@ -86,5 +86,14 @@ public interface SurveyDAOInter {
 
   // 비공개 설정
   public int update_y_n_n(int surveyno);
+  
+  //추천 수 증가
+  public int increaseRecom(int surveyno);
+  
+  //추천 수 증가
+  public int decreaseRecom(int surveyno);
+  
+  //좋아요
+  public int good(int surveyno);
 }
 

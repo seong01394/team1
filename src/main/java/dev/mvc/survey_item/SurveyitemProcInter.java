@@ -22,7 +22,7 @@ public interface SurveyitemProcInter {
 
 
   
-  // 하나의 설문조사에 대한 개별문제 리스트 출력 
+  // 하나의 개별문제에 대한 항목 리스트 출력 
   public ArrayList<SurveyitemVO>listBySurveytopicno(int surveytopicno);
   
   // 선택 인원 수 증가
@@ -39,7 +39,7 @@ public interface SurveyitemProcInter {
    * 검색 목록 
    * @return
    */
-  public ArrayList<SurveyitemVO> list_search(String word);
+  public ArrayList<SurveytopicSurveyitemVO> list_search(String word);
   
   /** 
    * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 
@@ -58,7 +58,7 @@ public interface SurveyitemProcInter {
    * @param map
    * @return
    */
-  public ArrayList<SurveyitemVO> list_paging(String word, int now_page, int record_per_page);
+  public ArrayList<SurveytopicSurveyitemVO> list_paging(String word, int now_page, int record_per_page);
    
-  public ArrayList<SurveyitemVO> list_search_paging(String word, int now_page, int record_per_page);
+  public ArrayList<SurveytopicSurveyitemVO> list_search_paging(String word, int now_page, int record_per_page);
 }

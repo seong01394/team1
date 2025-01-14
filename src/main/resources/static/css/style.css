@@ -15,6 +15,34 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'ClimateCrisisKRVF';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2212@1.0/ClimateCrisisKRVF.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'KBO-Dia-Gothic_bold';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/KBO-Dia-Gothic_bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RiaSans-ExtraBold';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2410-1@1.0/RiaSans-ExtraBold.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TTTogether';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/TTTogetherA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* 모든 태그에 적용 */
 *{
    font-family: STUNNING-Bd; 
@@ -22,11 +50,12 @@
    margin: 0px;  /* top right bottom left */
    padding: 0px;
    color: #555555;
+
 }  
 
 .title_line{
    font-family: Mungyeong-Gamhong-Apple; 
-   font-size: 50px; 
+   font-size: 20px; 
    margin: 0px;  /* top right bottom left */
    padding: 0px;
    color: #555555;
@@ -35,7 +64,7 @@
 
 
   .bar_img {
-    margin-top: 0;
+    
     width: 100%;
     height: 200px;
     background-image: url('./images/bar_image.png');
@@ -285,10 +314,10 @@
 .title_line {
   text-align: left;
   width: 100%;
-  margin: 10px 0;
-  height: 100px; /* 선의 두께 설정 */
+
+  height: 110px; /* 선의 두께 설정 */
   background-image: url(/survey/menu_image.jpg);
-  font-size: 20px;  
+  font-size: 40px;  
   color: #FAFAFA;  
 }
 
@@ -340,11 +369,69 @@
 .th_basic {
   font-size: 0.8em;
   border-bottom: solid 3px #DDDDDD; 
+  color: black;
+}
+
+.th_bs1 {
+  text-align: center;
+  background-image: url(/survey/리버.PNG);  /* 연한 빨간색 (Light Pink) */
+  color: white; /* 글자색을 검정색으로 설정 */
+  height:60px;
+}
+
+.th_bs2 {
+  text-align: center;
+  background-image: url(/survey/아스날.PNG);  /* 연한 빨간색 (Light Pink) */
+  color: white; /* 글자색을 검정색으로 설정 */
+  height:60px;
+}
+
+.th_bs3 {
+  text-align: center;
+  background-image: url(/survey/팅엄.PNG);  /* 연한 빨간색 (Light Pink) */
+  color: white; /* 글자색을 검정색으로 설정 */
+}
+
+.th_bs4 {
+  text-align: center;
+  background-image: url(/survey/첼시.PNG);  /* 연한 빨간색 (Light Pink) */
+  color: white; /* 글자색을 검정색으로 설정 */
+}
+
+.th_bs5 {
+  text-align: center;
+  background-image: url(/survey/아스톤.PNG);  /* 연한 빨간색 (Light Pink) */
+  color: white; /* 글자색을 검정색으로 설정 */
 }
 
 .th_bs {
   text-align: center;
+  color: black; 
 }
+
+.color1{
+  text-align: center;
+  background-image: url(/survey/그림1.PNG);
+}
+
+.color2{
+  text-align: center;
+  background-image: url(/survey/바탕.PNG);
+}
+
+
+
+.color{
+  text-align: center;
+}
+
+
+
+
+
+
+
+
 
 .td_basic {
   border-top: none;
@@ -384,7 +471,7 @@ a:visited{  /* 방문후 상태 */
 
 a:hover{  /* A 태그에 마우스가 올라간 상태 */
   text-decoration: underline; /* 밑줄 출력 */
-  color: #7777FF;
+  color: white;
 }
 
 a:active{  /* A 태그를 클릭한 상태 */
@@ -712,4 +799,21 @@ color: #FAFAFA;
     width: 13px; 
     height: 13px; /* 아이콘 크기 조정 */
     margin-left: 10px; /* 수정/삭제 버튼 여백 */
+}
+
+.tablist>a {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* 공간을 적절히 조정 */
+    cursor: pointer;
+    padding: .4rem .8rem; /* 패딩을 줄임 */
+    font-size: 0.9rem; /* 폰트 크기 줄임 */
+    line-height: 1.2rem; /* 줄 간격 조정 */
+    color:rgba(37, 7, 36, 0.17);
+    background-color: rgb(245, 242, 245);
+    border-radius: .8rem .8rem 0 0;
+    letter-spacing: -.3px; /* 글자 간격 조정 */
+    transition: background-color .1s, font-family .1s;
+    margin-top: 18px;
 }

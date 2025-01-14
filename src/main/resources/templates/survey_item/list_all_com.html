@@ -4,36 +4,39 @@
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
       <col style='width: 10%;'/>      
-      <col style='width: 5%;'/>
+
     </colgroup>
     <thead>
       <tr>
         <th class="th_bs">순서</th>
+        <th class="th_bs">설문조사 번호</th>
+        <th class="th_bs">개별문제 이름</th>
         <th class="th_bs">개별문제 번호</th>
         <th class="th_bs">항목</th>        
-        <th class="th_bs">항목 순서</th>
-        <th class="th_bs">기타</th>
+        <th class="th_bs">선택 인원 수</th>
       </tr>
     </thead>
     <tbody>
-    <tr th:each="surveyitemVO, status:${list}">
+    <tr th:each="SurveytopicSurveyitemVO, status:${list}">
         <td class="td_bs" th:text="|${status.index+1}|"></td>
     
         <td class="td_bs">
-          <a style="display:block; color:black;"  th:text="${surveyitemVO.surveytopicno}"></a>
+          <a style="display:block; color:black;"  th:text="${SurveytopicSurveyitemVO.surveyno}"></a>
         </td>               
         <td class="td_bs">
-          <a style="display:block; color:black;"  th:text="${surveyitemVO.item}"></a>
+          <a style="display:block; color:black;"  th:text="${SurveytopicSurveyitemVO.topic}"></a>
         </td>
         <td class="td_bs">
-          <a style="display:block; color:black;" th:text="${surveyitemVO.itemseq}"></a>
+          <a style="display:block; color:black;" th:text="${SurveytopicSurveyitemVO.surveytopicno}"></a>
         </td>
-
-
-        <td style="vertical-align: middle; text-align: center;">
-          <a th:href="@{|/survey_item/update?surveyitemno=${surveyitemVO.surveyitemno}&surveytopicno=${surveyitemVO.surveytopicno}|}"><img src="/survey/update.png" class="icon" title="수정"></a> <!-- /static 기준 -->
-          <a th:href="@{|/survey_item/delete?surveyitemno=${surveyitemVO.surveyitemno}&surveytopicno=${surveyitemVO.surveytopicno}|}"><img src="/survey/delete.png" class="icon" title="삭제"></a> <!--/* /static 기준 */-->
+        <td class="td_bs">
+          <a style="display:block; color:black;"  th:text="${SurveytopicSurveyitemVO.item}"></a>
+        </td>
+        <td class="td_bs">
+          <a style="display:block; color:black;"  th:text="${SurveytopicSurveyitemVO.itemcnt}"></a>
         </td>
       </tr>
     </tbody>

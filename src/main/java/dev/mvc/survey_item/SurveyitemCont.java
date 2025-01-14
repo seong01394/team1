@@ -263,16 +263,9 @@ public class SurveyitemCont {
      
       if (this.memberProc.isMemberAdmin(session)) {
                
-        word = Tool.checkNull(word);
-        SurveyitemVO surveyitemVO = new SurveyitemVO();        
-        model.addAttribute("surveyitemVO", surveyitemVO);    
+        word = Tool.checkNull(word);        
         
-        ArrayList<SurveyitemVO> surveyitemList = this.surveyitemProc.listBySurveytopicno(surveytopicno);
-        model.addAttribute("surveyitemList", surveyitemList);
-        
-
-        
-        ArrayList<SurveyitemVO> list = this.surveyitemProc.list_search_paging(word, now_page, this.record_per_page);
+        ArrayList<SurveytopicSurveyitemVO> list = this.surveyitemProc.list_search_paging(word, now_page, this.record_per_page);
         model.addAttribute("list", list);   
         
         int search_cnt = this.surveyitemProc.list_search_count(word);

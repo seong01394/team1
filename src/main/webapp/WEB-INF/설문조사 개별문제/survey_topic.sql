@@ -41,7 +41,7 @@ VALUES(SURVEY_TOPIC_SEQ.nextval, '한국인 선수 유무', 1, 'main.jpg', 'main
 
 
 
-- 목록
+-- 목록
 select surveytopicno, topic, seqno, filesaved, filethumb, filesize FROM survey_topic ORDER BY surveytopicno ASC;
 
 -- 조회
@@ -55,6 +55,65 @@ DELETE FROM survey_topic WHERE surveytopicno=1;
 select surveytopicno, topic, seqno, filesaved, filethumb, filesize FROM survey_topic ORDER BY surveytopicno ASC;
 
 
+SELECT t.surveytopicno, t.topic, t.seqno, s.survey_title as s_survey_title, s.surveyno
+FROM survey s, survey_topic t
+WHERE s.surveyno = t.surveyno
+ORDER BY surveytopicno DESC;
+
+SELECT t.surveytopicno, s.surveyno, t.topic, s."SURVEY_TITLE", r
+FROM (
+        SELECT t.surveytopicno, s.surveyno, t.topic, s."SURVEY_TITLE", rownum as r
+        FROM (
+            SELECT t.surveytopicno, s.surveyno, t.topic, s."SURVEY_TITLE"
+            FROM survey s 
+            JOIN survey_topic t ON s.surveyno = t.surveyno
+            WHERE (UPPER(t.topic) LIKE '%' || UPPER('손흥민') || '%') OR (UPPER(s.SURVEY_TITLE) LIKE '%' || UPPER('테스트') || '%') 
+            ORDER BY t.surveytopicno ASC
+        )
+      
+)
+WHERE r >= 1 AND r <= 3;
+    
+    SELECT survey_title FROM survey WHERE ROWNUM = 1;
+commit;
+
+SELECT t.surveytopicno, 
+       s.surveyno, 
+       t.topic, 
+       s."SURVEY_TITLE"  -- 대문자로 감싸기
+FROM survey s 
+JOIN survey_topic t ON s.surveyno = t.surveyno
+WHERE (UPPER(t.topic) LIKE '%' || UPPER('손흥민') || '%');
 
 
+SELECT surveytopicno, surveyno, topic, survey_title, r
+FROM (
+    SELECT t.surveytopicno, 
+           s.surveyno, 
+           t.topic, 
+           s.survey_title, 
+           ROW_NUMBER() OVER (ORDER BY t.surveytopicno ASC) AS r
+    FROM survey s 
+    JOIN survey_topic t ON s.surveyno = t.surveyno
+    WHERE (UPPER(t.topic) LIKE '%' || UPPER('손흥민') || '%') 
+       OR (UPPER(s.survey_title) LIKE '%' || UPPER('테스트') || '%')
+)
+WHERE r >= 1 AND r <= 3;  -- 필요한 페이지 범위 설정
+
+select topic 
+from survey_topic
+ORDER BY surveytopicno ASC;
+
+  <select id="list_search_count" resultType="Integer" parameterType="String">
+    SELECT COUNT(*) as cnt
+    FROM survey_topic t JOIN survey s  ON t.surveyno = s.surveyno
+    <if test="word != null and word != ''">
+      WHERE UPPER(t.topic) LIKE '%' || UPPER('손흥민') || '%'
+      OR (UPPER(s.survey_title) LIKE '%' || UPPER('테스트') || '%')
+    </if>
+  </select>
+  
+    SELECT COUNT(*) as cnt                           
+    FROM survey_topic t JOIN survey s ON t.surveyno = s.surveyno  
+    WHERE (UPPER(t.topic) LIKE '%' || UPPER('손흥민') || '%') OR (UPPER(s.survey_title) LIKE '%' || UPPER('테스트') || '%');
 

@@ -1,6 +1,7 @@
 package dev.mvc.survey;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -26,6 +29,8 @@ import dev.mvc.survey_item.SurveyitemProcInter;
 import dev.mvc.survey_item.SurveyitemVO;
 import dev.mvc.survey_topic.SurveytopicProcInter;
 import dev.mvc.survey_topic.SurveytopicVO;
+import dev.mvc.surveygood.SurveygoodProcInter;
+import dev.mvc.surveygood.SurveygoodVO;
 import dev.mvc.club.ClubVO;
 import dev.mvc.club.ClubVOMenu;
 import dev.mvc.tool.Tool;
@@ -57,6 +62,11 @@ public class SurveyCont {
   @Autowired
   @Qualifier("dev.mvc.survey_item.SurveyitemProc")
   private SurveyitemProcInter surveyitemProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.surveygood.SurveygoodProc")
+  private SurveygoodProcInter surveygoodProc;
+  
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
@@ -385,7 +395,6 @@ public class SurveyCont {
         @RequestParam(name = "now_page", defaultValue = "1") int now_page,
         @ModelAttribute("surveytopicVO") SurveytopicVO surveytopicVO) {
      
-      if (this.memberProc.isMemberAdmin(session)) {
         SurveyVO surveyVO = new SurveyVO();
 
         
@@ -414,11 +423,12 @@ public class SurveyCont {
         ArrayList<SurveytopicVO> surveytopicList = surveytopicProc.listBySurveyno(surveyno); // 또는 적절한 메서드 호출
         model.addAttribute("surveytopicList", surveytopicList);
         
+        
+
+        
         return "/survey/list_search"; 
-      } else {
-        return "redirect:/admin/login";
-      }
-    }   
+      } 
+
       
     
     /**
@@ -467,7 +477,68 @@ public class SurveyCont {
       } else {
         return "redirect:/member/login_cookie_need";  // redirect
       }
-
-     
     }
+      /**
+       * 수정처리 http://localhost:9093/survey/good
+       */
+      @PostMapping(value="/good")
+      @ResponseBody
+      public String good(HttpSession session, Model model, @RequestBody String json_src) {
+        System.out.println("->json_src:" + json_src);
+        
+        JSONObject src = new JSONObject(json_src); // String -> JSON
+        int surveyno = (int)src.get("surveyno"); // 값 가져오기
+        System.out.println("-> surveyno: " + surveyno);       
+        
+        if(this.memberProc.isMember(session)) {
+          // 추천을 한 상태인지 확인
+          int memberno = (int)session.getAttribute("memberno");
+          HashMap<String, Object> map = new HashMap<String, Object>();         
+          map.put("surveyno", surveyno);
+          map.put("memberno", memberno);
+          
+          int good_cnt = this.surveygoodProc.hartCnt(map);
+          System.out.println("-> good_cnt:" + good_cnt);
+          
+          
+          
+          if (good_cnt == 1) {
+            // 추천 해제
+            System.out.println("-> 추천 해제:" + ' '+ surveyno + ' ' + memberno);
+            
+            SurveygoodVO surveygoodVO = this.surveygoodProc.readBySurveynoMemberno(map);
+            
+            this.surveygoodProc.delete(surveygoodVO.getSurveygoodno()); // 좋아요 삭제
+            this.surveyProc.decreaseRecom(surveyno); // 카운트 감소
+          } else {
+            //추천
+            System.out.println("-> 추천:" + surveyno + ' ' + memberno);
+            SurveygoodVO surveygoodVO_new = new SurveygoodVO();
+            surveygoodVO_new.setSurveyno(surveyno);
+            surveygoodVO_new.setMemberno(memberno);
+            
+            this.surveygoodProc.create(surveygoodVO_new);
+            this.surveyProc.increaseRecom(surveyno);
+          }
+          //추천 여부가 변경되어 다시 새로운 값을 읽어옴
+          int hartCnt = this.surveygoodProc.hartCnt(map);
+          int recom = this.surveyProc.read(surveyno).getRecom();
+          
+          JSONObject result = new JSONObject();
+          result.put("isMember", 1); // 로그인 1, 비회원: 0
+          result.put("hartCnt", hartCnt);
+          result.put("recom", recom);
+          
+          System.out.println("->result.toString():" + result.toString());
+          return result.toString();
+
+        } else {
+          JSONObject result = new JSONObject();          
+          result.put("isMember", 0); // 로그인 1, 비회원: 0
+          System.out.println("->result.toString():" + result.toString());
+          return result.toString();
+        }
+      
+      }     
+      
 }

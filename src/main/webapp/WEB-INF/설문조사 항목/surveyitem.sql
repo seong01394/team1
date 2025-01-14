@@ -51,7 +51,9 @@ SELECT  surveytopicno, surveyno, topic, seqno, file1, filesaved, filethumb, file
 FROM survey_topic
 WHERE surveytopicno= 89
 
-SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt
-FROM survey_item
-WHERE surveytopicno=89
-ORDER BY surveytopicno ASC
+SELECT t.surveyno, t.topic, t.surveytopicno, i.surveyitemno, i.item, i.itemcnt 
+FROM survey_item i, survey_topic t
+WHERE t.surveytopicno = t.surveytopicno
+ORDER BY surveytopicno ASC;
+
+

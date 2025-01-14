@@ -84,7 +84,7 @@
     }    
   </script>
 
-  <div class="title_line">패스워드 변경 > <span th:text="@{|${memberVO.mname} (${memberVO.id})|}"></span></div>
+  <div class="title_line">패스워드 변경 > <span style="font-family: 'Mungyeong-Gamhong-Apple'; color:white;"th:text="@{|${memberVO.name} (${memberVO.id})|}"></span></div>
   <aside class="aside_right">
     <a href="javascript:location.reload();">새로고침</a>
     <span class='menu_divide' >│</span> 
@@ -93,13 +93,13 @@
     <a href='./list'>목록</a>
   </aside> 
 
-  <div class='menu_line'></div>
+
   
   <div style="width: 30%; margin: 0px auto ">
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/passwd_update_proc">
       <input type="hidden" name="memberno" th:value="${memberVO.memberno}">
 
-      <div class="form-group">
+      <div class="form-group" style="margin-top: 30px;">
         <label for="passwd">현재 패스워드*</label> 
         <input type='password' name='current_passwd' id='current_passwd' value='1234' required="required" 
                   placeholder="패스워드" autofocus="autofocus" 

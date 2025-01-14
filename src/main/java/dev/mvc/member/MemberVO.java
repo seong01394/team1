@@ -26,10 +26,10 @@ public class MemberVO {
     private String passwd = "";
     /** 회원 성명 */
     private String name = "";
-//    /** 별명 */
-//    private String nickname = "";
-//    /** 레벨 */
-//    private String user_level = "";
+    /** 별명 */
+    private String nickname = "";
+    /** 레벨 */
+   private String user_level = "";
     /** 전화 번호 */
     private String tel = "";
     /** 우편 번호 */
@@ -40,6 +40,8 @@ public class MemberVO {
     private String address2 = "";
     /** 가입일 */
     private String signup_date = "";
+    /** 가입경로 */
+    private String signup_path = "";    
     /** 등급 */
     private int grade = 0;
 

@@ -1,4 +1,4 @@
-<div th:fragment="list_all_fragment"> 
+<div th:fragment="join_list_all_fragment"> 
   <table class="table table-hover" style="width: 100%;">
     <colgroup>
       <col style='width: 10%;'/>
@@ -11,31 +11,26 @@
       <tr>
         <th class="th_bs">순서</th>
         <th class="th_bs">설문조사 번호</th>
+        <th class="th_bs">설문조사 제목</th>
         <th class="th_bs">개별문제</th>        
         <th class="th_bs">출력 순서</th>
-        <th class="th_bs">기타</th>
       </tr>
     </thead>
     <tbody>
-    <tr th:each="surveytopicVO, status:${list}">
+    <tr th:each="SurveySurveytopicVO, status:${list}">
         <td class="td_bs" th:text="|${status.index+1}|"></td>
     
         <td class="td_bs">
-          <a th:href="@{|/survey_topic/read?surveyno=${surveytopicVO.surveyno}|}"  style="display:block; color:black;"  th:text="${surveytopicVO.surveyno}"></a>
+          <a  style="display:block; color:black;"  th:text="${SurveySurveytopicVO.surveyno}"></a>
         </td>
-               
+         <td class="td_bs">
+          <a   style="display:block; color:black;"  th:text="${SurveySurveytopicVO.survey_title}"></a>
+        </td>              
         <td class="td_bs">
-          <a th:href="@{|/survey_topic/read?surveyno=${surveytopicVO.surveyno}|}"  style="display:block; color:black;"  th:text="${surveytopicVO.topic}"></a>
+          <a style="display:block; color:black;"  th:text="${SurveySurveytopicVO.topic}"></a>
         </td>
         <td class="td_bs">
-          <a th:href="@{|/survey_topic/read?surveyno/${surveytopicVO.surveyno}|}" style="display:block; color:black;" th:text="${surveytopicVO.seqno}"></a>
-        </td>
-
-
-        <td style="vertical-align: middle; text-align: center;">
-          <a th:href="@{|/survey_topic/update?surveytopicno=${surveytopicVO.surveytopicno}&surveyno=${surveytopicVO.surveyno}|}"><img src="/survey/update.png" class="icon" title="수정"></a> <!-- /static 기준 -->
-          <a th:href="@{|/survey_topic/delete?surveytopicno=${surveytopicVO.surveytopicno}&surveyno=${surveytopicVO.surveyno}|}"><img src="/survey/delete.png" class="icon" title="삭제"></a> <!--/* /static 기준 */-->
-          <a th:href="@{|/survey_item/create?surveytopicno=${surveytopicVO.surveytopicno}|}"><img src="/survey/create.png" class="icon" title="추가"></a> <!--/* /static 기준 */-->
+          <a style="display:block; color:black;" th:text="${SurveySurveytopicVO.seqno}"></a>
         </td>
       </tr>
     </tbody>

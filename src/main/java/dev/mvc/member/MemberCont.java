@@ -109,7 +109,7 @@ public class MemberCont {
       
       return "/member/list";  // /templates/member/list.html
     } else {
-      return "redirect:/member/login_cookie_need";  // redirect
+      return "redirect:/member/login_cookie_need.html";  // redirect
     }
   }
   
@@ -165,7 +165,7 @@ public class MemberCont {
       
       return "member/read";  // templates/member/read.html
     } else {
-      return "redirect:/member/login_cookie_need";  // redirect
+      return "redirect:/member/login_cookie_need.html";  // redirect
     }
     
   }
@@ -198,7 +198,7 @@ public class MemberCont {
       
       return "/member/msg"; // /templates/member/msg.html
     } else {
-      return "redirect:/member/login_cookie_need";  // redirect
+      return "redirect:/member/login_cookie_need.html";  // redirect
     }
     
   }
@@ -221,7 +221,7 @@ public class MemberCont {
       
       return "/member/delete";  // templates/member/delete.html
     } else {
-      return "redirect:/member/login_cookie_need";  // redirect
+      return "redirect:/member/login_cookie_need.html";  // redirect
     }
     
   }
@@ -246,7 +246,7 @@ public class MemberCont {
         return "/member/msg"; // /templates/member/msg.html
       }
     } else {
-      return "redirect:/member/login_cookie_need";  // redirect
+      return "redirect:/member/login_cookie_need.html";  // redirect
     }
   }
   
@@ -302,7 +302,14 @@ public class MemberCont {
    * @return 회원 정보
    */
   @GetMapping(value="/logout")
-  public String logout(HttpSession session, Model model) {
+  public String logout(HttpSession session, Model model, @RequestParam(value="id", defaultValue = "") String id,
+                              @RequestParam(value="user_level", defaultValue = "") String user_level,
+                              @RequestParam(value="nickname", defaultValue = "") String nickname,
+                              @ModelAttribute("memberVO") MemberVO memberVO) {
+    session.setAttribute("nickname", memberVO.getNickname());
+    session.setAttribute("user_level", memberVO.getUser_level());
+    System.out.println("출력:" + nickname);
+    System.out.println("출력:" + user_level);
     session.invalidate();  // 모든 세션 변수 삭제
     return "redirect:/";
   }
@@ -362,7 +369,7 @@ public class MemberCont {
 //    model.addAttribute("ck_id_save", "Y");
 //    model.addAttribute("ck_passwd_save", "Y");
     
-    return "/member/login_cookie";  // /templates/member/login_cookie.html
+    return "/member/login";  // /templates/member/login_cookie.html
   }
 
   /**
@@ -385,7 +392,9 @@ public class MemberCont {
                                      @RequestParam(value="id", defaultValue = "") String id, 
                                      @RequestParam(value="passwd", defaultValue = "") String passwd,
                                      @RequestParam(value="id_save", defaultValue = "") String id_save,
-                                     @RequestParam(value="passwd_save", defaultValue = "") String passwd_save
+                                     @RequestParam(value="passwd_save", defaultValue = "") String passwd_save,
+                                     @RequestParam(value="nickname", defaultValue = "") String nickname,
+                                     @RequestParam(value="user_level", defaultValue = "") String user_level
                                      ) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("id", id);
@@ -399,9 +408,12 @@ public class MemberCont {
     if (cnt == 1) {
       // id를 이용하여 회원 정보 조회
       MemberVO memberVO = this.memberProc.readById(id);
+      session.setAttribute("memberVO", memberVO);
       session.setAttribute("memberno", memberVO.getMemberno());
       session.setAttribute("id", memberVO.getId());
-      session.setAttribute("name", memberVO.getName());
+      session.setAttribute("nickname", memberVO.getNickname());
+      session.setAttribute("user_level", memberVO.getUser_level());
+ 
       // session.setAttribute("grade", memverVO.getGrade());
       
       if (memberVO.getGrade() >= 1 && memberVO.getGrade() <= 10) {
@@ -412,7 +424,9 @@ public class MemberCont {
         session.setAttribute("grade", "guest");
       }
       System.out.println("grade:" + memberVO.getGrade());
-      
+      System.out.println("출력:" + memberVO.getNickname());
+      System.out.println("출력:" + memberVO.getUser_level());
+     
       
       
       
@@ -492,7 +506,7 @@ public class MemberCont {
       
       return "/member/passwd_update";    // /templates/member/passwd_update.html      
     } else {
-      return "redirect:/member/login_cookie_need"; // redirect
+      return "redirect:/member/login_cookie_need.html"; // redirect
     }
 
   }
@@ -577,7 +591,7 @@ public class MemberCont {
 
       return "/member/msg";   // /templates/member/msg.html
     } else {
-      return "redirect:/member/login_cookie_need"; // redirect
+      return "redirect:/member/login_cookie_need.html"; // redirect
     }
 
   }

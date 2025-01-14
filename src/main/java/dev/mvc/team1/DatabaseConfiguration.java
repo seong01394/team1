@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -26,7 +27,8 @@ import com.zaxxer.hikari.HikariDataSource;
                                             "dev.mvc.commu",
                                             "dev.mvc.survey_item",
                                             "dev.mvc.calendar",
-                                            "dev.mvc.surveygood"}) // DAO interface를 찾는 위치
+                                            "dev.mvc.surveygood",
+                                            "dev.mvc.surveymember"}) // DAO interface를 찾는 위치
 
 
 public class DatabaseConfiguration {
@@ -55,6 +57,11 @@ public class DatabaseConfiguration {
         sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:/mybatis/**/*.xml"));
         
         return sqlSessionFactoryBean.getObject();
+    }
+    
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource); // JdbcTemplate 생성
     }
     
     @Bean

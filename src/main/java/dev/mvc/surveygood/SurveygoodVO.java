@@ -18,4 +18,6 @@ public class SurveygoodVO {
   
   /** 회원 번호*/
   private Integer memberno;
+  
+  
 }

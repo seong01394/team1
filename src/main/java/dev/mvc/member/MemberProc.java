@@ -140,14 +140,44 @@ public class MemberProc implements MemberProcInter {
 
   @Override
   public boolean isMemberPlant2(HttpSession session) {
-    // TODO Auto-generated method stub
-    return false;
+    boolean sw = false; // 로그인하지 않은 것으로 초기화
+    String user_level = (String)session.getAttribute("user_level");
+    
+    if (user_level != null) {
+      if (user_level.equals("plant")) {
+        sw = true;  // 로그인 한 경우
+      }      
+    }
+    
+    return sw;
   }
 
   @Override
   public boolean isMemberPlant3(HttpSession session) {
-    // TODO Auto-generated method stub
-    return false;
+    boolean sw = false; // 로그인하지 않은 것으로 초기화
+    String user_level = (String)session.getAttribute("user_level");
+    
+    if (user_level != null) {
+      if (user_level.equals("plant3")) {
+        sw = true;  // 로그인 한 경우
+      }      
+    }
+    
+    return sw;
+  }
+
+  @Override
+  public boolean isMemberPlant1(HttpSession session) {
+    boolean sw = false; // 로그인하지 않은 것으로 초기화
+    String user_level = (String)session.getAttribute("user_level");
+    
+    if (user_level != null) {
+      if (user_level.equals("plant1")) {
+        sw = true;  // 로그인 한 경우
+      }      
+    }
+    
+    return sw;
   }
   
   

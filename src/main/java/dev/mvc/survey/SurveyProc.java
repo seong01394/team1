@@ -198,8 +198,26 @@ public class SurveyProc implements SurveyProcInter{
 
   @Override
   public int increaseCnt(int surveyno) {
-    // TODO Auto-generated method stub
-    return 0;
+    int cnt = this.increaseCnt(surveyno);
+    return cnt;
+  }
+
+  @Override
+  public int increaseRecom(int surveyno) {
+    int cnt = this.surveyDAO.increaseRecom(surveyno);
+    return cnt;
+  }
+
+  @Override
+  public int decreaseRecom(int surveyno) {
+    int cnt = this.surveyDAO.decreaseRecom(surveyno);
+    return cnt;
+  }
+  
+  @Override
+  public int good(int surveyno) {
+    int cnt = this.surveyDAO.good(surveyno);
+    return cnt;
   }
 
 

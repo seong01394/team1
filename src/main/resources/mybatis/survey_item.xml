@@ -42,9 +42,9 @@
     <!-- 검색 개수 -->
   <select id="list_search_count" resultType="Integer" parameterType="String">
     SELECT COUNT(*) as cnt
-    FROM survey_item
+    FROM survey_topic t JOIN survey_item i  ON t.surveytopicno = i.surveytopicno
     <if test="word != null and word != ''">
-      WHERE UPPER(item) LIKE '%' || UPPER(#{word}) || '%'
+      WHERE (UPPER(t.topic) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(i.item) LIKE '%' || UPPER(#{word}) || '%')
     </if>
   </select>
   
@@ -74,18 +74,24 @@
   </select>
   
   <!-- 검색 + 페이징 -->
-  <select id="list_search_paging" resultType="dev.mvc.survey_item.SurveyitemVO" parameterType="Map">
-    SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt, r
+  <select id="list_search_paging" resultType="dev.mvc.survey_item.SurveytopicSurveyitemVO" parameterType="Map">
+    SELECT surveyno, topic, surveytopicno, item, itemcnt, r
     FROM (
-        SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt, rownum as r
-        FROM (
-            SELECT surveyitemno, surveytopicno, item, itemseq, itemcnt
-            FROM survey_item
-            WHERE (UPPER(item) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(surveyitemno) LIKE '%' || UPPER(#{word}) || '%')
-            ORDER BY itemseq ASC
-        )
+        SELECT t.surveyno, t.topic, t.surveytopicno, i.item, i.itemcnt, ROW_NUMBER() OVER (ORDER BY i.surveyitemno ASC) AS r
+        FROM survey_item i 
+        JOIN survey_topic t ON i.surveytopicno = t.surveytopicno
+        WHERE (UPPER(t.topic) LIKE '%' || UPPER(#{word}) || '%') 
+           OR (UPPER(i.item) LIKE '%' || UPPER(#{word}) || '%')
       
     )
     WHERE r &gt;= #{start_num}  AND r &lt;= #{end_num}  <!-- WHERE r >= 1 AND r <= 3 -->
   </select>
+  
+   <select id="join_list_all" resultType="dev.mvc.survey_item.SurveytopicSurveyitemVO">
+      SELECT t.surveyno, t.topic, t.surveytopicno, i.surveyitemno, i.item, i.itemcnt 
+      FROM survey_item i, survey_topic t
+      WHERE t.surveytopicno = t.surveytopicno
+      ORDER BY surveytopicno ASC
+  </select>
+  
 </mapper>

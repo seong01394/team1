@@ -41,14 +41,14 @@
     <!-- 검색 개수 -->
   <select id="list_search_count" resultType="Integer" parameterType="String">
     SELECT COUNT(*) as cnt
-    FROM survey_topic
+    FROM survey_topic t JOIN survey s  ON t.surveyno = s.surveyno
     <if test="word != null and word != ''">
-      WHERE UPPER(topic) LIKE '%' || UPPER(#{word}) || '%'
+      WHERE (UPPER(topic) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(s.survey_title) LIKE '%' || UPPER(#{word}) || '%')
     </if>
   </select>
   
   <!-- 검색 목록 -->
-  <select id="list_search" resultType="dev.mvc.survey_topic.SurveytopicVO" parameterType="String">
+  <select id="list_search" resultType="dev.mvc.survey_topic.SurveySurveytopicVO" parameterType="String">
     SELECT surveytopicno, surveyno, topic, seqno
     FROM survey_topic
     <if test="word != null and word != ''">
@@ -58,7 +58,7 @@
   </select>
   
   <!-- 페이징 -->
-  <select id="list_paging" resultType="dev.mvc.survey_topic.SurveytopicVO" parameterType="Map">
+  <select id="list_paging" resultType="dev.mvc.survey_topic.SurveySurveytopicVO" parameterType="Map">
     SELECT surveytopicno, surveyno, topic, seqno, r
     FROM (
         SELECT surveytopicno, surveyno, topic, seqno, rownum as r
@@ -73,18 +73,20 @@
   </select>
   
   <!-- 검색 + 페이징 -->
-  <select id="list_search_paging" resultType="dev.mvc.survey_topic.SurveytopicVO" parameterType="Map">
-    SELECT surveytopicno, surveyno, topic, seqno, r
+  <select id="list_search_paging" resultType="dev.mvc.survey_topic.SurveySurveytopicVO" parameterType="Map">
+    SELECT surveytopicno, surveyno, topic, survey_title, seqno, r
     FROM (
-        SELECT surveytopicno, surveyno, topic, seqno, rownum as r
-        FROM (
-            SELECT surveytopicno, surveyno, topic, seqno
-            FROM survey_topic
-            WHERE (UPPER(topic) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(surveytopicno) LIKE '%' || UPPER(#{word}) || '%')
-            ORDER BY seqno ASC
-        )
+        SELECT t.surveytopicno, s.surveyno, t.topic, s.survey_title, t.seqno, ROW_NUMBER() OVER (ORDER BY t.surveytopicno ASC) AS r
+        FROM survey s 
+        JOIN survey_topic t ON s.surveyno = t.surveyno
+        WHERE (UPPER(t.topic) LIKE '%' || UPPER(#{word}) || '%') 
+           OR (UPPER(s.survey_title) LIKE '%' || UPPER(#{word}) || '%')
       
     )
     WHERE r &gt;= #{start_num}  AND r &lt;= #{end_num}  <!-- WHERE r >= 1 AND r <= 3 -->
   </select>
+  
+
+  
+
 </mapper>
