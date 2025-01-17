@@ -2,7 +2,7 @@ DROP TABLE member CASCADE CONSTRAINTS;
 
 CREATE TABLE member (
   memberno      NUMBER(10)       NOT NULL, -- 회원 번호, 레코드를 구분하는 컬럼 
-  id            VARCHAR(30)      NOT NULL UNIQUE, -- 아이디(이메일), 중복 안됨, 레코드를 구분 
+  id            VARCHAR(30)      NOT NULL, -- 아이디(이메일), 중복 안됨, 레코드를 구분 
   passwd        VARCHAR(200)     NOT NULL, -- 패스워드, 영숫자 조합, 암호화
   name          VARCHAR(30)      NOT NULL, -- 성명, 한글 10자 저장 가능
   nickname      VARCHAR(30)      NOT NULL, -- 별명, 한글+영어 10자 저장 가능
@@ -87,7 +87,11 @@ DELETE FROM member;
 DELETE FROM member
 WHERE memberno=12;
 
+      SELECT COUNT(memberno) AS cnt
+      FROM member 
+      WHERE memberno = 2 AND id = 'user1@email.com'
+      
 COMMIT;
-
+   SELECT id FROM member WHERE memberno = 2; 
 
 

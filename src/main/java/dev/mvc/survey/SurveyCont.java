@@ -49,7 +49,7 @@ public class SurveyCont {
   public int page_per_block = 5;
   
   /** 페이징 목록 주소 */
-  private String list_file_name = "/survey/list_search";
+  private String list_file_name = "/th/survey/list_search";
   
   @Autowired
   @Qualifier("dev.mvc.survey.SurveyProc")
@@ -93,9 +93,9 @@ public class SurveyCont {
           String paging = this.surveyProc.pagingBox(now_page, word, this.list_file_name, search_count, recordPerPage, this.page_per_block);
           model.addAttribute("paging", paging);
           
-          return "/survey/create"; // survey/create.html로 리턴
+          return "/th/survey/create"; // survey/create.html로 리턴
       } else {
-          return "redirect:/admin/login"; // 로그인 안되어 있으면 리다이렉트
+          return "redirect:/th/admin/login"; // 로그인 안되어 있으면 리다이렉트
       }
   }
 
@@ -111,7 +111,7 @@ public class SurveyCont {
 
     // 유효성 검사 실패 시 다시 입력 폼으로 이동
     if (bindingResult.hasErrors()) {
-      return "/survey/create"; // templates/survey/create.html
+      return "/th/survey/create"; // templates/survey/create.html
     }
 
     // 파일 업로드 처리
@@ -137,7 +137,7 @@ public class SurveyCont {
         surveyVO.setPostersize(postersize);       // 파일 크기 저장
       } else {
         ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 실패 메시지
-        return "redirect:/survey/msg"; // 업로드 실패 메시지 페이지로 리다이렉트
+        return "redirect:/th/survey/msg"; // 업로드 실패 메시지 페이지로 리다이렉트
       }
     }
 
@@ -145,14 +145,14 @@ public class SurveyCont {
     surveyVO.setSurvey_title(surveyVO.getSurvey_title().trim()); // 제목 공백 제거
     int cnt = this.surveyProc.create(surveyVO);   // 설문 등록
     if (cnt == 1) {
-      return "redirect:/survey/list_search"; //8 설문 목록으로 이동
+      return "redirect:/th/survey/list_search"; //8 설문 목록으로 이동
     } else {
       model.addAttribute("code", "create_fail"); // 등록 실패 메시지
     }
 
     model.addAttribute("cnt", cnt); // 결과 추가
     model.addAttribute("surveyVO", surveyVO); // 이미지 경로 포함
-    return "/survey/msg"; // 메시지 페이지로 이동
+    return "/th/survey/msg"; // 메시지 페이지로 이동
   }
 
 
@@ -190,7 +190,7 @@ public class SurveyCont {
       model.addAttribute("no", no);
       // --------------------------------------------------------------------------------------      
      
-      return "/survey/list_all";
+      return "/th/survey/list_all";
       } 
       
     
@@ -210,7 +210,7 @@ public class SurveyCont {
       this.surveyProc.increaseCnt(surveyno);
 //      this.surveyitemProc.increaseitemCnt(surveyitemno);
       
-      return "/survey_topic/read" + surveyVO.getSurveyno();    
+      return "/th/survey_topic/read" + surveyVO.getSurveyno();    
     }    
     
     /**
@@ -243,9 +243,9 @@ public class SurveyCont {
         model.addAttribute("paging", paging);
         model.addAttribute("now_page", now_page);
 
-        return "/survey/update"; // templaes/cate/update.html
+        return "/th/survey/update"; // templaes/cate/update.html
       } else {
-        return "redirect:/member/login_cookie_need"; // redirect
+        return "redirect:/th/member/login_cookie_need"; // redirect
       }
     }
     
@@ -269,7 +269,7 @@ public class SurveyCont {
 
             if (cnt == 1) {
                 ra.addAttribute("now_page", now_page); // 리다이렉트로 페이지 정보 전달
-                return "redirect:/survey/list_search"; // 업데이트된 survey 페이지로 리다이렉트
+                return "redirect:/th/survey/list_search"; // 업데이트된 survey 페이지로 리다이렉트
             } else {
                 model.addAttribute("code", "update_fail"); // 업데이트 실패 처리
             }
@@ -283,9 +283,9 @@ public class SurveyCont {
             model.addAttribute("paging", paging);
             model.addAttribute("now_page", now_page);
 
-            return "/survey/msg"; // 업데이트 실패 시 메시지 페이지
+            return "/th/survey/msg"; // 업데이트 실패 시 메시지 페이지
         } else {
-            return "redirect:/admin/login"; // 권한이 없을 경우 로그인 페이지로 리다이렉트
+            return "redirect:/th/admin/login"; // 권한이 없을 경우 로그인 페이지로 리다이렉트
         }
     }
 
@@ -319,10 +319,10 @@ public class SurveyCont {
         int no = search_count - ((now_page - 1) * this.record_per_page);
         model.addAttribute("no", no);
 
-        return "/survey/delete"; // templaes/cate/delete.html
+        return "/th/survey/delete"; // templaes/cate/delete.html
 
       } else {
-        return "redirect:/member/login_cookie_need";  // redirect
+        return "redirect:/th/member/login_cookie_need";  // redirect
       }
       
     }
@@ -369,7 +369,7 @@ public class SurveyCont {
         
         ra.addAttribute("now_page", now_page); // redirect로 데이터 전송
         
-        return "redirect:/survey/list_search";
+        return "redirect:/th/survey/list_search";
         
       } else {
         model.addAttribute("code", "delete_fail");
@@ -377,9 +377,9 @@ public class SurveyCont {
       
       model.addAttribute("cnt", cnt);
       
-      return "/survey/msg"; //templates/cate/msg.html
+      return "/th/survey/msg"; //templates/cate/msg.html
     } else {
-      return "redirect:/admin/login";  // redirect
+      return "redirect:/th/member/admin_login";  // redirect
     }
     }
     
@@ -395,6 +395,7 @@ public class SurveyCont {
         @RequestParam(name = "now_page", defaultValue = "1") int now_page,
         @ModelAttribute("surveytopicVO") SurveytopicVO surveytopicVO) {
      
+      if (this.memberProc.isMember(session)) {
         SurveyVO surveyVO = new SurveyVO();
 
         
@@ -426,9 +427,11 @@ public class SurveyCont {
         
 
         
-        return "/survey/list_search"; 
-      } 
-
+        return "/th/survey/list_search"; 
+      } else {
+        return "/th/member/login_cookie_need";
+      }
+    }
       
     
     /**
@@ -448,10 +451,10 @@ public class SurveyCont {
         ra.addAttribute("word", word); // redirect로 데이터 전송
         ra.addAttribute("now_page", now_page); // redirect로 데이터 전송
         
-        return "redirect:/survey/list_search"; // @GetMapping(value="/list_all")
+        return "redirect:/th/survey/list_search"; // @GetMapping(value="/list_all")
       
       } else {
-        return "redirect:/member/login_cookie_need";  // redirect
+        return "redirect:/th/member/login_cookie_need";  // redirect
       }
       
     }
@@ -473,9 +476,9 @@ public class SurveyCont {
         ra.addAttribute("word", word); // redirect로 데이터 전송
         ra.addAttribute("now_page", now_page); // redirect로 데이터 전송
         
-        return "redirect:/survey/list_search"; // @GetMapping(value="/list_all")
+        return "redirect:/th/survey/list_search"; // @GetMapping(value="/list_all")
       } else {
-        return "redirect:/member/login_cookie_need";  // redirect
+        return "redirect:/th/member/login_cookie_need";  // redirect
       }
     }
       /**

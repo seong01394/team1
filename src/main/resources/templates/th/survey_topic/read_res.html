@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html layout:decorate="~{th/layout}"> <!-- layout.html 상속 -->
+<head>
+    <title>설문조사 결과</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="title_line">설문조사 결과
+    <div class="tabs page-header__tab-navigation">
+      <ul class="tablist"role="tablist">
+        <a href="javascript: location.reload();" style="color: black">새로 고침</a>
+        <a th:href="@{|/survey_topic/create?surveyno=${surveyVO.surveyno}|}" style="color: black">등록</a>
+      </ul>
+    </div>
+    </div>
+
+
+        
+        <div style="width: 50%; margin: 20px 470px;">
+            <div th:each="surveytopicVO, status:${surveytopicList}" 
+                 th:style="'background-image: url(/survey/survey_image_2.jpg); background-size: cover; color: white; padding: 10px; margin-bottom: 100px; border-radius: 5px; justify-content: space-between;'">
+                 
+                <!-- 썸네일 -->
+                <div style="display: flex; align-items: center;">
+                    <div style="text-align: center; margin-right: 10px;">
+                        <div th:if="${surveytopicVO.file1.endsWith('jpg') or surveytopicVO.file1.endsWith('PNG') or surveytopicVO.file1.endsWith('gif')}">
+                            <img th:src="@{|/store/storage/${surveytopicVO.filethumb}|}" alt="썸네일" style="width: 50px; height: 50px;">
+                        </div>
+                        <div th:if="${surveytopicVO.filesize == 0}">
+                            <img src="/surveytopic/images/none1.png" alt="등록된 썸네일 없음" style="width: 50px; height: 50px;">
+                        </div>
+                    </div>
+
+                    <!-- 출력 순서 및 제목 -->
+                    <div style="flex-grow: 1; text-align: center; margin-right: 20px;">
+                        <span th:text="${surveytopicVO.seqno}" style="color: white;"></span>
+                        <span style="color: white;">.</span>
+                        <span th:text="${surveytopicVO.topic}" style="color: white;"></span>
+                    </div>
+
+                    <!-- 수정 및 삭제 아이콘 -->
+                    <div>
+                        <a th:href="@{|/survey_item/create?surveytopicno=${surveytopicVO.surveytopicno}|}">
+                            <img src="/survey/create2.png" class="icon" title="항목 추가">
+                        </a>
+                        <a th:href="@{|/survey_topic/update?surveytopicno=${surveytopicVO.surveytopicno}&surveyno=${surveytopicVO.surveyno}|}">
+                            <img src="/survey/update2.png" class="icon" title="수정">
+                        </a>
+                        <a th:href="@{|/survey_topic/delete?surveytopicno=${surveytopicVO.surveytopicno}&surveyno=${surveytopicVO.surveyno}|}">
+                            <img src="/survey/delete2.png" class="icon" title="삭제">
+                        </a>
+                        <a th:href="@{|/survey_topic/list_all|}">
+                            <img src="/survey/delete2.png" class="icon" title="목록">
+                        </a>
+                    </div>           
+                </div>
+
+                <div th:each="surveyitemVO : ${itemsByTopic[surveytopicVO.surveytopicno]}" 
+                     style="display: flex; align-items: center; background-color: white; color: black; padding: 10px; margin-top: 10px; border-radius: 5px; justify-content: space-between;">
+                    
+                    <div style="text-align: center; margin-right: 10px;"> 
+                        <label style="display: flex; align-items: center; color: black;"> 
+                            <span th:text="${surveyitemVO.item}" style="margin-left: 5px;"></span>
+                        </label> 
+                    </div>
+                
+                    <div style='display: flex; align-items: center;'>
+                        <span style="color: black;">선택 인원 :</span>
+                        <span th:text="${surveyitemVO.itemcnt}" style="color: black; margin-left: 5px"></span>
+                        
+                        <!-- 선택 인원에 기반한 스타일 -->
+                        <div style="width: 100px; height: 20px; background-color: lightgray; margin-left: 10px; border-radius: 5px; position: relative;">
+                            <div th:style="'width:' + (${surveyitemVO.itemcnt} * 5) + 'px; height: 100%; background-color: green; border-radius: 5px; position: absolute;'" class="progress-bar"></div>
+                        </div>
+                
+
+                    </div>
+                </div>
+                <!-- 항목 루프 종료 -->
+            </div>
+        </div>
+
+        <div class="content_body_bottom_survey"  style="margin-left: 850px;">
+         <button id="btn_handleSubmit"  type="submit" style="
+              background-image: url('/survey/survey_image_2.jpg'); 
+              font-size: 20px; 
+              font-family: 'KBO-Dia-Gothic_bold'; 
+              color: white; 
+              border-radius: 15px; 
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+              padding: 8px; ">완료
+        </button>
+        <button type="button" onclick="location.href='/survey/list_search'" class="btn btn-secondary btn-sm" style="
+              background-color : red; 
+              font-size: 20px; 
+              font-family: 'KBO-Dia-Gothic_bold'; 
+              color: white; 
+              border-radius: 15px; 
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+              padding: 8px;">목록
+        </button>
+        </div>   
+</div>
+
+</body>
+</html>

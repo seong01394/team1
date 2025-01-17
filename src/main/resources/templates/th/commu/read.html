@@ -1,0 +1,258 @@
+<!DOCTYPE html> 
+
+<html layout:decorate="~{th/layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+
+  <div class='title_line'>
+    <span th:text="${clubVO.clubname}" class="title_line_text" style="font-family: 'Mungyeong-Gamhong-Apple'; font-size: 40px; color: white;"></span >   
+    > 글 조회
+ 
+  <div class="tabs page-header__tab-navigation">
+    <ul class="tablist"role="tablist"th:if="${session.grade == 'member' || session.grade == 'admin'}">     
+
+    <a href="javascript:location.reload();" style="color: black;">새로고침</a>    
+    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&hashtage=${hashtage}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
+    <a th:href="@{|/commu/create?clubno=${clubVO.clubno}&now_page=${now_page}&hashtage=${hashtage}|}" style="color: black;">등록</a>
+    <a th:href="@{|/commu/update_text?communo=${commuVO.communo}&now_page=${now_page}&hashtage=${hashtage}|}" style="color: black;">글 수정</a>
+    <a th:href="@{|./update_file?communo=${commuVO.communo}&hashtage=${hashtage}&now_page=${now_page}|}" style="color: black;">파일 수정</a>  
+    <a th:href="@{|/commu/youtube?clubno=${commuVO.clubno}&communo=${commuVO.communo}&hashtage=${hashtage}&now_page=${now_page}|}" style="color: black;">Youtube</a>
+    <a th:href="@{|./delete?communo=${commuVO.communo}&hashtage=${hashtage}&now_page=${now_page}&cateno=${commuVO.clubno}|}" style="color: black;">삭제</a>
+    </ul>
+  </div>
+ </div>
+ 
+
+
+  <fieldset class="fieldset_basic">
+    <ul>
+      <li class="li_none">
+        <div style="width: 100%; word-break: break-all;">
+        
+          <!-- 제목 -->
+          <div>
+            <span style="font-size: 1.5em; font-weight: bold;" th:text="${commuVO.headline}"></span>
+          </div>
+  
+          <!-- 작성 날짜 -->
+          <div style="font-size: 1em;">
+            <span th:text="${commuVO.rdate}"></span>
+          </div>
+  
+          <br><br>
+  
+          <!-- 이미지 (jpg, png, gif만 표시) -->
+          <div th:if="${commuVO.image.endsWith('jpg') or commuVO.image.endsWith('png') or commuVO.image.endsWith('gif')}">
+            <img th:src="@{|/commu/storage/${commuVO.imagesaved}|}" style="width: 20%; margin: 0 auto; display: block; margin-bottom: 1%;">
+          </div>
+  
+          <!-- Youtube (영상 링크 표시) -->
+          <div style="text-align: center; width: 640px; margin: 0 auto; padding: 10px 0;" th:if="${commuVO.youtube.length() > 0}" th:utext="${commuVO.youtube}">
+          </div>
+  
+          <div style="text-align: center;">
+          
+            <span id="heart_panel"></span><span id="recom_panel"></span>
+            
+          </div>
+  
+        </div>
+      </li>
+
+    <!-- 본문 내용 -->
+    <div style="border: 1px solid #ccc; padding: 0; border-radius: 5px; margin-bottom: 20px;">
+      <div style="white-space: pre-wrap; font-size: 1.5em; padding: 10px; margin: 0;">
+          <span th:text="${commuVO.contents}"></span>
+      </div>
+    </div>
+
+    <!-- 해시태그 표시 -->
+    <li class="li_none" th:text="|해시태그(키워드): ${commuVO.hashtag}|"></li>
+
+    <!-- 첨부 파일 표시 -->
+    <li class="li_none" th:if="${commuVO.imagesize > 0}">
+      <div style="color: black;">
+          첨부 파일: 
+          <a th:href="@{|/download?dir=commu/storage&filename=${commuVO.imagesaved}&downname=${commuVO.image}|}" style="color: black;">
+              <span th:text="${commuVO.image}"></span>
+          </a> 
+          <span th:text="|(${commuVO.size1_label})|"></span>
+          
+          <a th:href="@{|/download?dir=commu/storage&filename=${commuVO.imagesaved}&downname=${commuVO.image}|}" style="color: black;">
+              <img src="/commu/images/download.png" alt="Download">
+          </a>
+      </div>
+    </li> 
+
+    <li class="li_none">
+      <!-- ------------------------------ 댓글 영역 시작 ------------------------------ -->
+      <script>
+        window.onload = () => {
+          let content_tag = document.getElementById('content');
+          let btn_create_tag = document.getElementById('btn_create');
+          let heartCnt =  '[[${heartCnt}]]'; //  javascript -> Thymeleaf -> session
+          let tag = '';
+          
+          if(heartCnt == 1) {
+            tag = '<a href="javascript:good([[${commuVO.communo}]])"><img src="/commu/images/heart1.png" style="width: 30px;" title="추천"></a>';
+            document.querySelector('#heart_panel').innerHTML = tag;
+          } else{
+            tag = '<a href="javascript:good([[${commuVO.communo}]])"><img src="/commu/images/heart2.png" style="width: 30px;" title="비추천"></a>';
+            document.querySelector('#heart_panel').innerHTML = tag;
+          }
+          document.querySelector('#recom_panel').innerHTML = '([[${commuVO.recom}]])';
+      
+          content_tag.addEventListener('click', () => {
+            let id =  '[[${session.id}]]'; //  javascript -> Thymeleaf -> session
+            // alert('Click!: ' + id);
+            if (id == '') {
+              alert('로그인해야 댓글을 입력 할 수 있습니다.');
+              location.href="/member/login?url=/commu/read?communo=[[${commuVO.communo}]]%26hashtag=[[${hashtag}]]%26now_page=[[${now_page}]]";
+            } else {
+              // alert('로그인 됨');
+              // content_tag.focus();
+            }
+          });
+          
+          btn_create_tag.addEventListener('click', () => {
+            let content = content_tag.value.trim();
+            
+            if (content.length == 0) {
+              alert('내용이 없습니다. 내용을 입력해주세요.');
+            } else {
+              // alert('content: ' + content_tag.value);
+              // {"sentence":"안녕하세요.","language":"영어","age":"25"}
+              // console.log(JSON.stringify({sentence, language, age}))
+              // return;
+      
+              // Spring Security를 사용하지 않고 CORS 설정시 접근 안됨.
+              // fetch("http://127.0.0.1:9093/commureply/create", {
+              fetch("/commureply/create", {
+                "method": "post", 
+                "headers": {"Content-Type": "application/json"},
+                body: JSON.stringify({"communo": "[[${commuVO.communo}]]", "content": content})
+              })
+              .then((response) => response.json())
+              .then((data) => {
+                list_by_communo_join(); // 목록 출력
+              });
+      
+              // result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
+
+            }
+
+          });
+          
+          list_by_communo_join(); // 목록 출력
+        }
+        
+        function list_by_communo_join() { // 목록 출력
+          // Spring Security를 사용하지 않고 CORS 설정시 접근 안됨.
+          // fetch("http://127.0.0.1:9093/commureply/create", {
+          fetch("/commureply/list_by_communo_join?communo=[[${commuVO.communo}]]", {
+            "method": "get" 
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              reply_data = data['res'];
+      
+              if (reply_data.length > 5) {
+                  cnt = 5;
+              } else {
+                  cnt = reply_data.length;
+              }
+              
+              let msg = '';
+              for (let i = 0; i < cnt; i++) {
+                  let row = reply_data[i];
+      
+                  // rdate 형식 변환
+                  let date = new Date(row.rdate);
+                  let formattedDate = date.getFullYear() + '-' + 
+                      String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                      String(date.getDate()).padStart(2, '0') + ' ' + 
+                      String(date.getHours()).padStart(2, '0') + ':' + 
+                      String(date.getMinutes()).padStart(2, '0');
+      
+                  msg += "<div id='" + row.commureplyno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+                  msg += "<span style='font-weight: bold; color: #5EACD1;'>" + row.id + "</span>";
+                  msg += "  " + formattedDate; // 변환된 날짜 사용
+      
+
+                  msg += "  " + "<br>";
+                  msg += row.content;
+                  msg += "</div>";
+                }
+                
+                document.getElementById("commureply_list").innerHTML = msg;               
+              });
+    
+        }
+        
+
+    function good(communo) {
+      console.log('-> communo:' + communo);
+
+      fetch("http://localhost:9093/commu/good", {
+          "method": "post",
+          "headers": {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({communo}) // {"communo":communo}, JSON 형식으로 전송
+        })
+        .then((response) => response.json()) // 응답 문자열 추출
+        .then((data) => {
+          console.log('-> data.isMember:' + data.isMember);
+
+          if(data.isMember == 1){ // 회원
+            let heartCnt = data.heartCnt; 
+            let tag = '';
+    
+            if(heartCnt == 1) {
+              tag = '<a href="javascript:good([[${commuVO.communo}]])"><img src="/commu/images/heart1.png" style="width: 30px;" title="추천"></a>';
+              document.querySelector('#heart_panel').innerHTML = tag;
+            } else{
+              tag = '<a href="javascript:good([[${commuVO.communo}]])"><img src="/commu/images/heart2.png" style="width: 30px;" title="비추천"></a>';
+              document.querySelector('#heart_panel').innerHTML = tag;
+            }  
+
+            document.querySelector('#recom_panel').innerHTML = '(' + data.recom + ')';
+
+          } else { // 비회원
+            alert("로그인해야 추천 할 수 있습니다.");
+            location.href='/member/login_cookie_need';
+          }
+        });
+    }
+      </script>
+      
+      <div style='width: 100%; margin: 0px auto; clear: both;'>
+          <form name='frm_reply' id='frm_reply'> 
+              <input type='hidden' name='communo' id='communo' value='${communo}'>
+              <input type='hidden' name='memberno' id='memberno' value='${session.memberno}'>
+              
+              <textarea name='content' id='content' class="form-control" style='width: 100%; height: 60px;' 
+                             placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
+             <div style='text-align: center;'> 
+               <button type='button' id='btn_create'>  등  록  </button>
+             </div>               
+          </form>
+          <div id='commureply_list' data-replypage='1'>  <!-- 목록 -->
+            등록된 댓글이 없습니다.
+          </div>
+          <div id='commureply_list_btn' style='border: none'>
+              <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
+          </div>  
+        
+      </div>
+      
+      <!-- ------------------------------ 댓글 영역 종료 ------------------------------  -->
+
+    </li>   
+  
+    </ul>
+  </fieldset>
+  
+
+</html>
+

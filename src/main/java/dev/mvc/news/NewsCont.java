@@ -43,7 +43,7 @@ public class NewsCont{
   public int page_per_block = 10;
 
   /** 페이징 목록 주소 */
-  private String list_file_name = "/news/list_search";
+  private String list_file_name = "/th/news/list_search";
   
   public NewsCont() {
     System.out.println("-> NewsCont created.");
@@ -56,9 +56,9 @@ public class NewsCont{
       NewsVO newsVO = new NewsVO();
       model.addAttribute("newsVO", newsVO);
       
-      return "/news/create";
+      return "/th/news/create";
     }else {
-      return "redirect:/admin/login_cookie_need";      
+      return "redirect:/th/admin/login_cookie_need";      
     } 
   }
   
@@ -70,14 +70,14 @@ public class NewsCont{
          
     if (bindingResult.hasErrors() == true) {
 
-    return "news/create"; 
+    return "/thnews/create"; 
     } 
     
     int cnt = this.newsProc.create(newsVO);
    
     if (cnt == 1) {
 
-      return "redirect:/news/list_search"; 
+      return "redirect:/th/news/list_search"; 
     } else {
       model.addAttribute("code", "create_fail");
     }
@@ -115,7 +115,7 @@ public class NewsCont{
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no", no);
 
-    return "/news/list_all";
+    return "/th/news/list_all";
   }  
   
   /**
@@ -141,7 +141,7 @@ public class NewsCont{
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no", no);
     
-    return "/news/read";
+    return "/th/news/read";
    }
   
   /**
@@ -179,9 +179,9 @@ public class NewsCont{
       int no = search_count - ((now_page - 1) * this.record_per_page);
       model.addAttribute("no", no);
 
-      return "/news/list_search"; 
+      return "/th/news/list_search"; 
     } else {
-      return "redirect:/admin/login_cookie_need";
+      return "redirect:/th/admin/login_cookie_need";
     }
   }
   
@@ -212,9 +212,9 @@ public class NewsCont{
       int no = search_count - ((now_page - 1) * this.record_per_page);
       model.addAttribute("no", no);
       
-      return "/news/update"; 
+      return "/th/news/update"; 
     } else {
-      return "redirect:/admin/login_cookie_need"; // redirect
+      return "redirect:/th/admin/login_cookie_need"; // redirect
     }
    } 
   
@@ -232,7 +232,7 @@ public class NewsCont{
     if (this.adminProc.isAdmin(session)) {
     if (bindingResult.hasErrors() == true) { 
 
-      return "/news/update"; 
+      return "/th/news/update"; 
     }
     
     int cnt = this.newsProc.update(newsVO);
@@ -244,7 +244,7 @@ public class NewsCont{
       ra.addAttribute("now_page", now_page); 
 
       ra.addAttribute("newsno", newsVO.getNewsno());
-      return "redirect:/news/read/" + newsVO.getNewsno();
+      return "redirect:/th/news/read/" + newsVO.getNewsno();
     } else {
       model.addAttribute("code", "update_fail");
     }
@@ -260,9 +260,9 @@ public class NewsCont{
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no", no);
 
-    return "redirect:/news/read";
+    return "redirect:/th/news/read";
     } else {
-      return "redirect:/admin/login_cookie_need"; 
+      return "redirect:/th/admin/login_cookie_need"; 
     }  
   }
   
@@ -292,10 +292,10 @@ public class NewsCont{
       int no = search_count - ((now_page - 1) * this.record_per_page);
       model.addAttribute("no", no);
 
-      return "/news/delete"; 
+      return "/th/news/delete"; 
 
     } else {
-      return "redirect:/admin/login_cookie_need";  
+      return "redirect:/th/admin/login_cookie_need";  
     }   
   }  
   
@@ -331,16 +331,16 @@ public class NewsCont{
 
         ra.addAttribute("now_page", now_page); 
 
-        return "redirect:/news/list_search";
+        return "redirect:/th/news/list_search";
       } else {
         model.addAttribute("code", "delete_fail");
       }
 
       model.addAttribute("cnt", cnt);
 
-      return "/club/msg";
+      return "/th/club/msg";
     } else {
-      return "redirect:/admin/login_cookie_need";  
+      return "redirect:/th/admin/login_cookie_need";  
     }
 
   }

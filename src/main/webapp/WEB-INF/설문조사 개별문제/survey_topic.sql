@@ -51,7 +51,7 @@ select surveytopicno, topic, seqno, filesaved, filethumb, filesize FROM survey_t
 UPDATE survey_topic SET topic = '역습 vs 패스 플레이' , seqno = 2 WHERE surveytopicno=1;
 
 --삭제
-DELETE FROM survey_topic WHERE surveytopicno=1;
+DELETE FROM survey_topic WHERE surveytopicno=113;
 select surveytopicno, topic, seqno, filesaved, filethumb, filesize FROM survey_topic ORDER BY surveytopicno ASC;
 
 
@@ -116,4 +116,4 @@ ORDER BY surveytopicno ASC;
     SELECT COUNT(*) as cnt                           
     FROM survey_topic t JOIN survey s ON t.surveyno = s.surveyno  
     WHERE (UPPER(t.topic) LIKE '%' || UPPER('손흥민') || '%') OR (UPPER(s.survey_title) LIKE '%' || UPPER('테스트') || '%');
-
+commit;

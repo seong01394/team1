@@ -76,7 +76,7 @@ public class SurveygoodCont {
     model.addAttribute("menu", menu);
 
     
-    return "/surveygood/list_all";
+    return "/th/surveygood/list_all";
   }
   
   @GetMapping(value = "/join_list_all")
@@ -90,7 +90,7 @@ public class SurveygoodCont {
     model.addAttribute("menu", menu);
 
     
-    return "/surveygood/join_list_all";
+    return "/th/surveygood/join_list_all";
   }
   @PostMapping(path = "/delete")
   public String delete_proc(HttpSession session, 
@@ -100,9 +100,9 @@ public class SurveygoodCont {
     if (this.adminProc.isAdmin(session)) {
       this.surveygoodProc.delete(surveygoodno);
       
-      return "/surveygood/delete"; // /templates/calendar/delete.html
+      return "/th/surveygood/delete"; // /templates/calendar/delete.html
     } else {
-      ra.addAttribute("url", "/admin/login_cookie_need");
+      ra.addAttribute("url", "/th/admin/login_cookie_need");
       return "redirect:/surveygood/post2get";
     }
 

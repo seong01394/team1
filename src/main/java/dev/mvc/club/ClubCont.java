@@ -37,7 +37,7 @@ public class ClubCont {
   public int page_per_block = 10;
 
   /** 페이징 목록 주소 */
-  private String list_file_name = "/club/list_search";
+  private String list_file_name = "/th/club/list_search";
   
   public ClubCont() {
     System.out.println("-> ClubCont created."); 
@@ -61,9 +61,9 @@ public class ClubCont {
     ClubVO clubVO = new ClubVO();
     model.addAttribute("clubVO", clubVO);
 
-    return "/club/create";
+    return "/th/club/create";
     } else{
-      return "redirect:/admin/login_cookie_need";
+      return "redirect:/th/admin/login_cookie_need";
     }
  }
     
@@ -113,7 +113,7 @@ public class ClubCont {
           
     if (bindingResult.hasErrors() == true) {
 
-    return "/club/create"; 
+    return "/th/club/create"; 
     } 
 
     clubVO.setPl(clubVO.getPl().trim());
@@ -122,14 +122,14 @@ public class ClubCont {
     
     if (cnt == 1) {
 
-      return "redirect:/club/list_search"; 
+      return "redirect:/th/club/list_search"; 
     } else {
       model.addAttribute("code", "create_fail");
     }
     
     model.addAttribute("cnt", cnt);
    
-    return "/club/msg"; // /templates/club/msg.html
+    return "/th/club/msg"; // /templates/club/msg.html
   } 
   
   /**
@@ -167,7 +167,7 @@ public class ClubCont {
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no", no);
 
-    return "/club/list_all"; // /templates/club/list_all.html
+    return "/th/club/list_all"; // /templates/club/list_all.html
   }  
   
   /**
@@ -195,7 +195,7 @@ public class ClubCont {
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no", no);
     
-    return "/club/read";
+    return "/th/club/read";
    }
                       
   /**
@@ -231,9 +231,9 @@ public class ClubCont {
       int no = search_count - ((now_page - 1) * this.record_per_page);
       model.addAttribute("no", no);
       
-      return "/club/update"; 
+      return "/th/club/update"; 
     } else {
-      return "redirect:/admin/login_cookie_need"; // redirect
+      return "redirect:/th/member/admin_login"; // redirect
     }
    } 
   
@@ -251,7 +251,7 @@ public class ClubCont {
     if (this.adminProc.isAdmin(session)) {
     if (bindingResult.hasErrors() == true) { 
 
-      return "/club/update"; 
+      return "/th/club/update"; 
     }
     
     int cnt = this.clubProc.update(clubVO);
@@ -263,7 +263,7 @@ public class ClubCont {
       ra.addAttribute("now_page", now_page); 
 
       ra.addAttribute("clubno", clubVO.getClubno());
-      return "redirect:/club/read/" + clubVO.getClubno();
+      return "redirect:/th/club/read/" + clubVO.getClubno();
     } else {
       model.addAttribute("code", "update_fail");
     }
@@ -279,9 +279,9 @@ public class ClubCont {
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no", no);
 
-    return "redirect:/club/read";
+    return "redirect:/th/club/read";
     } else {
-      return "redirect:/admin/login_cookie_need"; 
+      return "redirect:/th/admin/login_cookie_need"; 
     }  
   }
   
@@ -313,10 +313,10 @@ public class ClubCont {
       int no = search_count - ((now_page - 1) * this.record_per_page);
       model.addAttribute("no", no);
 
-      return "/club/delete"; 
+      return "/th/club/delete"; 
 
     } else {
-      return "redirect:/admin/login_cookie_need";  
+      return "redirect:/th/admin/login_cookie_need";  
     }   
   }  
   
@@ -352,16 +352,16 @@ public class ClubCont {
 
         ra.addAttribute("now_page", now_page); 
 
-        return "redirect:/club/list_search";
+        return "redirect:/th/club/list_search";
       } else {
         model.addAttribute("code", "delete_fail");
       }
 
       model.addAttribute("cnt", cnt);
 
-      return "/club/msg";
+      return "/th/club/msg";
     } else {
-      return "redirect:/admin/login_cookie_need";  
+      return "redirect:/th/admin/login_cookie_need";  
     }
 
   }
@@ -381,7 +381,7 @@ public class ClubCont {
     ra.addAttribute("word", word);
     ra.addAttribute("now_page", now_page);
 
-    return "redirect:/club/list_search";
+    return "redirect:/th/club/list_search";
   }  
  
   /**
@@ -399,7 +399,7 @@ public class ClubCont {
     ra.addAttribute("word", word);
     ra.addAttribute("now_page", now_page); 
 
-    return "redirect:/club/list_search"; 
+    return "redirect:/th/club/list_search"; 
   }  
 
   /**
@@ -444,9 +444,9 @@ public class ClubCont {
       int no = search_count - ((now_page - 1) * this.record_per_page);
       model.addAttribute("no", no);
 
-      return "/club/list_search"; 
+      return "/th/club/list_search"; 
     } else {
-      return "redirect:/admin/login_cookie_need";
+      return "redirect:/member/admin_login";
     }
   }
   

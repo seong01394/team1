@@ -86,7 +86,7 @@ public class CommugoodCont {
     ArrayList<ClubVOMenu> menu = this.clubProc.menu();
     model.addAttribute("menu", menu);
 
-    return "/commugood/list_all"; 
+    return "/th/commugood/list_all"; 
   }
   
   /**
@@ -101,11 +101,11 @@ public class CommugoodCont {
     if (this.adminProc.isAdmin(session)) { // 관리자 로그인 확인
       this.commugoodProc.delete(commugoodno);
 
-      return "redirect:/commugood/list_all";
+      return "redirect:/th/commugood/list_all";
 
     } else { // 정상적인 로그인이 아닌 경우 로그인 유도
       ra.addAttribute("url", "/admin/login_cookie_need"); 
-      return "redirect:/commugood/post2get"; 
+      return "redirect:/th/commugood/post2get"; 
     }
  
   }  

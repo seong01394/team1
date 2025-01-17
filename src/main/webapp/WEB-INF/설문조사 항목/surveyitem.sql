@@ -44,7 +44,7 @@ select surveyitemno, surveytopicno, item, itemseq, itemcnt FROM surveyitem FROM 
 UPDATE surveyitem SET item = '손흥민, 황희찬 등을 비롯한 한국 선수가 뛰었던 팀 X' WHERE surveyitemno=1;
 
 --삭제
-DELETE FROM survey WHERE surveyno=6;
+DELETE FROM surveyitem WHERE surveytopicno=113;
 select surveyno, survey_title, start_date, fin_date, y_n, cnt, poster, postersaved, posterthumb, postersize FROM survey ORDER BY surveyno ASC;
 
 SELECT  surveytopicno, surveyno, topic, seqno, file1, filesaved, filethumb, filesize
@@ -56,4 +56,4 @@ FROM survey_item i, survey_topic t
 WHERE t.surveytopicno = t.surveytopicno
 ORDER BY surveytopicno ASC;
 
-
+commit;

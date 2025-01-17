@@ -59,7 +59,7 @@ public class AdminCont {
       
       model.addAttribute("list", list);
       
-      return "/admin/list";
+      return "/th/admin/list";
     } else {
       return "redirect:/admin/login_cookie_need";
    }
@@ -91,7 +91,7 @@ public class AdminCont {
     AdminVO adminVO = this.adminProc.read(adminno);
     model.addAttribute("adminVO", adminVO);
 
-    return "admin/read";
+    return "/th/admin/read";
   }
   
   /**
@@ -152,7 +152,7 @@ public class AdminCont {
     model.addAttribute("ck_passwd", ck_passwd);
     model.addAttribute("ck_passwd_save", ck_passwd_save);
 
-    return "/member/login_cookie";  // /templates/member/login_cookie.html
+    return "/th/admin/login";  // /templates/member/login_cookie.html
   }  
   
 
@@ -239,10 +239,10 @@ public class AdminCont {
       // -------------------------------------------------------------------
       // ----------------------------------------------------------------------------     
       
-      return "redirect:/";
+      return "/th/index";
     } else {
       model.addAttribute("code", "login_fail");
-      return "/member/msg";
+      return "/th/member/msg";
     }
  }
   // ----------------------------------------------------------------------------------
@@ -334,7 +334,7 @@ public class AdminCont {
 //   model.addAttribute("ck_id_save", "Y");
 //   model.addAttribute("ck_passwd_save", "Y");
    
-   return "/member/login_cookie_need";  // templates/member/login_cookie_need.html
+   return "/th/member/login_cookie_need";  // templates/member/login_cookie_need.html
  }
  
   

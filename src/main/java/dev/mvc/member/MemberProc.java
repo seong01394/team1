@@ -102,8 +102,8 @@ public class MemberProc implements MemberProcInter {
   }
   
   @Override
-  public int delete(int memberno) {
-    int cnt = this.memberDAO.delete(memberno);
+  public int bye(MemberVO memberVO) {
+    int cnt = this.memberDAO.bye(memberVO);
     return cnt;
   }
   
@@ -179,6 +179,54 @@ public class MemberProc implements MemberProcInter {
     
     return sw;
   }
+
+  @Override
+  public int id_check(HashMap<String, Object> map) {
+    String id = (String)map.get("id");
+    map.put("id", id);
+    
+    int cnt = this.memberDAO.id_check(map);
+    return cnt;
+  }
+
+  @Override
+  public int id_update(HashMap<String, Object> map) {
+    String id = (String)map.get("id");
+    map.put("id", id);
+    
+    int cnt = this.memberDAO.id_update(map);
+    return cnt;
+  }
+
+  @Override
+  public String id_check_find(HashMap<String, String> map) {
+    String id = this.memberDAO.id_check_find(map);
+    return id;
+  }
+
+  @Override
+  public int passwd_update_find(HashMap<String, String> map) {
+    String passwd = (String)map.get("passwd");
+    passwd = this.security.aesEncode(passwd);
+    map.put("passwd", passwd);
+    
+    int cnt = this.memberDAO.passwd_update_find(map);
+    return cnt;
+  }
+
+  @Override
+  public int passwd_check_find(HashMap<String, String> map) {
+    int cnt = this.memberDAO.passwd_check_find(map);
+    return cnt;
+  }
+
+  @Override
+  public int checkNICKNAME(String nickname) {
+   int cnt = this.memberDAO.checkNICKNAME(nickname);
+    return cnt;
+  }
+
+
   
   
 }

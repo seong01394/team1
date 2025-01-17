@@ -74,7 +74,7 @@ public class CommuCont {
     ClubVO clubVO = this.clubProc.read(clubno); 
     model.addAttribute("clubVO", clubVO);
 
-    return "/commu/create"; 
+    return "/th/commu/create"; 
   }
   
  @PostMapping(value = "/create")
@@ -120,7 +120,7 @@ public class CommuCont {
           ra.addFlashAttribute("code", "check_upload_file_fail"); 
           ra.addFlashAttribute("cnt", 0); 
           ra.addFlashAttribute("url", "/commu/msg"); 
-          return "redirect:/commu/msg"; 
+          return "redirect:/th/commu/msg"; 
         }
       } else { // 글만 등록하는 경우
         System.out.println("-> 글만 등록");
@@ -138,16 +138,16 @@ public class CommuCont {
       if (cnt == 1) {
 
         ra.addAttribute("clubno", commuVO.getClubno()); 
-        return "redirect:/commu/list_by_clubno";
+        return "redirect:/th/commu/list_by_clubno";
 
       } else {
         ra.addFlashAttribute("code", "create_fail"); 
         ra.addFlashAttribute("cnt", 0); 
         ra.addFlashAttribute("url", "/commu/msg"); 
-        return "redirect:/commu/msg";
+        return "redirect:/th/commu/msg";
       }
     } else { // 로그인 실패 한 경우
-      return "redirect:/member/login_cookie_need"; 
+      return "redirect:/th/member/login_cookie_need"; 
     }
   }
     
@@ -173,7 +173,7 @@ public class CommuCont {
      ClubVO clubVO = this.clubProc.read(clubno);
      model.addAttribute("clubVO", clubVO);
 
-     return "/commu/list_all";
+     return "/th/commu/list_all";
  }
 
  /**
@@ -206,7 +206,7 @@ public class CommuCont {
    model.addAttribute("hashtag", hashtag);
 
    int search_count = this.commuProc.list_by_clubno_search_count(map);
-   String paging = this.commuProc.pagingBox(clubno, now_page, hashtag, "/commu/list_by_clubno", search_count,
+   String paging = this.commuProc.pagingBox(clubno, now_page, hashtag, "/th/commu/list_by_clubno", search_count,
        Commu.RECORD_PER_PAGE, Commu.PAGE_PER_BLOCK);
    model.addAttribute("paging", paging);
    model.addAttribute("now_page", now_page);
@@ -217,7 +217,7 @@ public class CommuCont {
    int no = search_count - ((now_page - 1) * Commu.RECORD_PER_PAGE);
    model.addAttribute("no", no);
 
-   return "/commu/list_by_clubno_search_paging";
+   return "/th/commu/list_by_clubno_search_paging";
  }  
  
  /**
@@ -249,7 +249,7 @@ public class CommuCont {
    model.addAttribute("hashtag", hashtag);
 
    int search_count = this.commuProc.list_by_clubno_search_count(map);
-   String paging = this.commuProc.pagingBox(clubno, now_page, hashtag, "/commu/list_by_clubno_grid", search_count,
+   String paging = this.commuProc.pagingBox(clubno, now_page, hashtag, "/th/commu/list_by_clubno_grid", search_count,
        Commu.RECORD_PER_PAGE, Commu.PAGE_PER_BLOCK);
    model.addAttribute("paging", paging);
    model.addAttribute("now_page", now_page);
@@ -260,7 +260,7 @@ public class CommuCont {
    model.addAttribute("no", no);
 
 
-   return "/commu/list_by_clubno_search_paging_grid";
+   return "/th/commu/list_by_clubno_search_paging_grid";
  }
 
  /**
@@ -306,7 +306,7 @@ public class CommuCont {
     model.addAttribute("heartCnt", heartCnt);
    // ----------------------------------------------------------------------------
    
-   return "/commu/read";
+   return "/th/commu/read";
  }
  
  /**
@@ -330,7 +330,7 @@ public class CommuCont {
    model.addAttribute("hashtag", hashtag);
    model.addAttribute("now_page", now_page);
    
-   return "/commu/youtube";  
+   return "/th/commu/youtube";  
  }
 
  /**
@@ -358,7 +358,7 @@ public class CommuCont {
    ra.addAttribute("hashtag", hashtag);
    ra.addAttribute("now_page", now_page);
 
-   return "redirect:/commu/read";
+   return "redirect:/th/commu/read";
  }
  
 
@@ -385,12 +385,12 @@ public class CommuCont {
      ClubVO clubVO = this.clubProc.read(commuVO.getClubno());
      model.addAttribute("clubVO", clubVO);
 
-     return "/commu/update_text"; 
+     return "/th/commu/update_text"; 
 
 
    } else {
  
-     return "/member/login_cookie_need";
+     return "/th/member/login_cookie_need";
    }
 
  }
@@ -414,11 +414,11 @@ public class CommuCont {
 
      ra.addAttribute("communo", commuVO.getCommuno());
      ra.addAttribute("clubno", commuVO.getClubno());
-     return "redirect:/commu/read";
+     return "redirect:/th/commu/read";
 
    } else { // 정상적인 로그인이 아닌 경우 로그인 유도
-     ra.addAttribute("url", "/member/login_cookie_need");
-     return "redirect:/commu/post2get";
+     ra.addAttribute("url", "/th/member/login_cookie_need");
+     return "redirect:/th/commu/post2get";
    }
 
  }
@@ -446,7 +446,7 @@ public class CommuCont {
    ClubVO clubVO = this.clubProc.read(commuVO.getClubno());
    model.addAttribute("clubVO", clubVO);
 
-   return "/commu/update_file";
+   return "/th/commu/update_file";
 
  }
 
@@ -521,10 +521,10 @@ public class CommuCont {
      ra.addAttribute("hashtag", hashtag);
      ra.addAttribute("now_page", now_page);
      
-     return "redirect:/commu/read";
+     return "redirect:/th/commu/read";
    } else {
-     ra.addAttribute("url", "/member/login_cookie_need"); 
-     return "redirect:/commu/msg"; // GET
+     ra.addAttribute("url", "/th/member/login_cookie_need"); 
+     return "redirect:/th/commu/msg"; // GET
    }
  }
 
@@ -554,11 +554,11 @@ public class CommuCont {
      ClubVO clubVO = this.clubProc.read(commuVO.getClubno());
      model.addAttribute("clubVO", clubVO);
      
-     return "/commu/delete"; 
+     return "/th/commu/delete"; 
      
    } else {
-     ra.addAttribute("url", "/member/login_cookie_need");
-     return "redirect:/commu/msg"; 
+     ra.addAttribute("url", "/th/member/login_cookie_need");
+     return "redirect:/th/commu/msg"; 
    }
 
  }
@@ -617,7 +617,7 @@ public class CommuCont {
    ra.addAttribute("hashtag", hashtag);
    ra.addAttribute("now_page", now_page);
    
-   return "redirect:/commu/list_by_clubno";    
+   return "redirect:/th/commu/list_by_clubno";    
    
  }   
     

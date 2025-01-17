@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.commureply.CommureplyDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <insert id="create" parameterType="dev.mvc.commureply.CommureplyVO">
+    INSERT INTO commureply(commureplyno, communo, memberno, content, rdate)
+    VALUES(commureply_seq.nextval, #{communo}, #{memberno}, #{content}, sysdate)
+  </insert>
+  
+  <select id="list" resultType="dev.mvc.commureply.CommureplyVO">
+    SELECT commureplyno, communo, memberno, content, rdate
+    FROM commureply
+    ORDER BY commureplyno DESC
+  </select>
+
+  <select id="list_by_communo" resultType="dev.mvc.commureply.CommureplyVO" parameterType="int">
+    SELECT commureplyno, communo, memberno, content, rdate
+    FROM commureply
+    WHERE communo=#{communo}
+    ORDER BY commureplyno DESC
+  </select>
+
+  <!-- <select id="checkPasswd" parameterType="HashMap" resultType="int"> -->
+  <!-- <select id="checkPasswd" parameterType="ReplyVO" resultType="int"> -->
+  <!-- <select id="checkPasswd" parameterType="Map" resultType="int"> -->
+
+  <select id="read" resultType="dev.mvc.commureply.CommureplyVO" parameterType="int">
+    SELECT commureplyno, communo, memberno, content, rdate
+    FROM commureply
+    WHERE commureplyno = #{commureplyno}
+  </select>
+
+  <update id="update" parameterType="dev.mvc.commureply.CommureplyVO">
+    UPDATE commureply SET content=#{content}
+    WHERE commureplyno = #{commureplyno}
+  </update>
+    
+  <delete id="delete" parameterType="int">
+    DELETE FROM commureply
+    WHERE commureplyno=#{commureplyno}
+  </delete>
+  
+  <select id="list_by_communo_join" resultType="dev.mvc.commureply.CommureplyMemberVO" parameterType="int">
+      SELECT id, commureplyno, communo, memberno, content, rdate
+    FROM (
+          SELECT m.id, 
+                 p.commureplyno, 
+                 p.communo, 
+                 p.memberno, 
+                 p.content, 
+                 p.rdate,
+                 ROW_NUMBER() OVER (ORDER BY p.commureplyno DESC) AS r
+          FROM member m
+          JOIN commureply p ON m.memberno = p.memberno 
+          WHERE p.communo = #{communo}
+     )
+     WHERE r &lt; = 500
+  </select>
+  
+
+
+  
+</mapper>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html layout:decorate="~{th/layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+<script>
+window.onload = () => {
+      document.getElementById('btn_id_update').addEventListener('click', send);
+            
+      document.querySelector('#current_id').addEventListener('keypress', (event) => {
+        if(event.key === 'Enter') {
+          document.getElementById('id').focus();
+        }
+      });
+      
+      document.querySelector('#new_id').addEventListener('keypress', (event) => {
+        if(event.key === 'Enter') {
+          document.getElementById('new_id').focus();
+        }
+      }); 
+}      
+      
+     function send() {
+       // ---------------------------------------------------------------------------------------
+       // fetch 관련 시작
+       // ---------------------------------------------------------------------------------------
+        let url = '/member/id_check';
+        let id = document.getElementById("current_id").value;
+    
+        fetch(url, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json' // JSON 형식으로 데이터 전송을 알림
+            },
+            body: JSON.stringify({current_id: id}) // JSON 데이터를 문자열로 변환하여 요청 본문에 포함   
+        })
+        .then(response => response.json())
+        .then(rdata => {
+          if (rdata.cnt == 0) { // 패스워드 불일치
+            current_id_msg.innerHTML= '현재 패스워드가 일치하지 않습니다.';
+            current_id_msg.classList.add('span_warning');
+            current_id.focus();
+            return false;              
+          } else {
+            current_id_msg.style.display = 'none'; // gif 종료
+            
+            // 새로운 아이디 입력 확인
+            let current_id = document.getElementById('current_id');   // 원래 아이디 
+            let new_id = document.getElementById('new_id'); // 새로운 아이디 
+            let new_id_msg = document.getElementById('new_id_msg');       
+            
+            document.getElementById('frm').submit(); // 패스워드 수정 처리           
+          }
+        })
+        .catch(error => { // 서버 다운등 통신 에러
+            console.error('Error:', error);
+        });      
+            
+        // 처리중 출력
+        new_id_msg.innerHTML="<img src='/images/progress.gif' style='width: 5%;'>"; // static 기준
+
+       // ---------------------------------------------------------------------------------------
+       // fetch 관련 종료
+       // ---------------------------------------------------------------------------------------
+    }    
+</script>
+
+  <div class="title_line">아이디 변경 > <span th:text="@{|${memberVO.name} (${memberVO.id})|}" style="color:white; font-family: 'Mungyeong-Gamhong-Apple'; font-size : 40px;"></span></div>
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span> 
+    <a href='./list'>목록</a>
+  </aside> 
+
+<div style="width: 30%; margin: 0px auto">
+    <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/id_update_proc">
+        <input type="hidden" name="memberno" th:value="${memberVO.memberno}">
+
+        <div class="form-group">
+            <label for="id">현재 아이디*</label> 
+            <input type="text" name="current_id" id="current_id" value="" required="required" 
+                   placeholder="현재 아이디 입력" class="form-control form-control-sm" style="width: 100%;">
+                   <div id='current_id_msg' style='width: 100%; text-align: cnter;'></div>         
+        </div>
+
+        <div class="form-group">
+            <label for="new_id">새로운 아이디*</label> 
+            <input type="text" name="new_id" id="new_id" required="required" 
+                   placeholder="새로운 아이디 입력" class="form-control form-control-sm" style="width: 100%;">
+                   <span id='new_id_msg'></span>
+        </div>
+
+        <div class="content_body_bottom">
+            <button type="button" id="btn_id_update" style="
+              background-image: url('/survey/survey_image_2.jpg'); 
+              font-size: 20px; 
+              font-family: 'KBO-Dia-Gothic_bold'; 
+              color: white; 
+              border-radius: 15px; 
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+              padding: 8px; ">아이디 변경</button>
+            <button type="button" onclick="history.back();" style="
+              background-color : red; 
+              font-size: 20px; 
+              font-family: 'KBO-Dia-Gothic_bold'; 
+              color: white; 
+              border-radius: 15px; 
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+              padding: 8px;">취소</button>
+        </div>
+    </form>
+</div>
+
+
+
+
+</div>
+</html>

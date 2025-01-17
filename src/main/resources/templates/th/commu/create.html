@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{th/layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span th:text="${clubVO.clubname}" class="title_line_text"></span >  
+    > 글 등록
+  </div>
+  
+  <aside class="aside_right">
+    <a href="javascript:location.reload();" style="color: black;"></a>새로고침</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&hashtage=${hashtage}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./list_by_clubno_grid?clubno=${clubVO.clubno}&hashtage=${hashtage}&now_page=${now_page}|}" style="color: black;">갤러리형</a>
+  </aside>
+  
+  <div class='menu_line'></div>
+  
+  <form name='frm' method='post' th:object="${commuVO}" action='/commu/create' enctype="multipart/form-data">
+    <input type="hidden" name="clubno" th:value="${param.clubno}">
+    
+    <div>
+       <label>제목</label>
+       <input type='text' name='headline' value='' required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+    </div>
+    <div>
+       <label>내용</label>
+       <textarea name='contents' required="required" class="form-control" rows="12" style='width: 100%;'>손흥민의 플레이스타일에 대해서</textarea>
+    </div>
+    <div>
+       <label>해시 태그</label>
+       <input type='text' name='hashtag' value='토트넘,손흥민,런던,PL,한국인,월클,리그 순위,이적,재계약' required="required" 
+                 class="form-control" style='width: 100%;'>
+    </div>   
+    <div>
+       <label>이미지</label>
+       <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
+    </div>   
+
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+      <button type="button" th:attr="onclick=|location.href='/commu/list_by_clubno_search_paging?clubno=${clubno}'|" class="btn btn-secondary btn-sm">목록</button>
+    </div>
+  
+  </form>
+
+</div>
+
+  

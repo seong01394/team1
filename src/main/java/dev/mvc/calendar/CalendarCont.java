@@ -69,7 +69,7 @@ public class CalendarCont {
     ArrayList<ClubVOMenu> menu = this.clubProc.menu();
     model.addAttribute("menu", menu);
     
-    return "/calendar/create";    
+    return "/th/calendar/create";    
   }
   
   /**
@@ -92,14 +92,14 @@ public class CalendarCont {
       // model.addAttribute("code", "create_success");
       // model.addAttribute("name", cateVO.getName());
 
-      return "redirect:/calendar/list_all"; // @GetMapping(value="/list_all")
+      return "redirect:/th/calendar/list_all"; // @GetMapping(value="/list_all")
     } else {
       model.addAttribute("code", "create_fail");
     }
 
     model.addAttribute("cnt", cnt);
 
-    return "/calendar/msg"; 
+    return "/th/calendar/msg"; 
   }
   
   
@@ -116,7 +116,7 @@ public class CalendarCont {
     ArrayList<ClubVOMenu> menu = this.clubProc.menu();
     model.addAttribute("menu", menu);
 
-    return "/calendar/list_all"; // /templates/calendar/list_all.html
+    return "/th/calendar/list_all"; // /templates/calendar/list_all.html
   }
   
   /**
@@ -136,7 +136,7 @@ public class CalendarCont {
 
     model.addAttribute("calendarVO", calendarVO);
 
-    return "/calendar/read";
+    return "/th/calendar/read";
   }
     
   /**
@@ -156,11 +156,11 @@ public class CalendarCont {
       CalendarVO calendarVO = this.calendarProc.read(calendarno);
       model.addAttribute("calendarVO", calendarVO);
 
-      return "/calendar/update"; // /templates/calendar/update.html
+      return "/th/calendar/update"; // /templates/calendar/update.html
     } else {
       // ra.addAttribute("url", "/member/login_cookie_need"); // /templates/member/login_cookie_need.html
       // return "redirect:/contents/msg"; // @GetMapping(value = "/msg")
-      return "/admin/login_cookie_need"; 
+      return "/th/admin/login_cookie_need"; 
     }
 
   }
@@ -177,7 +177,7 @@ public class CalendarCont {
     if (this.adminProc.isAdmin(session)) { // 관리자 로그인 확인
       this.calendarProc.update(calendarVO); // 글수정
 
-      return "redirect:/calendar/read/" + calendarVO.getCalendarno(); // @GetMapping(value = "/read")
+      return "redirect:/th/calendar/read/" + calendarVO.getCalendarno(); // @GetMapping(value = "/read")
 
     } else { // 정상적인 로그인이 아닌 경우 로그인 유도
       ra.addAttribute("url", "/admin/login_cookie_need"); // /templates/member/login_cookie_need.html
@@ -203,11 +203,11 @@ public class CalendarCont {
       CalendarVO calendarVO = this.calendarProc.read(calendarno);
       model.addAttribute("calendarVO", calendarVO);
 
-      return "/calendar/delete"; // /templates/calendar/delete.html
+      return "/th/calendar/delete"; // /templates/calendar/delete.html
     } else {
       // ra.addAttribute("url", "/member/login_cookie_need"); // /templates/member/login_cookie_need.html
       // return "redirect:/contents/msg"; // @GetMapping(value = "/msg")
-      return "/admin/login_cookie_need"; 
+      return "/th/admin/login_cookie_need"; 
     }
   }
 
@@ -223,10 +223,10 @@ public class CalendarCont {
     if (this.adminProc.isAdmin(session)) { // 관리자 로그인 확인
       this.calendarProc.delete(calendarno);
 
-      return "redirect:/calendar/list_all";
+      return "redirect:/th/calendar/list_all";
 
     } else { // 정상적인 로그인이 아닌 경우 로그인 유도
-      ra.addAttribute("url", "/admin/login_cookie_need"); // /templates/member/login_cookie_need.html
+      ra.addAttribute("url", "/th/admin/login_cookie_need"); // /templates/member/login_cookie_need.html
       return "redirect:/calendar/post2get"; // @GetMapping(value = "/msg")
     }
 
@@ -270,7 +270,7 @@ public class CalendarCont {
     model.addAttribute("year", year);
     model.addAttribute("month", month-1);  // javascript는 1월이 0임. 
     
-    return "/calendar/list_calendar"; // /templates/calendar/list_calendar.html
+    return "/th/calendar/list_calendar"; // /templates/calendar/list_calendar.html
   }
   
   /**
@@ -310,7 +310,7 @@ public class CalendarCont {
   public String update_seqno_forward(Model model, @PathVariable("calendarno") Integer calendarno, RedirectAttributes ra) {
     this.calendarProc.update_seqno_forward(calendarno);
 
-    return "redirect:/calendar/list_all"; 
+    return "redirect:/th/calendar/list_all"; 
   }
 
   /**
@@ -320,7 +320,7 @@ public class CalendarCont {
   public String update_seqno_backward(Model model, @PathVariable("calendarno") Integer calendarno, RedirectAttributes ra) {
     this.calendarProc.update_seqno_backward(calendarno);
 
-    return "redirect:/calendar/list_all";
+    return "redirect:/th/calendar/list_all";
   }
   
 }

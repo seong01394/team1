@@ -23,6 +23,13 @@ public interface MemberDAOInter {
   public int checkID(String id);
   
   /**
+   * 닉네임 중복 검사
+   * @param nickname
+   * @return
+   */
+  public int checkNICKNAME(String nickname);
+  
+  /**
    * 회원 가입
    * @param memberVO
    * @return 추가한 레코드 갯수
@@ -57,11 +64,11 @@ public interface MemberDAOInter {
   public int update(MemberVO memberVO);
  
   /**
-   * 회원 삭제 처리
+   * 회원 탈퇴 처리
    * @param memberno
    * @return
    */
-  public int delete(int memberno);
+  public int bye(MemberVO memberVO);
   
   /**
    * 현재 패스워드 검사
@@ -78,9 +85,28 @@ public interface MemberDAOInter {
   public int passwd_update(HashMap<String, Object> map);
   
   /**
+   * 아이디, 전화번호 입력받아서 일치하는 회원이 있는지 검사
+   * @return 찾은 id 개수
+   */
+  public int passwd_check_find(HashMap<String, String> map);
+  
+  /**
+   * 문자 인증 성공 시 비밀번호 수정 처리
+   * @param map
+   * @return 수정한 비밀번호 개수
+   */
+  public int passwd_update_find(HashMap<String, String> map);
+  /**
    * 로그인 처리
    */
   public int login(HashMap<String, Object> map);
+  
+  /**
+   * 이름, 전화번호 입력받아서 일치하는 회원이 있는지 검사
+   * @return 찾은 id
+   */
+  public String id_check_find(HashMap<String, String> map);
+  
   
   /**
    * 카테고리별 검색된 레코드 갯수
@@ -88,5 +114,23 @@ public interface MemberDAOInter {
    * @return
    */
   public int list_by_cateno_search_count(HashMap<String, Object> hashMap);
+  
+
+  
+  /**
+   * 현재 아이디 일치 검사 
+   * @param map
+   * @return
+   */
+  public int id_check(HashMap<String, Object> map);
+  
+  /**
+   * 아이디 변경
+   * @param map
+   * @return
+   */
+  public int id_update(HashMap<String, Object> map);
+  
+
 }
  

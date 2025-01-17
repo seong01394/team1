@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeCont {
 
-  @GetMapping(value = {"/", "/index.do"})
+  @GetMapping(value = {"/", "/th/index.do"})
   public String Home() {
-    return "index";  // /templates/index.html
+    return "/th/index";  // /templates/index.html
   }
   
 }

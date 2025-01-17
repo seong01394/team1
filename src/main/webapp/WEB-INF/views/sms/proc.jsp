@@ -90,6 +90,7 @@ if(action.equals("go")) {
     // System.out.println(" ->msg: " + msg);
     String rphone = base64Encode(nullcheck(request.getParameter("rphone"), ""));
     // System.out.println(" ->rphone: " + rphone);
+    String rnickname = base64Encode(nullcheck(request.getParameter("rnickname"), ""));
     String sphone1 = base64Encode(nullcheck(request.getParameter("sphone1"), ""));
     String sphone2 = base64Encode(nullcheck(request.getParameter("sphone2"), ""));
     String sphone3 = base64Encode(nullcheck(request.getParameter("sphone3"), ""));
@@ -117,7 +118,7 @@ if(action.equals("go")) {
     // 데이터 맵핑 변수 정의
     String arrKey[]
         = new String[] {"user_id","secure","msg", "rphone","sphone1","sphone2","sphone3","rdate","rtime"
-                    ,"mode","testflag","destination","repeatFlag","repeatNum", "repeatTime", "smsType", "subject"};
+                    ,"mode","testflag","destination","repeatFlag","repeatNum", "repeatTime", "smsType", "subject", "rnickname"};
     String valKey[]= new String[arrKey.length] ;
     valKey[0] = user_id;
     valKey[1] = secure;
@@ -136,7 +137,8 @@ if(action.equals("go")) {
     valKey[14] = repeatTime;
     valKey[15] = smsType;
     valKey[16] = subject;
-
+    valKey[17] = rnickname;
+    
     String boundary = "";
     Random rnd = new Random();
     String rndKey = Integer.toString(rnd.nextInt(32000));

@@ -31,7 +31,9 @@ import com.zaxxer.hikari.HikariDataSource;
                                             "dev.mvc.surveymember", // DAO interface를 찾는 위치
                                             "dev.mvc.commugood", // DAO interface를 찾는 위치
                                             "dev.mvc.surveygood",
-                                            "dev.mvc.news"}) // DAO interface를 찾는 위치
+                                            "dev.mvc.news",
+                                            "dev.mvc.LoginLog",
+                                            "dev.mvc.commureply"}) // DAO interface를 찾는 위치
 
 
 public class DatabaseConfiguration {
@@ -62,10 +64,6 @@ public class DatabaseConfiguration {
         return sqlSessionFactoryBean.getObject();
     }
     
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource); // JdbcTemplate 생성
-    }
     
     @Bean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory){

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{th/layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+  <div class='title_line'>
+    <span th:text="${clubVO.clubname}" class="title_line_text" style="color: white;"></span >
+    <span th:if="${hashtag != ''}" th:text="|> ${hashtag} (${search_count} 건)|" class="title_line_text"></span>
+  </div>
+
+  <aside class="aside_right">
+    <span th:if="${session.grade == 'member'}">
+      <a th:href="@{|/th/commu/create?clubno=${clubVO.clubno}&now_page=${now_page}&hashtag=${hashtag}|}" style="color: black;">등록</a>
+      <span class="menu_devide">│</span>    
+    </span>
+    
+    <a href="javascript:location.reload();" style="color: black;">새로고침</a>
+    <span class='menu_divide' >│</span>    
+    <a th:href="@{|./list_by_clubno?clubno=${clubVO.clubno}&hashtag=${hashtag}&now_page=${now_page}|}" style="color: black;">기본 목록형</a>    
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./list_by_clubno_grid?clubno=${clubVO.clubno}&hashtag=${hashtag}&now_page=${now_page}|}" style="color: black;">갤러리형</a> 
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./list_all|}" style="color: black;">전체보기</a>
+  </aside> 
+
+  <!-- /commu/list_search_com.html 파일의 list_search_fragment import -->
+  <div th:replace="~{th/commu/list_search_com::list_search_fragment}"></div>
+     
+
+       
+  <div style='width: 100%;'> <!-- 갤러리 Layout  시작 -->
+    <div th:if="${list.size() > 0}"  th:each="commuVO, status:${list}" 
+         th:attr="onclick=|location.href='/commu/read?communo=${commuVO.communo}&hashtag=${hashtag}&now_page=${now_page}'|"
+         style='width: 19.0%; height: 200px; float: left; margin: 0.5%; padding: 0.5%; background-color: #EEEFFF; text-align: left; cursor: pointer;'>
+
+      <div th:if="${commuVO.image.endsWith('jpg') or commuVO.image.endsWith('png')  or commuVO.image.endsWith('gif')}"
+             style="width: 100%; height: 100px;">
+        <img th:src="@{|/commu/storage/${commuVO.commuthumb}|}" style="width: 100%; height: 100%;">
+      </div>
+
+      <div th:if="${((commuVO.image.endsWith('jpg') or commuVO.image.endsWith('png')  or commuVO.image.endsWith('gif')) == false) and (commuVO.imagesize > 0)}"
+             style="width: 100%; height: 100px;">
+        <span th:text="${commuVO.image}"></span>
+      </div>
+
+      <div th:if="${commuVO.imagesize == 0}" style="width: 100%; height: 100px;">
+        <img src="/commu/images/none1.png" style="width: 100%; height: 100%;">
+      </div>
+      <div>
+        <span th:if="${commuVO.headline.length() > 16 }" 
+                  th:text="|${commuVO.headline.substring(0, 16) }...|" style="font-weight: bold;"></span>
+        <span th:if="${commuVO.headline.length() <= 16 }" 
+                  th:text="|${commuVO.headline}|" style="font-weight: bold;"></span>
+        <br>
+        
+        <span th:if="${commuVO.contents.length() > 25 }" 
+                  th:text="|${commuVO.contents.substring(0, 25) }...|"></span>
+        <span th:if="${commuVO.contents.length() <= 25 }" 
+                  th:text="|${commuVO.contents}|"></span>
+      </div>
+      
+      <div style="width: 100%; text-align: right;">♡</div>
+      
+    </div>
+    
+    <div th:if="${list.size() == 0}" style="text-align: center; padding: 50px 0px;">
+      <span>관련 글이 등록되지 않았습니다.</span>
+    </div> 
+  </div>  <!-- 갤러리 Layout  종료 -->
+   
+  <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="bottom_menu" th:utext="${paging}"></div>
+  <!-- 페이지 버튼 목록 출력 종료 --> 
+
+</div>
+</html>
+

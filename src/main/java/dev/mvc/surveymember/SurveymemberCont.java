@@ -34,9 +34,9 @@ public class SurveymemberCont {
       
       System.out.println("list:" + list);
     
-      return "/surveymember/list_all"; // /templates/calendar/list_all.html
+      return "/th/surveymember/list_all"; // /templates/calendar/list_all.html
     } else {
-      return "redirect:/member/login_cookie_need"; // 로그인 안되어 있으면 리다이렉트
+      return "redirect:/th/member/login_cookie_need"; // 로그인 안되어 있으면 리다이렉트
     }
   }
   

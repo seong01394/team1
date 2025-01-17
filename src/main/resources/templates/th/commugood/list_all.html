@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{th/layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">커뮤니티 추천!</div>
+  <aside class="aside_right">
+    <a th:href="@{|/commugood/create|}" style="color: black;">등록</a>  
+    <span class='menu_divide' >│</span>       
+    <a href="javascript: location.reload();" style="color: black;">새로 고침</a>  
+  </aside>
+  
+  <!--/* '/commugood/list_all_com.html' 파일의 list_all_fragment를 가져다 사용 */--> 
+  <div th:replace="~{th/commugood/list_all_com_join::list_all_fragment}"></div> 
+  
+</div>
+</html>
+

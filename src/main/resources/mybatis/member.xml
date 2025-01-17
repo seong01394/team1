@@ -8,10 +8,17 @@
     WHERE id=#{id}
   </select>
   
+  <!-- nickname 중복 확인 -->
+  <select id="checkNICKNAME" resultType="int" parameterType="String">
+    SELECT COUNT(id) as cnt
+    FROM member
+    WHERE nickname=#{nickname}
+  </select>  
+  
   <insert id="create" parameterType="dev.mvc.member.MemberVO">
     INSERT INTO member(memberno, id, passwd, name, nickname, user_level, tel, zipcode, address1, address2, signup_date, signup_path, grade)
-    VALUES (member_seq.nextval, #{id}, #{passwd}, #{name}, #{nickname}, #{user_level}, #{tel}, #{zipcode}, 
-                 #{address1}, #{address2}, sysdate, #{sign_path}, #{grade})
+    VALUES (member_seq.nextval, #{id}, #{passwd}, #{name}, #{nickname}, NVL(#{user_level}, 'plant1'), #{tel}, #{zipcode}, 
+                 #{address1}, #{address2}, sysdate, #{signup_path}, #{grade})
   </insert>
 
   <select id="list" resultType="dev.mvc.member.MemberVO">
@@ -36,12 +43,13 @@
   
   <update id="update" parameterType="dev.mvc.member.MemberVO">
     UPDATE member 
-    SET name=#{name}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}
+    SET name=#{name}, nickname=#{nickname}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}
     WHERE memberno=#{memberno}
   </update>
   
-  <delete id="delete" parameterType="int">
-    DELETE FROM member
+  <delete id="bye"  parameterType="dev.mvc.member.MemberVO">
+    UPDATE member
+    SET grade = 99
     WHERE memberno=#{memberno}
   </delete>
 
@@ -65,5 +73,43 @@
     SET passwd=#{passwd}
     WHERE memberno=#{memberno}
   </update>
+
+  <!-- 비밀번호 변경 - 비밀번호 찾기에서 문자 인증을 성공했을 때-->
+  <update id="passwd_update_find" parameterType="HashMap">
+    UPDATE member
+    SET passwd=#{passwd}
+    WHERE id=#{id}
+  </update>
+ 
+  <!-- 아이디 찾기 회원 정보 일치 검증(name, nickname) -->
+  <select id="id_check_find" resultType="String" parameterType="HashMap">
+    SELECT id
+    FROM member
+    WHERE name=#{name} AND nickname=#{nickname}
+  </select>
+
+  <!-- 비밀번호 찾기 회원 정보 일치 검증(id, nickname) -->
+  <select id="passwd_check_find" resultType="int" parameterType="HashMap">
+    SELECT COUNT(id) as cnt
+    FROM member
+    WHERE id=#{id} AND nickname=#{rnickname}
+  </select>
+       
+  <select id="id_check" parameterType="HashMap" resultType="int">
+      SELECT COUNT(memberno) as cnt
+      FROM member 
+      WHERE memberno = #{memberno} AND id = #{id}
+  </select>
   
+      <update id="id_update" parameterType="HashMap">
+        UPDATE member 
+        SET id = #{id} 
+        WHERE memberno = #{memberno}
+    </update>
+  
+
+    
+    
 </mapper>
+  
+
